@@ -1,1 +1,0 @@
-cmsRun trigger_tests.py year=2018 isData=0 out=to_remove.root
