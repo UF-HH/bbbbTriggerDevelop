@@ -1,0 +1,4 @@
+cd ..
+cd ..
+scram b -j 4 
+cd bbbbWeight/test
