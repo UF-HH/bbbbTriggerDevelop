@@ -15,6 +15,7 @@ namespace hltObj{
         public:
             std::string Type;
             double MinPt = -1;
+	    double MaxPt = 99.E99;
             double MinEt = -1;
             double MinEta = -99E99;
             double MaxEta = 99E99;

@@ -221,7 +221,7 @@ void Event::Generate(){
         if(StringToObj.count(Cut_.at(i).Type)){
             std::vector<int> index_to_delete;
             for(int j = 0; j < StringToObj[Cut_.at(i).Type]->size(); j++){
-                if(StringToObj[Cut_.at(i).Type]->pt.at(j) < Cut_.at(i).MinPt || StringToObj[Cut_.at(i).Type]->et.at(j) < Cut_.at(i).MinEt ||
+                if(StringToObj[Cut_.at(i).Type]->pt.at(j) < Cut_.at(i).MinPt || StringToObj[Cut_.at(i).Type]->pt.at(j) > Cut_.at(i).MaxPt || StringToObj[Cut_.at(i).Type]->et.at(j) < Cut_.at(i).MinEt ||
                     StringToObj[Cut_.at(i).Type]->eta.at(j) < Cut_.at(i).MinEta || StringToObj[Cut_.at(i).Type]->eta.at(j) > Cut_.at(i).MaxEta){
                     
                     StringToObj[Cut_.at(i).Type]->clear(j);

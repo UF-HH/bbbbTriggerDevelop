@@ -48,8 +48,8 @@ int main(){
     hltObj::KinCuts PFCut;
     RecoCut.Type = "PFJets";
     RecoCut.MinPt = 20.0;
-    RecoCut.MinEta = -5;
-    RecoCut.MaxEta = 5;
+    RecoCut.MinEta = -2.4;
+    RecoCut.MaxEta = 2.4;
     ev.AddCut(PFCut);
     
 
@@ -220,7 +220,7 @@ int main(){
     h_calo_en->Scale(1./h_calo_en->Integral());
     h_L1_en->Scale(1./h_L1_en->Integral());
 
-    TF1*fpf = new TF1("fpf", "crystalball(5)+exp", -1, 1);
+    TF1*fpf = new TF1("fpf", "crystalball+expo", -1, 1);
     fpf->SetLineColor(kBlack);
     fpf->SetParameter(0, 0.18);
     fpf->SetParameter(1, 0.);
