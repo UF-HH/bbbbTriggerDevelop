@@ -62,6 +62,7 @@ def customize_trg_config_2018(process):
         'MC_AK4PFJets_v17', #for pf jets
         'MC_PFHT_v16', #pf HT
         'MC_CaloHT_v8', #calo HT
+        'HLT_PFHT250_v17' #for data, do we have these objects in nanoAOD?
     )
  
 
