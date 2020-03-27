@@ -15,6 +15,7 @@ hash
 
 git cms-addpkg HLTrigger/Configuration
 git cms-addpkg HLTrigger/HLTanalyzers
+git cms-addpkg HLTrigger/Timer
 git cms-addpkg GeneratorInterface/GenFilters 
 git cms-addpkg L1Trigger/L1TGlobal
 
@@ -34,7 +35,7 @@ hltGetConfiguration /frozen/2018/2e34/v3.2/HLT/V1 --globaltag 101X_mc2017_realis
 --input root:// #insert RAW file here
 --mc --process HLTest --full --offline --l1-emulator uGT --type GRun \ #--mc: if MC and --data: if data, --process: cms.Process name --type GRun for pp collisions.
 --path HLTriggerFirstPath,HLT_PFHT330PT30_QuadPFJet_75_60_45_40_v9,HLTriggerFinalPath,HLTAnalyzerEndpath \ #FirstPath and EndPath mandatory, in the middle whatever module you want (starts with HLT).
---l1 L1Menu_Collisions2018_v1_0_0-d1_xml --prescale none --max-events 10 --output none > hlt.py # --l1: .xml for L1 configuration,
+--l1 L1Menu_Collisions2018_v1_0_0-d1_xml --prescale none --timing  --max-events 10 --output none > hlt.py # --l1: .xml for L1 configuration,
 
 cmsRun hlt.py
 ```
@@ -49,6 +50,6 @@ cd ConfdbCustom
 ./setup #this generates setup_cff.py
 ./config #this generates hlt.py
 #insert the following line in hlt.py just after process = cms.Process(...) : process.load("setup_cff")
-cmsRun hlt.py
-    
+nohup taskset -c 4 cmsRun hlt.py >& full.log #-> output 2 .root: DQMIO.root and hltbits.root
+cmsRun haverstTiming_cff.py #->Specify name of DQMIO.root if u change it!! it's not automatic...output is a .root with a really long name.    
 ```
