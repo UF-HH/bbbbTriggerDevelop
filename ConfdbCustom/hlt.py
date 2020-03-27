@@ -5,6 +5,14 @@
 import FWCore.ParameterSet.Config as cms
 
 process = cms.Process( "HLTest" )
+process.load("setup_cff")
+
+process.load("HLTrigger.HLTanalyzers.HLTBitAnalyser_cfi")
+process.hltbitanalysis.HLTProcessName = cms.string(process.name_())
+process.hltbitanalysis.hltresults = cms.InputTag( 'TriggerResults', '', process.name_())
+process.hltbitanalysis.l1results = cms.InputTag('hltGtStage2Digis', '', process.name_())
+process.hltbitanalysis.RunParameters.HistogramFile = cms.untracked.string('hltbits.root')
+process.HLTBitAnalysisEndpath = cms.EndPath( process.hltbitanalysis )
 
 process.HLTConfigVersion = cms.PSet(
   tableName = cms.string('/frozen/2018/2e34/v3.2/HLT/V1')
@@ -11235,6 +11243,16 @@ process.hltTrigReport = cms.EDAnalyzer( "HLTrigReport",
     HLTriggerResults = cms.InputTag( 'TriggerResults','','@currentProcess' )
 )
 
+process.RemovePileUpDominatedEventsGen = cms.EDFilter("RemovePileUpDominatedEventsGen"
+)
+
+process.genParticlesForFilter = cms.EDProducer("GenParticleProducer",
+    saveBarCodes = cms.untracked.bool(True),
+    src = cms.InputTag("generatorSmeared"),
+    abortOnUnknownPDGCode = cms.untracked.bool(False)
+)
+
+
 process.HLTL1UnpackerSequence = cms.Sequence( process.hltGtStage2Digis + process.hltGtStage2ObjectMap )
 process.HLTBeamSpot = cms.Sequence( process.hltScalersRawToDigi + process.hltOnlineBeamSpot )
 process.HLTBeginSequence = cms.Sequence( process.hltTriggerType + process.HLTL1UnpackerSequence + process.HLTBeamSpot )
@@ -11293,9 +11311,14 @@ process.HLTriggerFirstPath = cms.Path( process.hltGetConditions + process.hltGet
 process.HLT_PFHT330PT30_QuadPFJet_75_60_45_40_v9 = cms.Path( process.HLTBeginSequence + process.hltL1sQuadJetC50to60IorHTT280to500IorHTT250to340QuadJet + process.hltPrePFHT330PT30QuadPFJet75604540 + process.HLTAK4CaloJetsSequence + process.hltQuadCentralJet30 + process.hltCaloJetsQuad30ForHt + process.hltHtMhtCaloJetsQuadC30 + process.hltCaloQuadJet30HT320 + process.HLTAK4PFJetsSequence + process.hltPFCentralJetLooseIDQuad30 + process.hlt1PFCentralJetLooseID75 + process.hlt2PFCentralJetLooseID60 + process.hlt3PFCentralJetLooseID45 + process.hlt4PFCentralJetLooseID40 + process.hltPFCentralJetLooseIDQuad30forHt + process.hltHtMhtPFCentralJetsLooseIDQuadC30 + process.hltPFCentralJetsLooseIDQuad30HT330 + process.HLTEndSequence )
 process.HLTriggerFinalPath = cms.Path( process.hltGtStage2Digis + process.hltScalersRawToDigi + process.hltFEDSelector + process.hltTriggerSummaryAOD + process.hltTriggerSummaryRAW + process.hltBoolFalse )
 process.HLTAnalyzerEndpath = cms.EndPath( process.hltGtStage2Digis + process.hltPreHLTAnalyzerEndpath + process.hltL1TGlobalSummary + process.hltTrigReport )
+process.HLT_RemovePileUpDominatedEventsGen_v1 = cms.Path(process.HLTBeginSequence + process.RemovePileUpDominatedEventsGen + process.HLTEndSequence)
+#process.HLT_BCToEFilter_v1 = cms.Path(process.genParticlesForFilter + process.bctoefilter)
+#process.HLTEmFilter_v1 = cms.Path(process.genParticlesForFilter + process.emenrichingfilter)
+#process.HLT_EmGlobalFilter_v1 = cms.Path(process.genParticlesForFilter + ~process.bctoefilter + process.emenrichingfilter)
+#process.HLTMuFilter_v1 = cms.Path(process.genmuons + process.mufilter)
 
 
-process.HLTSchedule = cms.Schedule( *(process.HLTriggerFirstPath, process.HLT_PFHT330PT30_QuadPFJet_75_60_45_40_v9, process.HLTriggerFinalPath, process.HLTAnalyzerEndpath ))
+process.HLTSchedule = cms.Schedule( *(process.HLTriggerFirstPath, process.HLT_RemovePileUpDominatedEventsGen_v1, process.HLT_PFHT330PT30_QuadPFJet_75_60_45_40_v9, process.HLTriggerFinalPath, process.HLTAnalyzerEndpath, process.HLTBitAnalysisEndpath ))
 
 
 process.source = cms.Source( "PoolSource",
@@ -11313,7 +11336,7 @@ process = L1REPACK(process,"uGT")
 
 # limit the number of events to be processed
 process.maxEvents = cms.untracked.PSet(
-    input = cms.untracked.int32( 10 )
+    input = cms.untracked.int32( 100 )
 )
 
 # enable TrigReport, TimeReport and MultiThreading
@@ -11344,7 +11367,7 @@ process.dqmOutput = cms.OutputModule("DQMRootOutputModule",
     fileName = cms.untracked.string("DQMIO.root")
 )
 
-process.DQMOutput = cms.EndPath( process.dqmOutput )
+#process.DQMOutput = cms.EndPath( process.dqmOutput )
 
 # add specific customizations
 _customInfo = {}
@@ -11355,7 +11378,7 @@ _customInfo['globalTags'][False] = "auto:run2_mc_GRun"
 _customInfo['inputFiles']={}
 _customInfo['inputFiles'][True]  = "file:RelVal_Raw_GRun_DATA.root"
 _customInfo['inputFiles'][False] = "file:RelVal_Raw_GRun_MC.root"
-_customInfo['maxEvents' ]=  10
+_customInfo['maxEvents' ]=  100
 _customInfo['globalTag' ]= "101X_mc2017_realistic_TSG_2018_04_09_20_43_53"
 _customInfo['inputFile' ]=  ['root://cms-xrd-global.cern.ch//store/mc/RunIISummer17DRStdmix/TT_TuneCUETP8M2T4_13TeV-powheg-pythia8/GEN-SIM-RAW/NZSFlatPU28to62_92X_upgrade2017_realistic_v10-v2/50000/0043237F-0DA1-E711-AD49-346AC29F11B8.root']
 _customInfo['realData'  ]=  False
@@ -11369,3 +11392,9 @@ process = customizeHLTforCMSSW(process,"GRun")
 from HLTrigger.Configuration.Eras import modifyHLTforEras
 modifyHLTforEras(process)
 
+process.load('L1Trigger.L1TGlobal.hackConditions_cff')
+process.L1TGlobalPrescalesVetos.PrescaleXMLFile = cms.string('L1PS_2018_06_13_Run317696.xml')
+process.L1TGlobalPrescalesVetos.FinOrMaskXMLFile = cms.string('mask-trivial.xml')
+process.simGtStage2Digis.AlgorithmTriggersUnmasked = cms.bool(False)
+process.simGtStage2Digis.AlgorithmTriggersUnprescaled = cms.bool(False)
+process.simGtStage2Digis.PrescaleSet = cms.uint32(2)
