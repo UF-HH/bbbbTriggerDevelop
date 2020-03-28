@@ -48,8 +48,8 @@ Some lines have been added to ```hlt.py``` like the ntuplizer or the PURemoval
 git clone https://github.com/UF-HH/bbbbTriggerDevelop.git
 cd ConfdbCustom
 ./setup #this generates setup_cff.py
-./config #this generates hlt.py
+#./config #this generates hlt.py note we changed name -> hlt_timing.py, many modules were added and can't be override.
 #insert the following line in hlt.py just after process = cms.Process(...) : process.load("setup_cff")
-nohup taskset -c 4 cmsRun hlt.py >& full.log #-> output 2 .root: DQMIO.root and hltbits.root
+nohup taskset -c 4 cmsRun hlt_timing.py >& full.log #-> output 2 .root: DQMIO.root and hltbits.root
 cmsRun haverstTiming_cff.py #->Specify name of DQMIO.root if u change it!! it's not automatic...output is a .root with a really long name.    
 ```
