@@ -172,6 +172,7 @@ namespace hltObj{
                 MappedSetCuts.insert(std::make_pair("setEtaMax", &HLTCuts::setEtaMax));
                 MappedSetCuts.insert(std::make_pair("setHTMin", &HLTCuts::setHTMin));
                 MappedSetCuts.insert(std::make_pair("setMHTMin", &HLTCuts::setMHTMin));
+                MappedSetCuts.insert(std::make_pair("setMinN", &HLTCuts::setMinN));
             }
             void setPtMin(double p){PtMin = p; };
             void setPtMax(double p){PtMax = p;};
@@ -180,7 +181,7 @@ namespace hltObj{
             void setHTMin(double H){HTMin = H;};
             void setMHTMin(double H){MHTMin=H;};
             void setOrdered(bool o){ordered=o;};
-            void setMinN(int N){MinN=N;};
+            void setMinN(double N){MinN=(int) round(N);};
 
 
     };

@@ -253,13 +253,68 @@ std::vector<double> TriggerMaker::Sequence(Event ev){
 };
 
 void TriggerMaker::ModifyCut(std::string FilName, std::string Action, double value){
+    std::cout << FilName << " " << Action << std::endl;
     int index = std::distance(Fil_Names.begin(), std::find(Fil_Names.begin(), Fil_Names.end(), FilName));
 
     //index-1 because first name is always the l1 name...implementing a L1 search?
 
     for(auto p : Cuts.at(index-1).MappedSetCuts){
-        if(p.first == Action)
+        if(p.first == Action){
             (Cuts.at(index-1).*p.second)(value);
+            std::cout << Cuts.at(index-1).PtMin << std::endl;
+        }
     }
 };
+
+void TriggerMaker::CutFromJson(std::string config){
+
+    std::ifstream cut_file (config);
+
+    bool Continue = true;
+
+    std::string line;
+    std::string mod_name;
+    std::string mod_type;
+    std::string algo_name;
+    std::string algo_type;
+    
+    if (cut_file.is_open()){
+            
+        while(std::getline(cut_file, line)){
+                        
+            std::string delimeter = ",";
+            std::string value_delimeter = ":";
+            
+            mod_type = line.substr(0, line.find(value_delimeter));
+            line.erase(0, line.find(value_delimeter) + value_delimeter.length());
+            mod_name = line.substr(0, line.find(delimeter));
+            line.erase(0, line.find(delimeter) + value_delimeter.length());
+            
+            algo_type = line.substr(0, line.find(value_delimeter));
+            line.erase(0, line.find(value_delimeter) + value_delimeter.length());
+            algo_name = line.substr(0, line.find(delimeter));
+            line.erase(0, line.find(delimeter) + value_delimeter.length());
+            
+            
+            while(line.find(delimeter) != std::string::npos){
+                
+                std::string action = line.substr(0, line.find(value_delimeter));
+                line.erase(0, line.find(value_delimeter) + value_delimeter.length());
+                double set = std::stod(line.substr(0, line.find(delimeter)));
+                line.erase(0, line.find(delimeter) + delimeter.length());
+            
+                ModifyCut(mod_name, action , set);                    
+            
+            }
+        
+        }
+        
+        cut_file.close();
+    } 
+
+    else std::cout << "Unable to open file";
+
+    return;
+};
+
 

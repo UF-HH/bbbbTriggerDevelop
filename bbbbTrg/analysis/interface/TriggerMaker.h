@@ -3,6 +3,7 @@
 #include <vector>
 #include <map>
 #include <string>
+#include <fstream>
 #include "Obj.h"
 #include "Event.h"
 
@@ -36,6 +37,7 @@ class TriggerMaker{
         void SetHLTRequired(std::vector<std::string> HLTR){ HLT_Required = HLTR; };
         int computeL1(Event ev);
         void ModifyCut(std::string FilName, std::string Action, double value);
+        void CutFromJson(std::string config);
         int FindFirstZero(std::vector<double> v);
         std::vector<double> Sequence(Event ev);
 
