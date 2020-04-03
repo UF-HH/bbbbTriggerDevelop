@@ -1,0 +1,1 @@
+hltConfigFromDB --cff --configName /frozen/2018/2e34/v3.2/HLT/V1 --nopaths --services -PrescaleService,-EvFDaqDirector,-FastMonitoringService > setup_cff.py
