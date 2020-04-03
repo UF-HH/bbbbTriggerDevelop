@@ -122,6 +122,7 @@ process.TFileService = cms.Service('TFileService',
 
 
 process.checkTrg = cms.EDAnalyzer("TO_Tree_nob",
+    puLabel = cms.InputTag("slimmedAddPileupInfo"),  # v1 miniaod addPileupInfo 
     triggerObjects = cms.InputTag("slimmedPatTrigger"),
     triggerResults = cms.InputTag("TriggerResults", "", "HLT"),
     reco_jets = cms.InputTag("slimmedJets"),

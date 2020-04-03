@@ -1,0 +1,9 @@
+Trigger Name: HLT_PFHT330PT30_QuadPFJet_75_60_45_40_v9 
+Filter:hltQuadCentralJet30,type:CustomFixedPtEtaSelector,setPtMin:30,setPtMax:1.0E99,setEtaMin:-2.5,setEtaMax:2.5,setMinN:4,
+Filter:hltCaloQuadJet30HT320,type:CustomFixedPtEtaHTSelector,setPtMin:30,setPtMax:1.0E99,setEtaMin:-2.5,setEtaMax:2.5,setHTMin:320,setMHTMin:0.0,setMinN:1,
+Filter:hltPFCentralJetLooseIDQuad30,type:CustomFixedPtEtaSelector,setPtMin:30,setPtMax:1.0E99,setEtaMin:-2.5,setEtaMax:2.5,setMinN:4,
+Filter:hlt1PFCentralJetLooseID75,type:CustomFixedPtEtaSelector,setPtMin:75,setPtMax:1.0E99,setEtaMin:-2.5,setEtaMax:2.5,setMinN:1,
+Filter:hlt2PFCentralJetLooseID60,type:CustomFixedPtEtaSelector,setPtMin:60,setPtMax:1.0E99,setEtaMin:-2.5,setEtaMax:2.5,setMinN:2,
+Filter:hlt3PFCentralJetLooseID45,type:CustomFixedPtEtaSelector,setPtMin:45,setPtMax:1.0E99,setEtaMin:-2.5,setEtaMax:2.5,setMinN:3,
+Filter:hlt4PFCentralJetLooseID40,type:CustomFixedPtEtaSelector,setPtMin:40,setPtMax:1.0E99,setEtaMin:-2.5,setEtaMax:2.5,setMinN:4,
+Filter:hltPFCentralJetsLooseIDQuad30HT330,type:CustomFixedPtEtaHTSelector,setPtMin:30,setPtMax:1.0E99,setEtaMin:-2.5,setEtaMax:2.5,setHTMin:330.0,setMHTMin:0.0,setMinN:1,

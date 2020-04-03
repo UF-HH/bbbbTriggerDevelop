@@ -1,5 +1,0 @@
-hltGetConfiguration /frozen/2018/2e34/v3.2/HLT/V1 --globaltag 101X_mc2017_realistic_TSG_2018_04_09_20_43_53 \
---input root://cms-xrd-global.cern.ch//store/mc/RunIISummer17DRStdmix/TT_TuneCUETP8M2T4_13TeV-powheg-pythia8/GEN-SIM-RAW/NZSFlatPU28to62_92X_upgrade2017_realistic_v10-v2/50000/0043237F-0DA1-E711-AD49-346AC29F11B8.root \
---mc --process HLTest --full --offline --l1-emulator uGT --type GRun \
---path HLTriggerFirstPath,HLT_PFHT330PT30_QuadPFJet_75_60_45_40_v9,HLTriggerFinalPath,HLTAnalyzerEndpath \
---l1 L1Menu_Collisions2018_v1_0_0-d1_xml --prescale none --max-events 10 --output none > hlt.py

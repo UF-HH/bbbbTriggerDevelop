@@ -27,6 +27,7 @@
 #include "DataFormats/HepMCCandidate/interface/GenStatusFlags.h"
 #include "DataFormats/PatCandidates/interface/Jet.h"
 #include "DataFormats/PatCandidates/interface/PackedCandidate.h"
+#include "SimDataFormats/PileupSummaryInfo/interface/PileupSummaryInfo.h"
 
 //
 #include "CondFormats/L1TObjects/interface/L1GtTriggerMenuFwd.h"
@@ -72,10 +73,15 @@ class TO_Tree_nob : public edm::EDAnalyzer {
 
         bool verbose_;
 
+        unsigned long long int event_;
+        int       run_;
+        int       lumi_;
+
         const edm::EDGetTokenT< pat::TriggerObjectStandAloneCollection > triggerObjectsToken_;
         const edm::EDGetTokenT< edm::TriggerResults >                    triggerBitsToken_;
         const edm::EDGetTokenT< reco::GenParticleCollection >            gensToken_; //GenParticles
         const edm::EDGetTokenT< std::vector<pat::Jet> >                  jetsToken_; //jets
+        const edm::EDGetTokenT< vector<PileupSummaryInfo> >              PuToken_; //PU
 
         std::string calojet_fil_2018 = "hltCaloJetCollection20Filter";
         std::string pfjet_fil_2018 = "hltAK4PFJetCollection20Filter";
@@ -163,6 +169,10 @@ class TO_Tree_nob : public edm::EDAnalyzer {
         //Cuts
         bool      cut_;
 
+        //Pile-UP
+        std::vector<double>* _puOccupancy = new std::vector<double>;
+        double _trpu;
+
         // vars from HHReweight5D
         float gen_H1_m;
         float gen_H1_pt;
@@ -197,7 +207,9 @@ class TO_Tree_nob : public edm::EDAnalyzer {
     triggerObjectsToken_ (consumes< pat::TriggerObjectStandAloneCollection >  (iConfig.getParameter<edm::InputTag>("triggerObjects"))),
     triggerBitsToken_    (consumes< edm::TriggerResults >                     (iConfig.getParameter<edm::InputTag>("triggerResults"))),
     gensToken_           (consumes< reco::GenParticleCollection >             (iConfig.getParameter<edm::InputTag>("genP"))),
-    jetsToken_           (consumes< std::vector<pat::Jet>   >                 (iConfig.getParameter<edm::InputTag>("reco_jets")))
+    jetsToken_           (consumes< std::vector<pat::Jet>   >                 (iConfig.getParameter<edm::InputTag>("reco_jets"))),
+    PuToken_             (consumes< std::vector<PileupSummaryInfo>   >        (iConfig.getParameter<edm::InputTag>("puLabel")))
+
 {
     trgprocessName_            = iConfig.getParameter<edm::InputTag>("triggerResults");
     trgs_of_interest_names_    = iConfig.getParameter<std::vector<string>> ("triggerList");
@@ -354,6 +366,15 @@ void TO_Tree_nob::beginJob()
     tree_->Branch("gen_costh_H1_cm", &gen_costh_H1_cm);
     tree_->Branch("gen_costh_H2_cm", &gen_costh_H2_cm);
 
+    //-----------------------
+    // PU & infos
+    //-----------------------
+    tree_->Branch("puOccupancy", &_puOccupancy);
+    tree_->Branch("trpu", &_trpu);
+    tree_->Branch("event", &event_);
+    tree_->Branch("run",   &run_);
+    tree_->Branch("lumi",  &lumi_);
+
 
 }
 
@@ -400,6 +421,7 @@ void TO_Tree_nob::reset()
     reco_jet_energy->clear();
     reco_jet_et->clear();
     reco_jet_b_tag->clear();
+    _puOccupancy->clear();
     //chargedHadronEnergyFraction->clear();
     //neutralHadronEnergyFraction->clear();
     //chargedEmEnergyFraction->clear();
@@ -436,6 +458,13 @@ void TO_Tree_nob::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetu
     edm::Handle<edm::TriggerResults> triggerBitsH;
     iEvent.getByToken(triggerBitsToken_, triggerBitsH);
     const edm::TriggerNames &trg_names = iEvent.triggerNames(*triggerBitsH);
+
+    edm::Handle<std::vector<PileupSummaryInfo>> puInfoH;
+    iEvent.getByToken(PuToken_, puInfoH);
+
+    event_ = iEvent.id().event();
+    run_   = iEvent.id().run();
+    lumi_  = iEvent.luminosityBlock();
 
 
     //check for triggers for given year
@@ -719,6 +748,20 @@ void TO_Tree_nob::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetu
             matched_jet_b_tag->push_back(-999);
         }
 
+    }
+
+    //Adding Pile-Up infos to the tree
+    for (int j=0; j<20; j++) {
+        _puOccupancy->push_back(-1.0);
+    }
+        
+    for(size_t i=0;i<puInfoH->size();++i) {
+        for (int j=0; j<20; j++) {
+            if( puInfoH->at(i).getBunchCrossing() == (-10 + j) ) {
+                _puOccupancy->at(j) = puInfoH->at(i).getPU_NumInteractions();
+            }
+            if( puInfoH->at(i).getBunchCrossing()==-10 ) _trpu = puInfoH->at(i).getTrueNumInteractions(); 
+        }
     }
 
 
