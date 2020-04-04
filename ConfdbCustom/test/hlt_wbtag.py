@@ -5,6 +5,41 @@
 import FWCore.ParameterSet.Config as cms
 import FWCore.PythonUtilities.LumiList as LumiList
 import FWCore.ParameterSet.Types as CfgTypes
+import FWCore.ParameterSet.VarParsing as VarParsing
+"""
+
+op = VarParsing.VarParsing ('analysis')
+
+op.register ('json',
+                  'Json/json_2018D_Ephemeral_20181022_PU50.txt', # default value
+                  VarParsing.VarParsing.multiplicity.singleton, # singleton or list
+                  VarParsing.VarParsing.varType.string,            # string, int, or float
+                  "Golden Json")
+op.register ('Run',
+                  [323725], # default value
+                  VarParsing.VarParsing.multiplicity.list, # singleton or list
+                  VarParsing.VarParsing.varType.int,            # string, int, or float
+                  "Run to analyze")
+op.register ('LS',
+                  [18], # default value
+                  VarParsing.VarParsing.multiplicity.list, # singleton or list
+                  VarParsing.VarParsing.varType.int,            # string, int, or float
+                  "Lumisection to analyze")
+op.register ('nev',
+                  1000, # default value
+                  VarParsing.VarParsing.multiplicity.singleton, # singleton or list
+                  VarParsing.VarParsing.varType.int,            # string, int, or float
+                  "Number of event to process (Does not consider json discards)")
+
+op.parseArguments()
+
+runs = op.Run
+ls = op.LS
+nev = op.nev
+json_file = op.json
+
+print(runs, ls, nev, json_file)
+"""
 
 process = cms.Process( "HLTest" )
 process.load("setup_cff")
@@ -13005,7 +13040,7 @@ process.MyHLTAnalyzer = cms.EDAnalyzer("HLTAn",
     triggerResults = cms.InputTag("TriggerResults", "", "@currentProcess"),
     triggerList = cms.vstring(),
     filterList  = cms.vstring(),
-    verbose     = cms.bool(True)
+    verbose     = cms.bool(False)
 )
 
 process.MyHLTAnalyzer.inputs = cms.PSet (
@@ -13015,7 +13050,7 @@ process.MyHLTAnalyzer.inputs = cms.PSet (
 # get JSON file correctly parced
 JSONfile = 'Json/json_2018D_Ephemeral_20181022_PU50.txt'
 myList = LumiList.LumiList (filename = JSONfile).getCMSSWString().split(',')
-process.MyHLTAnalyzer.inputs.lumisToProcess.extend(myList)
+#process.MyHLTAnalyzer.inputs.lumisToProcess.extend(myList)
 
 from bbbbTrg_nob.ConfdbCustom.customize_trg_config import *
 #CONFIGURING ANALYZER WITH TRIGGER OF INTEREST
@@ -13177,7 +13212,7 @@ process.dqmOutput = cms.OutputModule("DQMRootOutputModule",
 )
 
 process.DQMOutput = cms.EndPath( process.dqmOutput )
-
+from bbbbTrg_nob.ConfdbCustom.QueryForFiles import *
 # add specific customizations
 _customInfo = {}
 _customInfo['menuType'  ]= "GRun"
@@ -13187,35 +13222,9 @@ _customInfo['globalTags'][False] = "auto:run2_mc_GRun"
 _customInfo['inputFiles']={}
 _customInfo['inputFiles'][True]  = "file:RelVal_Raw_GRun_DATA.root"
 _customInfo['inputFiles'][False] = "file:RelVal_Raw_GRun_MC.root"
-_customInfo['maxEvents' ]=  30000
+_customInfo['maxEvents' ] = -1
 _customInfo['globalTag' ]= "101X_dataRun2_HLT_v7"
-_customInfo['inputFile' ]=  ['/store/data/Run2018D/EphemeralHLTPhysics1/RAW/v1/000/323/725/00000/90A4F4FB-B94B-824B-B6C0-5FFC8CABCC6D.root', #323725
-                             '/store/data/Run2018D/EphemeralHLTPhysics1/RAW/v1/000/323/725/00000/90A4F4FB-B94B-824B-B6C0-5FFC8CABCC6D.root', #323725
-                             '/store/data/Run2018D/EphemeralHLTPhysics1/RAW/v1/000/323/725/00000/2FDF3BCB-6701-DF4A-AB51-652165EA938C.root', #323725
-                             '/store/data/Run2018D/EphemeralHLTPhysics1/RAW/v1/000/323/725/00000/16C44885-921E-8E4B-B973-A426EB9FA496.root', #323725
-                             '/store/data/Run2018D/EphemeralHLTPhysics1/RAW/v1/000/323/725/00000/C30D0D17-4A12-BA41-84B3-C45238AE5FB5.root', #323725
-                             '/store/data/Run2018D/EphemeralHLTPhysics1/RAW/v1/000/323/725/00000/797F651F-6ECD-D348-A00A-0BC9F233B1FD.root', #323725
-                             '/store/data/Run2018D/EphemeralHLTPhysics1/RAW/v1/000/323/725/00000/22870B07-E9D8-B843-8C7A-8E0BB8013F22.root', #323725
-                             '/store/data/Run2018D/EphemeralHLTPhysics1/RAW/v1/000/323/725/00000/EF3C3A85-7CFC-064F-B4E4-F67B6A352F7F.root', #323725
-                             '/store/data/Run2018D/EphemeralHLTPhysics1/RAW/v1/000/323/725/00000/B6664F9E-9069-6141-9911-4E784C676C76.root', #323725
-                             '/store/data/Run2018D/EphemeralHLTPhysics1/RAW/v1/000/323/725/00000/26CF9B45-A620-2F44-8923-190D91F43191.root', #323725
-                             '/store/data/Run2018D/EphemeralHLTPhysics1/RAW/v1/000/323/725/00000/E65E29C7-DAB3-494D-9214-136316432959.root', #323725
-                             '/store/data/Run2018D/EphemeralHLTPhysics1/RAW/v1/000/323/725/00000/35C4F246-7F2C-1B40-AE35-A08D9C94DAFB.root', #323725
-                             '/store/data/Run2018D/EphemeralHLTPhysics1/RAW/v1/000/323/725/00000/4DBE497B-D4A0-1843-8DF3-DF793D75FEE8.root', #323725
-                             '/store/data/Run2018D/EphemeralHLTPhysics1/RAW/v1/000/323/725/00000/FDF72769-4DE6-9746-94AA-03901F6065C7.root', #323725
-                             '/store/data/Run2018D/EphemeralHLTPhysics1/RAW/v1/000/323/725/00000/D6AADDE0-F64D-3C4E-85CE-2DBF5D783D16.root', #323725
-                             '/store/data/Run2018D/EphemeralHLTPhysics1/RAW/v1/000/323/725/00000/1CBCC573-194D-D842-9242-A6E0443D7DFB.root', #323725
-                             '/store/data/Run2018D/EphemeralHLTPhysics1/RAW/v1/000/323/725/00000/E3A2AC1A-66CA-A340-95D5-9CA073A7083C.root', #323725
-                             '/store/data/Run2018D/EphemeralHLTPhysics1/RAW/v1/000/323/725/00000/B7798C89-EA33-6545-B183-202F64CC6842.root', #323725
-                             '/store/data/Run2018D/EphemeralHLTPhysics1/RAW/v1/000/323/725/00000/B7798C89-EA33-6545-B183-202F64CC6842.root', #323725
-                             '/store/data/Run2018D/EphemeralHLTPhysics1/RAW/v1/000/323/725/00000/B107DCE4-D3C7-FA43-9488-8DD867C077B1.root', #323725
-                             '/store/data/Run2018D/EphemeralHLTPhysics1/RAW/v1/000/324/201/00000/BD8E4505-B130-B640-8572-A0CCA0FA67FE.root', #324201
-                             '/store/data/Run2018D/EphemeralHLTPhysics1/RAW/v1/000/324/201/00000/05A44F30-A950-BE44-96F3-3EB58AA2D234.root', #324201
-                             '/store/data/Run2018D/EphemeralHLTPhysics1/RAW/v1/000/324/201/00000/05A44F30-A950-BE44-96F3-3EB58AA2D234.root', #324201
-                             '/store/data/Run2018D/EphemeralHLTPhysics1/RAW/v1/000/324/201/00000/B2DBBA2D-98BE-F943-8B9E-292AE18E88D4.root', #324201
-                             '/store/data/Run2018D/EphemeralHLTPhysics1/RAW/v1/000/324/201/00000/B2DBBA2D-98BE-F943-8B9E-292AE18E88D4.root', #324201
-                             '/store/data/Run2018D/EphemeralHLTPhysics1/RAW/v1/000/324/201/00000/B2DBBA2D-98BE-F943-8B9E-292AE18E88D4.root'  #324201
-                             ]
+_customInfo['inputFile' ]=  QueryFilesFromRuns(run=[323725])
 _customInfo['realData'  ]=  True
 from HLTrigger.Configuration.customizeHLTforALL import customizeHLTforAll
 process = customizeHLTforAll(process,"GRun",_customInfo)
@@ -13226,4 +13235,3 @@ process = customizeHLTforCMSSW(process,"GRun")
 # Eras-based customisations
 from HLTrigger.Configuration.Eras import modifyHLTforEras
 modifyHLTforEras(process)
-

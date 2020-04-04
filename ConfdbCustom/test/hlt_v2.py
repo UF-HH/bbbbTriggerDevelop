@@ -11394,7 +11394,7 @@ _customInfo['globalTags'][False] = "auto:run2_mc_GRun"
 _customInfo['inputFiles']={}
 _customInfo['inputFiles'][True]  = "file:RelVal_Raw_GRun_DATA.root"
 _customInfo['inputFiles'][False] = "file:RelVal_Raw_GRun_MC.root"
-_customInfo['maxEvents' ]=  30000
+_customInfo['maxEvents' ]=  1000
 _customInfo['globalTag' ]= "101X_dataRun2_HLT_v7"
 _customInfo['inputFile' ]=  ['/store/data/Run2018D/EphemeralHLTPhysics1/RAW/v1/000/323/725/00000/90A4F4FB-B94B-824B-B6C0-5FFC8CABCC6D.root', #323725
                              '/store/data/Run2018D/EphemeralHLTPhysics1/RAW/v1/000/323/725/00000/90A4F4FB-B94B-824B-B6C0-5FFC8CABCC6D.root', #323725
