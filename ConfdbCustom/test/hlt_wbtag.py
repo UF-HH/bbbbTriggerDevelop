@@ -13050,7 +13050,7 @@ process.MyHLTAnalyzer.inputs = cms.PSet (
 # get JSON file correctly parced
 JSONfile = 'Json/json_2018D_Ephemeral_20181022_PU50.txt'
 myList = LumiList.LumiList (filename = JSONfile).getCMSSWString().split(',')
-#process.MyHLTAnalyzer.inputs.lumisToProcess.extend(myList)
+process.MyHLTAnalyzer.inputs.lumisToProcess.extend(myList)
 
 from bbbbTrg_nob.ConfdbCustom.customize_trg_config import *
 #CONFIGURING ANALYZER WITH TRIGGER OF INTEREST
@@ -13058,6 +13058,20 @@ customize_trg_config_2018(process)
 
 process.TFileService = cms.Service('TFileService',
     fileName = cms.string('MyHLTAnalyzer.root')
+)
+
+process.SaveCaloJets = cms.EDAnalyzer("CaloSaver",
+    Jets = cms.InputTag("hltAK4CaloJetsCorrectedIDPassed"),
+    verbose = cms.bool(True),
+    tree = cms.string("trgObjTree"),
+    branch = cms.string("CaloJets")
+)
+
+process.SavePFJets = cms.EDAnalyzer("PFSaver",
+    Jets = cms.InputTag("hltAK4PFJetsLooseIDCorrected"),
+    verbose = cms.bool(True),
+    tree = cms.string("Jets"),
+    branch = cms.string("PFJets")
 )
 
 process.HLTL1UnpackerSequence = cms.Sequence( process.hltGtStage2Digis + process.hltGtStage2ObjectMap )
@@ -13126,13 +13140,17 @@ process.HLTBtagDeepCSVSequencePF = cms.Sequence( process.hltVerticesPF + process
 process.HLTEndSequence = cms.Sequence( process.hltBoolEnd )
 process.HLTAnalyzerEndpath = cms.EndPath( process.hltGtStage2Digis + process.hltPreHLTAnalyzerEndpath + process.hltL1TGlobalSummary + process.hltTrigReport + process.MyHLTAnalyzer )
 
+#SAVING OBJECTS OF INTEREST
+process.SaveCaloObj = cms.Path(process.HLTAK4CaloJetsSequence + process.SaveCaloJets)
+process.SavePFObj = cms.Path(process.HLTAK4PFJetsSequence + process.SavePFJets)
+
 process.HLTriggerFirstPath = cms.Path( process.hltGetConditions + process.hltGetRaw + process.hltBoolFalse )
 process.HLT_PFHT330PT30_QuadPFJet_75_60_45_40_TriplePFBTagDeepCSV_4p5_v3 = cms.Path( process.HLTBeginSequence + process.hltL1sQuadJetC50to60IorHTT280to500IorHTT250to340QuadJet + process.hltPrePFHT330PT30QuadPFJet75604540TriplePFBTagDeepCSV4p5 + process.HLTAK4CaloJetsSequence + process.hltQuadCentralJet30 + process.hltCaloJetsQuad30ForHt + process.hltHtMhtCaloJetsQuadC30 + process.hltCaloQuadJet30HT320 + process.HLTBtagDeepCSVSequenceL3 + process.hltBTagCaloDeepCSVp17Double + process.HLTAK4PFJetsSequence + process.hltPFCentralJetLooseIDQuad30 + process.hlt1PFCentralJetLooseID75 + process.hlt2PFCentralJetLooseID60 + process.hlt3PFCentralJetLooseID45 + process.hlt4PFCentralJetLooseID40 + process.hltPFCentralJetLooseIDQuad30forHt + process.hltHtMhtPFCentralJetsLooseIDQuadC30 + process.hltPFCentralJetsLooseIDQuad30HT330 + process.HLTBtagDeepCSVSequencePF + process.hltBTagPFDeepCSV4p5Triple + process.HLTEndSequence )
 process.HLT_PFHT330PT30_QuadPFJet_75_60_45_40_v9 = cms.Path( process.HLTBeginSequence + process.hltL1sQuadJetC50to60IorHTT280to500IorHTT250to340QuadJet + process.hltPrePFHT330PT30QuadPFJet75604540 + process.HLTAK4CaloJetsSequence + process.hltQuadCentralJet30 + process.hltCaloJetsQuad30ForHt + process.hltHtMhtCaloJetsQuadC30 + process.hltCaloQuadJet30HT320 + process.HLTAK4PFJetsSequence + process.hltPFCentralJetLooseIDQuad30 + process.hlt1PFCentralJetLooseID75 + process.hlt2PFCentralJetLooseID60 + process.hlt3PFCentralJetLooseID45 + process.hlt4PFCentralJetLooseID40 + process.hltPFCentralJetLooseIDQuad30forHt + process.hltHtMhtPFCentralJetsLooseIDQuadC30 + process.hltPFCentralJetsLooseIDQuad30HT330 + process.HLTEndSequence )
 process.HLTriggerFinalPath = cms.Path( process.hltGtStage2Digis + process.hltScalersRawToDigi + process.hltFEDSelector + process.hltTriggerSummaryAOD + process.hltTriggerSummaryRAW + process.hltBoolFalse )
 
 
-process.HLTSchedule = cms.Schedule( *(process.HLTriggerFirstPath, process.HLT_PFHT330PT30_QuadPFJet_75_60_45_40_TriplePFBTagDeepCSV_4p5_v3, process.HLT_PFHT330PT30_QuadPFJet_75_60_45_40_v9, process.HLTriggerFinalPath, process.HLTAnalyzerEndpath ))
+process.HLTSchedule = cms.Schedule( *(process.HLTriggerFirstPath, process.HLT_PFHT330PT30_QuadPFJet_75_60_45_40_TriplePFBTagDeepCSV_4p5_v3, process.HLT_PFHT330PT30_QuadPFJet_75_60_45_40_v9, process.HLTriggerFinalPath, process.HLTAnalyzerEndpath, process.SaveCaloObj, process.SavePFObj ))
 
 
 process.source = cms.Source( "PoolSource",
@@ -13224,7 +13242,7 @@ _customInfo['inputFiles'][True]  = "file:RelVal_Raw_GRun_DATA.root"
 _customInfo['inputFiles'][False] = "file:RelVal_Raw_GRun_MC.root"
 _customInfo['maxEvents' ] = -1
 _customInfo['globalTag' ]= "101X_dataRun2_HLT_v7"
-_customInfo['inputFile' ]=  QueryFilesFromRuns(run=[323725])
+_customInfo['inputFile' ]=  QueryFilesFromRuns(run=[323976], lumi=[50])
 _customInfo['realData'  ]=  True
 from HLTrigger.Configuration.customizeHLTforALL import customizeHLTforAll
 process = customizeHLTforAll(process,"GRun",_customInfo)

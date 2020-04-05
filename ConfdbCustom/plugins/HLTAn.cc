@@ -165,7 +165,7 @@ void HLTAn::beginRun(edm::Run const& iRun, edm::EventSetup const& iSetup){
             cout << "== Here are all the triggers in this run" << endl;
         }
         for(size_t j = 0; j < hltConfig_.triggerNames().size(); j++)
-        {
+        {   
             string pathName = hltConfig_.triggerNames()[j];
             if (verbose_) cout << j << " .... : " << pathName << endl;
 

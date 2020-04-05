@@ -32,7 +32,13 @@ def QueryFilesFromRuns(run=None, lumi=None):
 
     datasets = []
     for i in range(1,9):
+        if i == 5 or i == 1:
+            continue
         datasets.append('/EphemeralHLTPhysics{}/Run2018D-v1/RAW'.format(i))
+
+    #REMOVE ONLY FOR THE MOMENT THE DTATASET 5 THAT IS 
+    #INACCESSIBLE
+
 
     tot_file_list = []
 
