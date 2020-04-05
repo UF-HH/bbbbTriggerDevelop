@@ -1,4 +1,4 @@
-#include "../interface/JetSaver.h"
+#include "../interface/JetBSaver.h"
 #include "TTree.h"
 #include "FWCore/Framework/interface/ESHandle.h"
 #include "FWCore/Framework/interface/EventSetup.h"
@@ -21,22 +21,23 @@
 
 
 template <typename T>
-JetSaver<T>::JetSaver(const edm::ParameterSet& iConfig): 
-    JetsTag_(iConfig.getParameter<edm::InputTag>("Jets")),
-    JetsToken_(consumes<std::vector<T>>(JetsTag_)),
+JetBSaver<T>::JetBSaver(const edm::ParameterSet& iConfig): 
+    JetsBTag_(iConfig.getParameter<edm::InputTag>("JetTags")),
+    JetsBToken_(consumes<reco::JetTagCollection>(JetsBTag_)),
     verbose_(iConfig.getParameter<bool>("verbose")),
     t(iConfig.getParameter<std::string>("tree")),
     branchName(iConfig.getParameter<std::string>("branch"))
 {   
-    if(verbose_) std::cout << "Initializing with: " << JetsTag_.encode() << std::endl;
+    if(verbose_) std::cout << "Initializing with: " << JetsBTag_.encode() << std::endl;
 };
 
 template <typename T>
-void JetSaver<T>::beginJob()
+void JetBSaver<T>::beginJob()
 {   
     edm::Service<TFileService> fs;
     tree_ = fs -> make<TTree>(t.c_str(), t.c_str());
 
+    tree_->Branch((branchName+"_btag").c_str(), &btag_);
     tree_->Branch((branchName+"_pt").c_str(), &pt_);
     tree_->Branch((branchName+"_et").c_str(), &et_);
     tree_->Branch((branchName+"_eta").c_str(), &eta_);
@@ -48,7 +49,9 @@ void JetSaver<T>::beginJob()
 }
 
 template <typename T>
-void JetSaver<T>::clear(){
+void JetBSaver<T>::clear(){
+
+    btag_->clear();
     pt_->clear();
     et_->clear();
     eta_->clear();
@@ -60,29 +63,28 @@ void JetSaver<T>::clear(){
 }
 
 template <typename T>
-void JetSaver<T>::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
+void JetBSaver<T>::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
 {   
     using namespace edm;
     using namespace reco;
 
-    typedef std::vector<T> TCollection;
-    edm::Handle<TCollection> jets;
-    iEvent.getByToken(JetsToken_, jets);
-    
-
     clear();
-    
-    typename TCollection::const_iterator i(jets->begin());
 
-    for (; i != jets->end(); i++) {
-        pt_->push_back(i->pt());
-        et_->push_back(i->et());
-        eta_->push_back(i->eta());
-        phi_->push_back(i->phi());
-        e_->push_back(i->energy());
-        mass_->push_back(i->mass());
+    
+    edm::Handle<JetTagCollection> h_JetTags;
+    iEvent.getByToken(JetsBToken_, h_JetTags);
+
+    for (auto const& jet : *h_JetTags) {
+        btag_->push_back(jet.second);
+        pt_->push_back(jet.first->pt());
+        et_->push_back(jet.first->et());
+        eta_->push_back(jet.first->eta());
+        phi_->push_back(jet.first->phi());
+        e_->push_back(jet.first->energy());
+        mass_->push_back(jet.first->mass());
 
     }
+    
 
     tree_->Fill();
 
@@ -91,17 +93,17 @@ void JetSaver<T>::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetu
 //------------------Starting Event-----------------------------------------
 
 template <typename T>
-void JetSaver<T>::beginRun(edm::Run const& iRun, edm::EventSetup const& iEvent)
+void JetBSaver<T>::beginRun(edm::Run const& iRun, edm::EventSetup const& iEvent)
 {
 
 };
 
 template <typename T>
-void JetSaver<T>::endJob(){
+void JetBSaver<T>::endJob(){
 
 };
 
 template <typename T>
-void JetSaver<T>::endRun(edm::Run const& iRun, edm::EventSetup const& iEvent){
+void JetBSaver<T>::endRun(edm::Run const& iRun, edm::EventSetup const& iEvent){
 
 };

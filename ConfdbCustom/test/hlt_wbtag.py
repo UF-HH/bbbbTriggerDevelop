@@ -13067,11 +13067,25 @@ process.SaveCaloJets = cms.EDAnalyzer("CaloSaver",
     branch = cms.string("CaloJets")
 )
 
+process.SaveCaloBJets = cms.EDAnalyzer("CaloBSaver",
+    JetTags = cms.InputTag('hltDeepCombinedSecondaryVertexBJetTagsCalo','probb'),
+    verbose = cms.bool(True),
+    tree = cms.string("trgObjTree"),
+    branch = cms.string("CaloBJets")
+)
+
 process.SavePFJets = cms.EDAnalyzer("PFSaver",
     Jets = cms.InputTag("hltAK4PFJetsLooseIDCorrected"),
     verbose = cms.bool(True),
     tree = cms.string("Jets"),
     branch = cms.string("PFJets")
+)
+
+process.SavePFBJets = cms.EDAnalyzer("PFBSaver",
+    JetTags = cms.InputTag('hltDeepCombinedSecondaryVertexBJetTagsPF','probb'),
+    verbose = cms.bool(True),
+    tree = cms.string("Jets"),
+    branch = cms.string("PFBJets")
 )
 
 process.HLTL1UnpackerSequence = cms.Sequence( process.hltGtStage2Digis + process.hltGtStage2ObjectMap )
@@ -13083,7 +13097,7 @@ process.HLTDoCaloSequence = cms.Sequence( process.HLTDoFullUnpackingEgammaEcalWi
 process.HLTAK4CaloJetsReconstructionSequence = cms.Sequence( process.HLTDoCaloSequence + process.hltAK4CaloJets + process.hltAK4CaloJetsIDPassed )
 process.HLTAK4CaloCorrectorProducersSequence = cms.Sequence( process.hltAK4CaloFastJetCorrector + process.hltAK4CaloRelativeCorrector + process.hltAK4CaloAbsoluteCorrector + process.hltAK4CaloResidualCorrector + process.hltAK4CaloCorrector )
 process.HLTAK4CaloJetsCorrectionSequence = cms.Sequence( process.hltFixedGridRhoFastjetAllCalo + process.HLTAK4CaloCorrectorProducersSequence + process.hltAK4CaloJetsCorrected + process.hltAK4CaloJetsCorrectedIDPassed )
-process.HLTAK4CaloJetsSequence = cms.Sequence( process.HLTAK4CaloJetsReconstructionSequence + process.HLTAK4CaloJetsCorrectionSequence )
+process.HLTAK4CaloJetsSequence = cms.Sequence( process.HLTAK4CaloJetsReconstructionSequence + process.HLTAK4CaloJetsCorrectionSequence + process.SaveCaloJets)
 process.HLTDoLocalPixelSequenceRegForBTag = cms.Sequence( process.hltSelectorJets20L1FastJet + process.hltSelectorCentralJets20L1FastJeta + process.hltSiPixelDigisRegForBTag + process.hltSiPixelClustersRegForBTag + process.hltSiPixelClustersRegForBTagCache + process.hltSiPixelRecHitsRegForBTag + process.hltPixelLayerQuadrupletsRegForBTag )
 process.HLTFastRecopixelvertexingSequence = cms.Sequence( process.hltSelector4CentralJetsL1FastJet + process.hltFastPrimaryVertex + process.hltFastPVPixelVertexFilter + process.hltFastPVPixelTracksFilter + process.hltFastPVPixelTracksFitter + process.hltFastPVPixelTracksTrackingRegions + process.hltFastPVPixelTracksHitDoublets + process.hltFastPVPixelTracksHitQuadruplets + process.hltFastPVPixelTracks + process.hltFastPVJetTracksAssociator + process.hltFastPVJetVertexChecker + process.hltFastPVPixelTracksRecoverFilter + process.hltFastPVPixelTracksRecoverFitter + process.hltFastPVPixelTracksTrackingRegionsRecover + process.hltFastPVPixelTracksHitDoubletsRecover + process.hltFastPVPixelTracksHitQuadrupletsRecover + process.hltFastPVPixelTracksRecover + process.hltFastPVPixelTracksMerger + process.hltFastPVPixelVertices + process.hltFastPVPixelVerticesFilter )
 process.HLTDoLocalStripSequenceRegForBTag = cms.Sequence( process.hltSiStripExcludedFEDListProducer + process.hltSiStripRawToClustersFacility + process.hltSiStripClustersRegForBTag )
@@ -13093,7 +13107,7 @@ process.HLTIterativeTrackingIteration2ForBTag = cms.Sequence( process.hltIter2Cl
 process.HLTIterativeTrackingDoubletRecoveryForBTag = cms.Sequence( process.hltDoubletRecoveryClustersRefRemovalForBTag + process.hltDoubletRecoveryMaskedMeasurementTrackerEventForBTag + process.hltDoubletRecoveryPixelLayersAndRegionsForBTag + process.hltDoubletRecoveryPFlowPixelClusterCheckForBTag + process.hltDoubletRecoveryPFlowPixelHitDoubletsForBTag + process.hltDoubletRecoveryPFlowPixelSeedsForBTag + process.hltDoubletRecoveryPFlowCkfTrackCandidatesForBTag + process.hltDoubletRecoveryPFlowCtfWithMaterialTracksForBTag + process.hltDoubletRecoveryPFlowTrackCutClassifierForBTag + process.hltDoubletRecoveryPFlowTrackSelectionHighPurityForBTag )
 process.HLTIterativeTrackingIter02ForBTag = cms.Sequence( process.HLTIterativeTrackingIteration0ForBTag + process.HLTIterativeTrackingIteration1ForBTag + process.hltIter1MergedForBTag + process.HLTIterativeTrackingIteration2ForBTag + process.hltIter2MergedForBTag + process.HLTIterativeTrackingDoubletRecoveryForBTag + process.hltMergedTracksForBTag )
 process.HLTTrackReconstructionForBTag = cms.Sequence( process.HLTDoLocalPixelSequenceRegForBTag + process.HLTFastRecopixelvertexingSequence + process.HLTDoLocalStripSequenceRegForBTag + process.HLTIterativeTrackingIter02ForBTag )
-process.HLTBtagDeepCSVSequenceL3 = cms.Sequence( process.hltSelectorJets30L1FastJet + process.hltSelectorCentralJets30L1FastJeta + process.hltSelector8CentralJetsL1FastJet + process.HLTTrackReconstructionForBTag + process.hltVerticesL3 + process.hltFastPixelBLifetimeL3Associator + process.hltImpactParameterTagInfos + process.hltInclusiveVertexFinder + process.hltInclusiveSecondaryVertices + process.hltTrackVertexArbitrator + process.hltInclusiveMergedVertices + process.hltInclusiveSecondaryVertexFinderTagInfos + process.hltDeepCombinedSecondaryVertexBJetTagsInfosCalo + process.hltDeepCombinedSecondaryVertexBJetTagsCalo )
+process.HLTBtagDeepCSVSequenceL3 = cms.Sequence( process.hltSelectorJets30L1FastJet + process.hltSelectorCentralJets30L1FastJeta + process.hltSelector8CentralJetsL1FastJet + process.HLTTrackReconstructionForBTag + process.hltVerticesL3 + process.hltFastPixelBLifetimeL3Associator + process.hltImpactParameterTagInfos + process.hltInclusiveVertexFinder + process.hltInclusiveSecondaryVertices + process.hltTrackVertexArbitrator + process.hltInclusiveMergedVertices + process.hltInclusiveSecondaryVertexFinderTagInfos + process.hltDeepCombinedSecondaryVertexBJetTagsInfosCalo + process.hltDeepCombinedSecondaryVertexBJetTagsCalo + process.SaveCaloBJets )
 process.HLTDoCaloSequencePF = cms.Sequence( process.HLTDoFullUnpackingEgammaEcalWithoutPreshowerSequence + process.HLTDoLocalHcalSequence + process.hltTowerMakerForAll )
 process.HLTAK4CaloJetsPrePFRecoSequence = cms.Sequence( process.HLTDoCaloSequencePF + process.hltAK4CaloJetsPF )
 process.HLTPreAK4PFJetsRecoSequence = cms.Sequence( process.HLTAK4CaloJetsPrePFRecoSequence + process.hltAK4CaloJetsPFEt5 )
@@ -13135,14 +13149,13 @@ process.HLTParticleFlowSequence = cms.Sequence( process.HLTPreshowerSequence + p
 process.HLTAK4PFJetsReconstructionSequence = cms.Sequence( process.HLTL2muonrecoSequence + process.HLTL3muonrecoSequence + process.HLTTrackReconstructionForPF + process.HLTParticleFlowSequence + process.hltAK4PFJets + process.hltAK4PFJetsLooseID + process.hltAK4PFJetsTightID )
 process.HLTAK4PFCorrectorProducersSequence = cms.Sequence( process.hltAK4PFFastJetCorrector + process.hltAK4PFRelativeCorrector + process.hltAK4PFAbsoluteCorrector + process.hltAK4PFResidualCorrector + process.hltAK4PFCorrector )
 process.HLTAK4PFJetsCorrectionSequence = cms.Sequence( process.hltFixedGridRhoFastjetAll + process.HLTAK4PFCorrectorProducersSequence + process.hltAK4PFJetsCorrected + process.hltAK4PFJetsLooseIDCorrected + process.hltAK4PFJetsTightIDCorrected )
-process.HLTAK4PFJetsSequence = cms.Sequence( process.HLTPreAK4PFJetsRecoSequence + process.HLTAK4PFJetsReconstructionSequence + process.HLTAK4PFJetsCorrectionSequence )
-process.HLTBtagDeepCSVSequencePF = cms.Sequence( process.hltVerticesPF + process.hltVerticesPFSelector + process.hltVerticesPFFilter + process.hltPFJetForBtagSelector + process.hltPFJetForBtag + process.hltDeepBLifetimeTagInfosPF + process.hltDeepInclusiveVertexFinderPF + process.hltDeepInclusiveSecondaryVerticesPF + process.hltDeepTrackVertexArbitratorPF + process.hltDeepInclusiveMergedVerticesPF + process.hltDeepSecondaryVertexTagInfosPF + process.hltDeepCombinedSecondaryVertexBJetTagsInfos + process.hltDeepCombinedSecondaryVertexBJetTagsPF )
+process.HLTAK4PFJetsSequence = cms.Sequence( process.HLTPreAK4PFJetsRecoSequence + process.HLTAK4PFJetsReconstructionSequence + process.HLTAK4PFJetsCorrectionSequence  + process.SavePFJets )
+process.HLTBtagDeepCSVSequencePF = cms.Sequence( process.hltVerticesPF + process.hltVerticesPFSelector + process.hltVerticesPFFilter + process.hltPFJetForBtagSelector + process.hltPFJetForBtag + process.hltDeepBLifetimeTagInfosPF + process.hltDeepInclusiveVertexFinderPF + process.hltDeepInclusiveSecondaryVerticesPF + process.hltDeepTrackVertexArbitratorPF + process.hltDeepInclusiveMergedVerticesPF + process.hltDeepSecondaryVertexTagInfosPF + process.hltDeepCombinedSecondaryVertexBJetTagsInfos + process.hltDeepCombinedSecondaryVertexBJetTagsPF + process.SavePFBJets )
 process.HLTEndSequence = cms.Sequence( process.hltBoolEnd )
 process.HLTAnalyzerEndpath = cms.EndPath( process.hltGtStage2Digis + process.hltPreHLTAnalyzerEndpath + process.hltL1TGlobalSummary + process.hltTrigReport + process.MyHLTAnalyzer )
 
 #SAVING OBJECTS OF INTEREST
-process.SaveCaloObj = cms.Path(process.HLTAK4CaloJetsSequence + process.SaveCaloJets)
-process.SavePFObj = cms.Path(process.HLTAK4PFJetsSequence + process.SavePFJets)
+#process.SaveJets = cms.Path(process.HLTAK4CaloJetsSequence + process.SaveCaloJets + process.HLTAK4PFJetsSequence + process.SavePFJets)
 
 process.HLTriggerFirstPath = cms.Path( process.hltGetConditions + process.hltGetRaw + process.hltBoolFalse )
 process.HLT_PFHT330PT30_QuadPFJet_75_60_45_40_TriplePFBTagDeepCSV_4p5_v3 = cms.Path( process.HLTBeginSequence + process.hltL1sQuadJetC50to60IorHTT280to500IorHTT250to340QuadJet + process.hltPrePFHT330PT30QuadPFJet75604540TriplePFBTagDeepCSV4p5 + process.HLTAK4CaloJetsSequence + process.hltQuadCentralJet30 + process.hltCaloJetsQuad30ForHt + process.hltHtMhtCaloJetsQuadC30 + process.hltCaloQuadJet30HT320 + process.HLTBtagDeepCSVSequenceL3 + process.hltBTagCaloDeepCSVp17Double + process.HLTAK4PFJetsSequence + process.hltPFCentralJetLooseIDQuad30 + process.hlt1PFCentralJetLooseID75 + process.hlt2PFCentralJetLooseID60 + process.hlt3PFCentralJetLooseID45 + process.hlt4PFCentralJetLooseID40 + process.hltPFCentralJetLooseIDQuad30forHt + process.hltHtMhtPFCentralJetsLooseIDQuadC30 + process.hltPFCentralJetsLooseIDQuad30HT330 + process.HLTBtagDeepCSVSequencePF + process.hltBTagPFDeepCSV4p5Triple + process.HLTEndSequence )
@@ -13150,7 +13163,7 @@ process.HLT_PFHT330PT30_QuadPFJet_75_60_45_40_v9 = cms.Path( process.HLTBeginSeq
 process.HLTriggerFinalPath = cms.Path( process.hltGtStage2Digis + process.hltScalersRawToDigi + process.hltFEDSelector + process.hltTriggerSummaryAOD + process.hltTriggerSummaryRAW + process.hltBoolFalse )
 
 
-process.HLTSchedule = cms.Schedule( *(process.HLTriggerFirstPath, process.HLT_PFHT330PT30_QuadPFJet_75_60_45_40_TriplePFBTagDeepCSV_4p5_v3, process.HLT_PFHT330PT30_QuadPFJet_75_60_45_40_v9, process.HLTriggerFinalPath, process.HLTAnalyzerEndpath, process.SaveCaloObj, process.SavePFObj ))
+process.HLTSchedule = cms.Schedule( *(process.HLTriggerFirstPath, process.HLT_PFHT330PT30_QuadPFJet_75_60_45_40_TriplePFBTagDeepCSV_4p5_v3, process.HLT_PFHT330PT30_QuadPFJet_75_60_45_40_v9, process.HLTriggerFinalPath, process.HLTAnalyzerEndpath ))
 
 
 process.source = cms.Source( "PoolSource",

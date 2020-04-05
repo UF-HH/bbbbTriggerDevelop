@@ -1,5 +1,5 @@
-#ifndef JET_SAVER_H
-#define JET_SAVER_H
+#ifndef JET_B_SAVER_H
+#define JET_B_SAVER_H
 
 
 #include <vector>
@@ -24,14 +24,15 @@
 #include "DataFormats/JetReco/interface/PFJet.h"
 #include "DataFormats/JetReco/interface/PFJetCollection.h"
 #include "DataFormats/HLTReco/interface/TriggerTypeDefs.h"
+#include "DataFormats/BTauReco/interface/JetTag.h"
 
 
 template <typename T>
 
-class JetSaver : public edm::EDAnalyzer {
+class JetBSaver : public edm::EDAnalyzer {
     public:
-        explicit JetSaver(const edm::ParameterSet& iConfig);
-        virtual ~JetSaver(){};
+        explicit JetBSaver(const edm::ParameterSet& iConfig);
+        virtual ~JetBSaver(){};
 
     private:
         //----edm control---
@@ -43,8 +44,9 @@ class JetSaver : public edm::EDAnalyzer {
         virtual void clear();
 
         //Important objects:
-        const edm::InputTag JetsTag_; 
-        const edm::EDGetTokenT<std::vector<T>> JetsToken_;
+    
+        const edm::InputTag JetsBTag_; 
+        const edm::EDGetTokenT<reco::JetTagCollection> JetsBToken_;
 
 
         //booleans
@@ -56,6 +58,7 @@ class JetSaver : public edm::EDAnalyzer {
         TTree* tree_;
 
         //Kinematics
+        std::vector<double>* btag_ = new std::vector<double>;
         std::vector<double>* pt_ = new std::vector<double>;
         std::vector<double>* et_ = new std::vector<double>;
         std::vector<double>* eta_ = new std::vector<double>;
