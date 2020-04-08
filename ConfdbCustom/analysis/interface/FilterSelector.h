@@ -622,14 +622,29 @@ double hltCaloQuadJet30HT320_ret_HT(std::vector<double> pt, std::vector<double> 
 
    bool CustomFixedBtagSelector(hltObj::Jets jets, hltObj::HLTCuts cuts){
         
-        bool pass = false;
         if(!(check_length<double, double>(jets.pt, jets.eta) || check_length<double, double>(jets.eta, jets.btag))){
             throw std::runtime_error("--->Size does not Coincide<---");
         }
 
-        auto count = std::count_if(jets.btag.begin(), jets.btag.end(),[&](int const& val){ return val > 0.; }); 
-        std::cout << count <<  " " << cuts.MinN << std::endl;
-        return pass || count >= cuts.MinN;
+        bool pass = true;
+        std::vector<double> results;
+        //local copy for lambda, can we actually avoid this?
+        double PtMin = cuts.PtMin;
+        double PtMax = cuts.PtMax;
+
+        auto it = std::find_if(std::begin(jets.pt), std::end(jets.pt), [PtMin, PtMax](double i){return (i >= PtMin && i <= PtMax);});
+        while (it != std::end(jets.pt)) {
+            auto dis = std::distance(std::begin(jets.pt), it);
+            if(jets.eta.at(dis) <= cuts.EtaMax && jets.eta.at(dis) >= cuts.EtaMin && jets.btag.at(dis) >= cuts.BtagMin)
+                results.emplace_back(jets.pt.at(dis));
+            it = std::find_if(std::next(it), std::end(jets.pt), [PtMin, PtMax](double i){return (i >= PtMin && i <= PtMax);});
+        }   
+        if(results.size() < cuts.MinN){
+            return false;
+        }
+        else{
+            return pass;
+        }
 
     };
 

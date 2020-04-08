@@ -30,8 +30,7 @@ class TriggerMaker{
         void SetCuts(std::vector<hltObj::HLTCuts> C){ Cuts = C; };
         void InsertCut(std::string name, std::string Fil_type, std::string req, hltObj::HLTCuts C, int position);
         void PushCut(std::string name, std::string Fil_type, std::string req, hltObj::HLTCuts C);
-        void AddCut(std::string name, hltObj::HLTCuts C){Fil_Names.push_back(name); Cuts.push_back(C);};
-        void AddL1Cut(hltObj::HLTCuts C){L1Cuts.push_back(C);};
+        //void PushL1Cut(hltObj::HLTCuts C){L1Cuts.push_back(C);};
         void SetFilNames(std::vector<std::string> Fn){ Fil_Names = Fn; };
         void SetFilTypes(std::vector<std::string> Ft){ Fil_Types = Ft; };
         void SetL1FilTypes(std::vector<std::string> L1FT){ L1_Fil_Types = L1FT; };

@@ -5,6 +5,8 @@
 #include <vector>
 #include <string>
 #include <iostream>
+#include <boost/bind.hpp>
+
 #include "DataFormats/HLTReco/interface/TriggerTypeDefs.h"
 #include "HLTrigger/HLTcore/interface/HLTFilter.h"
 #include "FWCore/ParameterSet/interface/ConfigurationDescriptions.h"
@@ -27,6 +29,12 @@
 #include "DataFormats/JetReco/interface/PFJetCollection.h"
 #include "DataFormats/HLTReco/interface/TriggerTypeDefs.h"
 #include "DataFormats/BTauReco/interface/JetTag.h"
+#include "DataFormats/L1GlobalTrigger/interface/L1GlobalTriggerReadoutSetupFwd.h"
+#include "CondFormats/L1TObjects/interface/L1GtTriggerMenuFwd.h"
+#include "DataFormats/L1TGlobal/interface/GlobalObjectMapFwd.h"
+#include "DataFormats/L1TGlobal/interface/GlobalObjectMap.h"
+#include "DataFormats/L1TGlobal/interface/GlobalObjectMapRecord.h"
+#include "DataFormats/L1TGlobal/interface/GlobalObject.h"
 
 
 class SaveAllJets : public edm::EDAnalyzer {
@@ -42,12 +50,20 @@ class SaveAllJets : public edm::EDAnalyzer {
         virtual void endJob();
         virtual void endRun(edm::Run const&, edm::EventSetup const&);
         virtual void clear();
+        virtual bool jsonContainsEvent (const edm::Event& iEvent);
 
         //check on lumi
         std::vector<edm::LuminosityBlockRange> lumisTemp ;
 
+        //basic infos on the event
+        unsigned long long int event_;
+        int       run_;
+        int       lumi_;
+
         //Important objects:
-    
+
+        const edm::InputTag L1Tag_;
+        const edm::EDGetTokenT<l1t::JetBxCollection> L1Token_;
         const edm::InputTag PFTag_; 
         const edm::EDGetTokenT<std::vector<reco::PFJet>> PFToken_;
         const edm::InputTag CaloTag_; 
@@ -66,6 +82,13 @@ class SaveAllJets : public edm::EDAnalyzer {
         TTree* tree_;
 
         //Kinematics
+        std::vector<double>* l1_pt_ = new std::vector<double>;
+        std::vector<double>* l1_et_ = new std::vector<double>;
+        std::vector<double>* l1_eta_ = new std::vector<double>;
+        std::vector<double>* l1_phi_ = new std::vector<double>;
+        std::vector<double>* l1_e_ = new std::vector<double>;
+        std::vector<double>* l1_mass_ = new std::vector<double>;
+
         std::vector<double>* calo_btag_ = new std::vector<double>;
         std::vector<double>* calo_pt_ = new std::vector<double>;
         std::vector<double>* calo_et_ = new std::vector<double>;
@@ -87,6 +110,8 @@ class SaveAllJets : public edm::EDAnalyzer {
 using namespace reco;
 
 SaveAllJets::SaveAllJets(const edm::ParameterSet& iConfig): 
+    L1Tag_(iConfig.getParameter<edm::InputTag>("L1JetTag")),
+    L1Token_(consumes<l1t::JetBxCollection>(L1Tag_)),
     PFTag_(iConfig.getParameter<edm::InputTag>("PFJetTag")),
     PFToken_(consumes<std::vector<PFJet>>(PFTag_)),
     CaloTag_(iConfig.getParameter<edm::InputTag>("CaloJetTag")),
@@ -99,6 +124,7 @@ SaveAllJets::SaveAllJets(const edm::ParameterSet& iConfig):
     t(iConfig.getParameter<std::string>("tree"))
 {   
     if(verbose_){
+        std::cout << "Initializing with: " << L1Tag_.encode() << std::endl;
         std::cout << "Initializing with: " << PFTag_.encode() << std::endl;
         std::cout << "Initializing with: " << CaloTag_.encode() << std::endl;
         std::cout << "Initializing with: " << CaloBTag_.encode() << std::endl;
@@ -119,6 +145,13 @@ void SaveAllJets::beginJob()
     edm::Service<TFileService> fs;
     tree_ = fs -> make<TTree>(t.c_str(), t.c_str());
 
+    tree_->Branch("l1_pt", &l1_pt_);
+    tree_->Branch("l1_et", &l1_et_);
+    tree_->Branch("l1_eta", &l1_eta_);
+    tree_->Branch("l1_phi", &l1_phi_);
+    tree_->Branch("l1_e", &l1_e_);
+    tree_->Branch("l1_mass", &l1_mass_);
+
     tree_->Branch("calo_btag", &calo_btag_);
     tree_->Branch("calo_pt", &calo_pt_);
     tree_->Branch("calo_et", &calo_et_);
@@ -135,11 +168,22 @@ void SaveAllJets::beginJob()
     tree_->Branch("pf_e", &pf_e_);
     tree_->Branch("pf_mass", &pf_mass_);
 
+    tree_->Branch("event", &event_);
+    tree_->Branch("run",   &run_);
+    tree_->Branch("lumi",  &lumi_);
+
     return;
 }
 
 
 void SaveAllJets::clear(){
+
+    l1_pt_->clear();
+    l1_et_->clear();
+    l1_eta_->clear();
+    l1_phi_->clear();
+    l1_e_->clear();
+    l1_mass_->clear();
 
     calo_btag_->clear();
     calo_pt_->clear();
@@ -184,14 +228,18 @@ void SaveAllJets::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetu
     using namespace edm;
     using namespace reco;
 
+    event_ = iEvent.id().event();
+    run_   = iEvent.id().run();
+    lumi_  = iEvent.luminosityBlock();
+
     clear();
 
     //If this configuration is not present in the json then the event is skipped
     //Note than if no json is provided this function always returns true
-    if(!jsonContainsEvent(iEvent)){
-        if(verbose_) std::cout << "Skipping Event: " << event_ << " Run: " << run_ << " Lumi: " << lumi_ << std::endl;
-        return;
-    }
+    if(!jsonContainsEvent(iEvent)) return;
+
+    edm::Handle<l1t::JetBxCollection> L1jets;
+    iEvent.getByToken(L1Token_, L1jets);
 
     edm::Handle<std::vector<reco::CaloJet>> Calojets;
     iEvent.getByToken(CaloToken_, Calojets);
@@ -203,7 +251,19 @@ void SaveAllJets::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetu
     edm::Handle<JetTagCollection> PFBjets;
     iEvent.getByToken(PFBToken_, PFBjets);
 
-    //filling in kinematical for calo and pf
+    //filling in kinematical for l1 calo and pf
+    typename l1t::JetBxCollection::const_iterator l1(L1jets->begin());
+
+    for (; l1 != L1jets->end(); l1++) {
+        l1_pt_->push_back(l1->pt());
+        l1_et_->push_back(l1->et());
+        l1_eta_->push_back(l1->eta());
+        l1_phi_->push_back(l1->phi());
+        l1_e_->push_back(l1->energy());
+        l1_mass_->push_back(l1->mass());
+
+    }
+
     typename std::vector<reco::CaloJet>::const_iterator i(Calojets->begin());
 
     for (; i != Calojets->end(); i++) {

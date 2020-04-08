@@ -91,6 +91,8 @@ def QueryFilesFromJson(file, runs=None, lumi=None):
     tot_file_list = []
 
     for i in range(1,9):
+        if i==5:
+            continue
         datasets.append('/EphemeralHLTPhysics{}/Run2018D-v1/RAW'.format(i))
 
     with open(file) as json_file:
@@ -199,7 +201,7 @@ def QueryFilesFromJson(file, runs=None, lumi=None):
                     if(len(lumis) > 0): #if the json selects specific lumis
                         for lumi_range in lumis:
                             for l in lumi:
-                                if l in lumi_range:
+                                if l in range(lumi_range[0], lumi_range[len(lumi_range)-1]):
                                     for dataset in datasets:
                                         parse = 'dasgoclient --query="file dataset={} run in [{}] lumi={}"'.format(dataset, run,l)
                                         files = subprocess.Popen(shlex.split(parse), stdout=subprocess.PIPE)
@@ -231,13 +233,22 @@ def QueryFilesFromJson(file, runs=None, lumi=None):
     return to_ret
 
 
-                
-"""
-l = QueryFilesFromJson('../test/Json/json_2018D_Ephemeral_20181022_PU50.txt', runs=[323725], lumi=[18])
+def QueryFilesMCgg():
 
-for i in l:
-    print(i)
-"""
+    tot_file_list = []
+
+    parse = 'dasgoclient --query="file dataset=/GluGluToHHTo4B_node_SM_TuneCP5_14TeV-madgraph-pythia8/Run3Winter20DRPremixMiniAOD-110X_mcRun3_2021_realistic_v6-v2/GEN-SIM-RAW"'
+    files = subprocess.Popen(shlex.split(parse), stdout=subprocess.PIPE)
+    file_list = files.communicate()[0].split("\n") #dividing single tuple by \n
+    file_list = file_list[:len(file_list)-1] #last element is ''
+
+    for file in file_list:
+        tot_file_list.append(file)
+
+    to_ret = remove_duplicates(tot_file_list)
+    print('...Queried DAS for a total of {} MC files'.format(len(to_ret)))
+    return to_ret
+
 
         
 

@@ -76,7 +76,7 @@ TriggerMaker::TriggerMaker(){
                 "CustomVariablePtEtaHTSelector", "CustomVariablePtEtaHTSelector" };
     L1_Required = {"L1Jets", "L1Jets", "L1Jets", "L1Jets", "L1Jets", "L1Jets", "L1Jets", "L1Jets", "L1Jets", "L1Jets"};
 
-    HLT_Required = { "CaloBJets", "CaloBJets", "PFBJets", "PFBJets", "PFBJets", "PFBJets", "PFBJets", "PFBJets" };
+    HLT_Required = { "CaloJets", "CaloJets", "PFJets", "PFJets", "PFJets", "PFJets", "PFJets", "PFJets" };
 
 };
 
@@ -208,14 +208,14 @@ std::vector<double> TriggerMaker::Sequence(Event ev){
 
     std::vector<double> results; 
 
+    hltObj::Jets ReqObj;
+
     if(!SkipL1Seed){
         if(L1Cuts.size() == 0){
             std::cerr << "Warning, no L1 seed in this trigger" << std::endl;
         }
         results.push_back(computeL1(ev));
     }
-
-    hltObj::Jets ReqObj;
 
     for(int i = 0; i < Fil_Types.size(); i++){
 
@@ -336,5 +336,7 @@ void TriggerMaker::PushCut(std::string name, std::string Fil_type, std::string r
     Cuts.push_back(C); 
     HLT_Required.push_back(req); 
 };
+
+
 
 
