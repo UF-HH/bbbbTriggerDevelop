@@ -12,4 +12,5 @@ git clone https://github.com/UF-HH/bbbbTriggerDevelop.git
 
 # Usage
 
-To be updated  
+ConfdbCustom: Directory containing menu configurations for 2018. Menus are meant to be run on RAW data/MC. \
+bbbbTrg: Directory with analyzers and analysis tools meant to be run on nano/mini AOD.  
