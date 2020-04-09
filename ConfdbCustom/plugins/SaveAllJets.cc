@@ -236,7 +236,10 @@ void SaveAllJets::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetu
 
     //If this configuration is not present in the json then the event is skipped
     //Note than if no json is provided this function always returns true
-    if(!jsonContainsEvent(iEvent)) return;
+    if(!jsonContainsEvent(iEvent)){
+        std::cout << "Removing Event, not found in Json" << std::endl;
+        return;
+    } 
 
     edm::Handle<l1t::JetBxCollection> L1jets;
     iEvent.getByToken(L1Token_, L1jets);

@@ -1,5 +1,6 @@
 # THIS ONLY WORKS IN PYTHON 3, JSON IN PYTHON2 ARE NON-ORDERED MAPS
 #python3 FromJSON.py -f ../TriggerCnfg/ThVar2018NoBtag.txt -o TriggerConfig.txt -cpp ComputeEfficiencyFromJSON.cpp -n 1000
+#to import root source in python3 /cvmfs/sft.cern.ch/lcg/views/LCG_92python3/x86_64-slc6-gcc62-opt/setup.sh
 
 import json
 import sys
@@ -7,6 +8,9 @@ import os
 import subprocess
 from tqdm import tqdm
 import argparse
+import matplotlib
+matplotlib.use('Agg')
+import matplotlib.pyplot as plt
 
 
 parser = argparse.ArgumentParser()
@@ -19,6 +23,7 @@ parser.add_argument('-n', '--nevents', type=int, required=False, help="Number of
 args = parser.parse_args()
 
 print("[INFO] Creating map")
+
 
 with open(args.jsonfile) as json_file:
     data= json.load(json_file)
@@ -33,13 +38,11 @@ for i in data: #trigger names
         cuts.append(j)
         names.append("Filter")
         for el in data[i][j]: #cut names
-            print(el)
             cuts.append(data[i][j][el])#else they are string such as names
             names.append(el)
         list_cuts.append(cuts)
         list_names.append(names)
-    
-    
+        
     unPacking_lists = []
     for index,line in enumerate(list_cuts):
         if any(isinstance(x, list) for x in line):
@@ -92,7 +95,6 @@ for i in data: #trigger names
         
 builder.close()
 
-"""
 if(args.cppscript):
     print("[INFO] Compiling")
     os.system("c++ -o exec {} ../src/Event.cc ../src/TriggerMaker.cc `root-config --cflags --glibs`".format(args.cppscript))
@@ -117,4 +119,6 @@ if(args.cppscript):
 
     os.system("rm Build_.txt")  
     os.system("rm exec")  
-"""
+
+
+

@@ -10,7 +10,7 @@ import FWCore.ParameterSet.VarParsing as VarParsing
 op = VarParsing.VarParsing ('analysis')
 
 op.register ('json',
-                  'Json/json_2018D_Ephemeral_20181022.txt', # default value
+                  'Json/json_2018D_Ephemeral_20181022_PU50.txt', # default value
                   VarParsing.VarParsing.multiplicity.singleton, # singleton or list
                   VarParsing.VarParsing.varType.string,            # string, int, or float
                   "Golden Json")
@@ -27,6 +27,7 @@ op.register ('out',
 
 op.parseArguments()
 
+out = op.out
 inputnev = op.nev
 json_file = op.json
 
@@ -13053,7 +13054,7 @@ from bbbbTrg_nob.ConfdbCustom.customize_trg_config import *
 customize_trg_config_2018(process)
 
 process.TFileService = cms.Service('TFileService',
-    fileName = cms.string("323775.root")
+    fileName = cms.string("325022_64_PU50.root")
 )
 
 process.SaveAllJets = cms.EDAnalyzer("SaveAllJets",
@@ -13069,6 +13070,16 @@ process.SaveAllJets.inputs = cms.PSet (
     lumisToProcess = CfgTypes.untracked(CfgTypes.VLuminosityBlockRange())
 )
 process.SaveAllJets.inputs.lumisToProcess.extend(myList)
+
+process.SaveL1Jets = cms.EDAnalyzer("SaveL1Jets",
+    L1JetTag = cms.InputTag( 'hltGtStage2Digis','Jet' ),
+    verbose = cms.bool(True),
+    tree = cms.string("L1jets")
+)
+process.SaveL1Jets.inputs = cms.PSet (
+    lumisToProcess = CfgTypes.untracked(CfgTypes.VLuminosityBlockRange())
+)
+process.SaveL1Jets.inputs.lumisToProcess.extend(myList)
 
 #-------PATH OF 2018 MENU--------------------
 
@@ -13140,7 +13151,7 @@ process.HLTAnalyzerEndpath = cms.EndPath( process.hltGtStage2Digis + process.hlt
 
 #SAVING OBJECTS OF INTEREST
 process.SaveJets = cms.Path(process.HLTBeginSequence + process.hltL1sQuadJetC50to60IorHTT280to500IorHTT250to340QuadJet +process.hltPrePFHT330PT30QuadPFJet75604540TriplePFBTagDeepCSV4p5 + process.HLTAK4CaloJetsSequence + process.HLTBtagDeepCSVSequenceL3 + process.HLTAK4PFJetsSequence + process.HLTBtagDeepCSVSequencePF + process.SaveAllJets + process.HLTEndSequence)
-
+#process.SaveL1 = cms.Path(process.HLTBeginSequence + process.SaveL1Jets +  process.HLTEndSequence)
 process.HLTriggerFirstPath = cms.Path( process.hltGetConditions + process.hltGetRaw + process.hltBoolFalse )
 process.HLT_PFHT330PT30_QuadPFJet_75_60_45_40_TriplePFBTagDeepCSV_4p5_v3 = cms.Path( process.HLTBeginSequence + process.hltL1sQuadJetC50to60IorHTT280to500IorHTT250to340QuadJet + process.hltPrePFHT330PT30QuadPFJet75604540TriplePFBTagDeepCSV4p5 + process.HLTAK4CaloJetsSequence + process.hltQuadCentralJet30 + process.hltCaloJetsQuad30ForHt + process.hltHtMhtCaloJetsQuadC30 + process.hltCaloQuadJet30HT320 + process.HLTBtagDeepCSVSequenceL3 + process.hltBTagCaloDeepCSVp17Double + process.HLTAK4PFJetsSequence + process.hltPFCentralJetLooseIDQuad30 + process.hlt1PFCentralJetLooseID75 + process.hlt2PFCentralJetLooseID60 + process.hlt3PFCentralJetLooseID45 + process.hlt4PFCentralJetLooseID40 + process.hltPFCentralJetLooseIDQuad30forHt + process.hltHtMhtPFCentralJetsLooseIDQuadC30 + process.hltPFCentralJetsLooseIDQuad30HT330 + process.HLTBtagDeepCSVSequencePF + process.hltBTagPFDeepCSV4p5Triple + process.HLTEndSequence )
 process.HLT_PFHT330PT30_QuadPFJet_75_60_45_40_v9 = cms.Path( process.HLTBeginSequence + process.hltL1sQuadJetC50to60IorHTT280to500IorHTT250to340QuadJet + process.hltPrePFHT330PT30QuadPFJet75604540 + process.HLTAK4CaloJetsSequence + process.hltQuadCentralJet30 + process.hltCaloJetsQuad30ForHt + process.hltHtMhtCaloJetsQuadC30 + process.hltCaloQuadJet30HT320 + process.HLTAK4PFJetsSequence + process.hltPFCentralJetLooseIDQuad30 + process.hlt1PFCentralJetLooseID75 + process.hlt2PFCentralJetLooseID60 + process.hlt3PFCentralJetLooseID45 + process.hlt4PFCentralJetLooseID40 + process.hltPFCentralJetLooseIDQuad30forHt + process.hltHtMhtPFCentralJetsLooseIDQuadC30 + process.hltPFCentralJetsLooseIDQuad30HT330 + process.HLTEndSequence )
@@ -13149,7 +13160,7 @@ process.HLTriggerFinalPath = cms.Path( process.hltGtStage2Digis + process.hltSca
 
 #process.HLTSchedule = cms.Schedule( *(process.HLTriggerFirstPath, process.HLT_PFHT330PT30_QuadPFJet_75_60_45_40_TriplePFBTagDeepCSV_4p5_v3, process.HLT_PFHT330PT30_QuadPFJet_75_60_45_40_v9, process.HLTriggerFinalPath, process.HLTAnalyzerEndpath ))
 #process.HLTSchedule = cms.Schedule( *(process.SaveJets, process.HLTriggerFirstPath, process.HLT_PFHT330PT30_QuadPFJet_75_60_45_40_TriplePFBTagDeepCSV_4p5_v3, process.HLT_PFHT330PT30_QuadPFJet_75_60_45_40_v9, process.HLTriggerFinalPath, process.HLTAnalyzerEndpath ))
-process.HLTSchedule = cms.Schedule(*(process.SaveJets, process.HLTriggerFinalPath))
+process.HLTSchedule = cms.Schedule(process.SaveJets)
 
 process.source = cms.Source( "PoolSource",
     fileNames = cms.untracked.vstring(),
@@ -13239,8 +13250,8 @@ _customInfo['inputFiles'][True]  = "file:RelVal_Raw_GRun_DATA.root"
 _customInfo['inputFiles'][False] = "file:RelVal_Raw_GRun_MC.root"
 _customInfo['maxEvents' ] = -1
 _customInfo['globalTag' ]= "101X_dataRun2_HLT_v7"
-#_customInfo['inputFile' ]=  QueryFilesFromRuns(run=[323727], lumi=[3])
-_customInfo['inputFile' ]=  QueryFilesFromJson(JSONfile, runs=[323775])
+_customInfo['inputFile' ]=  QueryFilesFromRuns(run=[325022], lumi=[64])
+#_customInfo['inputFile' ]=  QueryFilesFromJson(JSONfile, runs=[323725])
 _customInfo['realData'  ]=  True
 from HLTrigger.Configuration.customizeHLTforALL import customizeHLTforAll
 process = customizeHLTforAll(process,"GRun",_customInfo)

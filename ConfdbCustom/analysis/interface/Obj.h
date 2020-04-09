@@ -175,7 +175,7 @@ namespace hltObj{
                 MappedSetCuts.insert(std::make_pair("setHTMin", &HLTCuts::setHTMin));
                 MappedSetCuts.insert(std::make_pair("setMHTMin", &HLTCuts::setMHTMin));
                 MappedSetCuts.insert(std::make_pair("setMinN", &HLTCuts::setMinN));
-                MappedSetCuts.insert(std::make_pair("setBtagMin", &HLTCuts::setBTagMin));
+                MappedSetCuts.insert(std::make_pair("setBTagMin", &HLTCuts::setBTagMin));
                 MappedSetCuts.insert(std::make_pair("setEtMin", &HLTCuts::setEtMin));
             }
             void setPtMin(double p){PtMin = p; };

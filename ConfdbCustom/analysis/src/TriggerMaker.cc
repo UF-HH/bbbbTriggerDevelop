@@ -258,16 +258,26 @@ std::vector<double> TriggerMaker::Sequence(Event ev){
 };
 
 void TriggerMaker::ModifyCut(std::string FilName, std::string Action, double value){
-    std::cout << FilName << " " << Action << std::endl;
+    
     int index = std::distance(Fil_Names.begin(), std::find(Fil_Names.begin(), Fil_Names.end(), FilName));
-
     //index-1 because first name is always the l1 name...implementing a L1 search?
 
     for(auto p : Cuts.at(index-1).MappedSetCuts){
         if(p.first == Action){
-            (Cuts.at(index-1).*p.second)(value);
+            std::cout << "Before" << std::endl;
             std::cout << Cuts.at(index-1).PtMin << std::endl;
+            std::cout << Cuts.at(index-1).EtaMin << std::endl;
+            std::cout << Cuts.at(index-1).EtaMax << std::endl;
+            std::cout << Cuts.at(index-1).BtagMin << std::endl;
+            (Cuts.at(index-1).*p.second)(value);
+            std::cout << "After" << std::endl;
+            std::cout << Cuts.at(index-1).PtMin << std::endl;
+            std::cout << Cuts.at(index-1).EtaMin << std::endl;
+            std::cout << Cuts.at(index-1).EtaMax << std::endl;
+            std::cout << Cuts.at(index-1).BtagMin << std::endl;
+            //std::cout << Cuts.at(index-1).PtMin << std::endl;
         }
+        
     }
 };
 
@@ -324,7 +334,8 @@ void TriggerMaker::CutFromJson(std::string config){
 
 void TriggerMaker::InsertCut(std::string name, std::string Fil_type, std::string req, hltObj::HLTCuts C, int position){
     
-    Fil_Names.insert(Fil_Names.begin() + position, name); 
+    //FilNames has also the L1 name!!
+    Fil_Names.insert(Fil_Names.begin() + position+1, name); 
     Fil_Types.insert(Fil_Types.begin() + position, Fil_type); 
     Cuts.insert(Cuts.begin() + position, C); 
     HLT_Required.insert(HLT_Required.begin() + position, req); 

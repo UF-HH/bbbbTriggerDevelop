@@ -1,0 +1,12 @@
+{
+   "HLT_PFHT330PT30_QuadPFJet_75_60_45_40_v9":{
+      "hltPFCentralJetLooseIDQuad30":{
+         "type":"CustomFixedPtEtaSelector",
+         "setPtMin":30,
+         "setPtMax":"1.0E99",
+         "setEtaMin":"-2.5",
+         "setEtaMax":"2.5",
+         "setMinN":4
+      }
+   }
+}

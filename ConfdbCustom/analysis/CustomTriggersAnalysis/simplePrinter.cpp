@@ -12,8 +12,27 @@
 int main(){
 
 
-    TFile* f = new TFile("../../test/323725_18_168.root");
+    //TFile* f = new TFile("../../test/datasets/323725_37_57_PU50.root");
+    TFile* f = new TFile("../../../../../../CMSSW_11_0_0_patch1/src/ggHHRaw/ggHH/test/ggMCRAW.root");
     std::string branch = "SaveAllJets/Jets";
+
+    //retrieving infos from HLTAnalyzer which stores the online HLT decision
+    std::vector<int> trigcount_;
+    trigcount_.resize(2);
+    TTree* tree = (TTree*)f->Get("MyHLTAnalyzer/trgObjTree");
+    tree->SetBranchAddress("HLT_PFHT330PT30_QuadPFJet_75_60_45_40_v9", &trigcount_.at(0));
+    tree->SetBranchAddress("HLT_PFHT330PT30_QuadPFJet_75_60_45_40_TriplePFBTagDeepCSV_4p5_v3", &trigcount_.at(1));
+
+    std::vector<int> finalcounts_;
+    finalcounts_.resize(2);
+
+    for(int i = 0; i < tree->GetEntries(); i++){
+        tree->GetEntry(i);
+        for(int j = 0; j < trigcount_.size(); j++){
+            if(trigcount_.at(j)) finalcounts_.at(j)++;
+        }
+    }
+
 
     Event ev(f, branch);
 
@@ -85,6 +104,11 @@ int main(){
         
     }
 
+    std::cout << "...ONLINE RESULTS:..." << std::endl;
+    std::cout << "....Events Processed: " << tree->GetEntries() << std::endl;
+    std::cout << "....HLT_PFHT330PT30_QuadPFJet_75_60_45_40_v9: " << finalcounts_.at(0) << std::endl;
+    std::cout << "....HLT_PFHT330PT30_QuadPFJet_75_60_45_40_TriplePFBTagDeepCSV_4p5_v3: " << finalcounts_.at(1) << std::endl;
+    std::cout << "....OFFILINE RESULTS:...." << std::endl;
     std::cout << "....Events Processed: " << entries << std::endl;
     std::cout << "....HLT_PFHT330PT30_QuadPFJet_75_60_45_40_v9: " << results_nob.at(results_nob.size()-1) << std::endl;
     std::cout << "....HLT_PFHT330PT30_QuadPFJet_75_60_45_40_TriplePFBTagDeepCSV_4p5_v3: " << results.at(results.size()-1) << std::endl;

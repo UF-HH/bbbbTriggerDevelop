@@ -1,0 +1,13 @@
+{
+   "HLT_PFHT330PT30_QuadPFJet_75_60_45_40_TriplePFBTagDeepCSV_4p5_v3":{
+         "hltBTagPFDeepCSV4p5Triple":{
+         "type":"CustomFixedBtagSelector",
+         "setPtMin":"30",
+         "setPtMax":"1.0E99",
+         "setEtaMin":"-2.6",
+         "setEtaMax":"2.6",
+         "setBTagMin":0.24,
+         "setMinN":3
+      }
+   }
+}
