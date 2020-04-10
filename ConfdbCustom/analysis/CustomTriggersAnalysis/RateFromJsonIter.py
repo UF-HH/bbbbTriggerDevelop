@@ -9,11 +9,20 @@ import argparse
 import matplotlib
 import matplotlib.pyplot as plt
 
-with open("prova.txt") as json_file:
+parser = argparse.ArgumentParser()
+parser.add_argument('-f', '--jsonfile', type=str, required=True, help="File")
+parser.add_argument('-o', '--output', type=str, required=True, help="Output file")
+parser.add_argument('-cpp', '--cppscript', type=str, required=False, help="Script")
+parser.add_argument('-n', '--nevents', type=int, required=False, help="Number of events to process")
+
+
+args = parser.parse_args()
+
+with open(args.jsonfile) as json_file:
     data= json.load(json_file)
 
 print("[INFO:] Creating Map...")
-builder = open("provabuild.txt", "w+")
+builder = open(args.output, "w+")
 for i in data: #trigger names
     list_cuts = []
     list_names = []
