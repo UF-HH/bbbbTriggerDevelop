@@ -210,6 +210,8 @@ std::vector<double> TriggerMaker::Sequence(Event ev){
 
     hltObj::Jets ReqObj;
 
+    bool pass = true;
+
     if(!SkipL1Seed){
         if(L1Cuts.size() == 0){
             std::cerr << "Warning, no L1 seed in this trigger" << std::endl;
@@ -219,23 +221,28 @@ std::vector<double> TriggerMaker::Sequence(Event ev){
 
     for(int i = 0; i < Fil_Types.size(); i++){
 
-        //this ifs are shit...they slow down
-        if(HLT_Required.at(i) == "L1Jets")
-            ReqObj = ev.GetL1JetsCollection();
-        else if(HLT_Required.at(i) == "CaloJets")
-            ReqObj = ev.GetCaloJetsCollection();
-        else if(HLT_Required.at(i) == "PFJets")
-            ReqObj = ev.GetPFJetsCollection();
-        else if(HLT_Required.at(i) == "CaloBJets")
-            ReqObj = ev.GetCaloBJetsCollection();
-        else if(HLT_Required.at(i) == "PFBJets")
-            ReqObj = ev.GetPFBJetsCollection();
-        else if(HLT_Required.at(i) != "L1Jets" && HLT_Required.at(i) != "CaloJets" && HLT_Required.at(i) != "PFJets" && HLT_Required.at(i) != "CaloBJets" && HLT_Required.at(i) != "PFBJets"){
-            std::cerr<< "Required HLT Object does not exist." << std::endl;
-            throw std::runtime_error((L1_Required.at(i) + " Is not a valid type: L1Jets, CaloJets, PFJets.").c_str());
+        if(pass){
+            //this ifs are shit...they slow down
+            if(HLT_Required.at(i) == "L1Jets")
+                ReqObj = ev.GetL1JetsCollection();
+            else if(HLT_Required.at(i) == "CaloJets")
+                ReqObj = ev.GetCaloJetsCollection();
+            else if(HLT_Required.at(i) == "PFJets")
+                ReqObj = ev.GetPFJetsCollection();
+            else if(HLT_Required.at(i) == "CaloBJets")
+                ReqObj = ev.GetCaloBJetsCollection();
+            else if(HLT_Required.at(i) == "PFBJets")
+                ReqObj = ev.GetPFBJetsCollection();
+            else if(HLT_Required.at(i) != "L1Jets" && HLT_Required.at(i) != "CaloJets" && HLT_Required.at(i) != "PFJets" && HLT_Required.at(i) != "CaloBJets" && HLT_Required.at(i) != "PFBJets"){
+                std::cerr<< "Required HLT Object does not exist." << std::endl;
+                throw std::runtime_error((L1_Required.at(i) + " Is not a valid type: L1Jets, CaloJets, PFJets.").c_str());
+            }
+            pass = pass && FilterMap[Fil_Types.at(i)](ReqObj, Cuts.at(i));
+            results.push_back(FilterMap[Fil_Types.at(i)](ReqObj, Cuts.at(i)));
         }
-
-        results.push_back(FilterMap[Fil_Types.at(i)](ReqObj, Cuts.at(i)));
+        else{
+            results.push_back(0);
+        }
     }
 
     //sequentiality assured here 

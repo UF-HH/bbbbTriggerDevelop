@@ -2,7 +2,7 @@
    "HLT_PFHT330PT30_QuadPFJet_75_60_45_40_v9":{
       "hltQuadCentralJet30":{
          "type":"CustomFixedPtEtaSelector",
-         "setPtMin":30,
+         "setPtMin":20,
          "setPtMax":"1.0E99",
          "setEtaMin":"-2.5",
          "setEtaMax":"2.5",
@@ -14,9 +14,18 @@
          "setPtMax":"1.0E99",
          "setEtaMin":"-2.5",
          "setEtaMax":"2.5",
-         "setHTMin":320,
+         "setHTMin":[250, 260, 270, 280, 290],
          "setMHTMin":"0.0",
          "setMinN":1
+      },
+      "hltBTagCaloDeepCSVp17Double":{
+         "type":"CustomFixedBtagSelector",
+         "setPtMin":20,
+         "setPtMax":"1.0E99",
+         "setEtaMin":"-2.4",
+         "setEtaMax":"2.4",
+         "setBtagMin":[0.1, 0.11, 0.12, 0.13, 0.14, 0.15, 0.16],
+         "setMinN":2
       },
       "hltPFCentralJetLooseIDQuad30":{
          "type":"CustomFixedPtEtaSelector",
@@ -44,7 +53,7 @@
       },
       "hlt3PFCentralJetLooseID45":{
          "type":"CustomFixedPtEtaSelector",
-         "setPtMin":"45",
+         "setPtMin":45,
          "setPtMax":"1.0E99",
          "setEtaMin":"-2.5",
          "setEtaMax":"2.5",
@@ -52,7 +61,7 @@
       },
       "hlt4PFCentralJetLooseID40":{
          "type":"CustomFixedPtEtaSelector",
-         "setPtMin":"40",
+         "setPtMin":40,
          "setPtMax":"1.0E99",
          "setEtaMin":"-2.5",
          "setEtaMax":"2.5",
@@ -60,13 +69,22 @@
       },
       "hltPFCentralJetsLooseIDQuad30HT330":{
          "type":"CustomFixedPtEtaHTSelector",
-         "setPtMin":"30",
+         "setPtMin":[20, 25, 30],
          "setPtMax":"1.0E99",
          "setEtaMin":"-2.5",
          "setEtaMax":"2.5",
-         "setHTMin":"330.0",
+         "setHTMin":[300, 310, 320],
          "setMHTMin":"0.0",
          "setMinN":1
+      },
+      "hltBTagPFDeepCSV4p5Triple":{
+         "type":"CustomFixedBtagSelector",
+         "setPtMin":"30",
+         "setPtMax":"1.0E99",
+         "setEtaMin":"-2.6",
+         "setEtaMax":"2.6",
+         "setBtagMin":[0.01, 0.05, 0.08, 0.1, 0.105, 0.11],
+         "setMinN":3
       }
    }
 }

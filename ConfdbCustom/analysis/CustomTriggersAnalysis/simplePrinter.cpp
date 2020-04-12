@@ -12,9 +12,10 @@
 int main(){
 
 
-    //TFile* f = new TFile("../../test/datasets/323725_37_57_PU50.root");
-    TFile* f = new TFile("../../../../../../CMSSW_11_0_0_patch1/src/ggHHRaw/ggHH/test/ggMCRAW.root");
+    //TFile* f = new TFile("../../test/datasets/324878.root");
+    TFile* f = new TFile("../../../../../../CMSSW_11_0_0_patch1/src/ggHHRaw/ggHH/test/ggMCRAW_GenJets.root");
     std::string branch = "SaveAllJets/Jets";
+    std::string genbranch = "SaveGenHH/Gen";
 
     //retrieving infos from HLTAnalyzer which stores the online HLT decision
     std::vector<int> trigcount_;
@@ -34,7 +35,7 @@ int main(){
     }
 
 
-    Event ev(f, branch);
+    Event ev(f, branch, genbranch);
 
     //HLT_PFHT330PT30_QuadPFJet_75_60_45_40_v9
     std::vector<int> results_nob;

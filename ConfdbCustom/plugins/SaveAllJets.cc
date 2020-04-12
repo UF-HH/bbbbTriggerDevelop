@@ -232,6 +232,8 @@ void SaveAllJets::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetu
     run_   = iEvent.id().run();
     lumi_  = iEvent.luminosityBlock();
 
+    std::cout << event_ << " " << run_ << " " << lumi_ << std::endl;
+
     clear();
 
     //If this configuration is not present in the json then the event is skipped

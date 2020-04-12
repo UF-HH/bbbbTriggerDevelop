@@ -42,7 +42,7 @@ with open("RateBkg.txt") as ratefile:
 
             if "Accepted" in sec:
                 acc = sec.split(":")[1]
-
+        
         ratebkg.append(RateProportion(tot, acc))
         line = ratefile.readline()
 

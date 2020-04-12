@@ -9,6 +9,7 @@ import FWCore.ParameterSet.VarParsing as VarParsing
 
 op = VarParsing.VarParsing ('analysis')
 
+"""
 op.register ('json',
                   'Json/json_2018D_Ephemeral_20181022_PU50.txt', # default value
                   VarParsing.VarParsing.multiplicity.singleton, # singleton or list
@@ -30,7 +31,7 @@ op.parseArguments()
 out = op.out
 inputnev = op.nev
 json_file = op.json
-
+"""
 
 process = cms.Process( "HLTest" )
 process.load("setup_cff")
@@ -13041,7 +13042,7 @@ process.MyHLTAnalyzer.inputs = cms.PSet (
 )
 
 # get JSON file correctly parced
-JSONfile = json_file
+JSONfile = "Json/json_2018D_Ephemeral_20181022.txt"
 myList = LumiList.LumiList (filename = JSONfile).getCMSSWString().split(',')
 process.MyHLTAnalyzer.inputs.lumisToProcess.extend(myList)
 
@@ -13054,7 +13055,7 @@ from bbbbTrg_nob.ConfdbCustom.customize_trg_config import *
 customize_trg_config_2018(process)
 
 process.TFileService = cms.Service('TFileService',
-    fileName = cms.string("325022_64_PU50.root")
+    fileName = cms.string("324997.root")
 )
 
 process.SaveAllJets = cms.EDAnalyzer("SaveAllJets",
@@ -13162,11 +13163,19 @@ process.HLTriggerFinalPath = cms.Path( process.hltGtStage2Digis + process.hltSca
 #process.HLTSchedule = cms.Schedule( *(process.SaveJets, process.HLTriggerFirstPath, process.HLT_PFHT330PT30_QuadPFJet_75_60_45_40_TriplePFBTagDeepCSV_4p5_v3, process.HLT_PFHT330PT30_QuadPFJet_75_60_45_40_v9, process.HLTriggerFinalPath, process.HLTAnalyzerEndpath ))
 process.HLTSchedule = cms.Schedule(process.SaveJets)
 
-process.source = cms.Source( "PoolSource",
-    fileNames = cms.untracked.vstring(),
-    inputCommands = cms.untracked.vstring(
-        'keep *'
-    )
+process.source = cms.Source("PoolSource", fileNames = cms.untracked.vstring())
+
+process.maxEvents = cms.untracked.PSet(
+    input = cms.untracked.int32(-1 )
+)
+
+# enable TrigReport, TimeReport and MultiThreading
+process.options = cms.untracked.PSet(
+    SkipEvent = cms.untracked.vstring('ProductNotFound'),
+    wantSummary = cms.untracked.bool( True ),
+    numberOfThreads = cms.untracked.uint32( 4 ),
+    numberOfStreams = cms.untracked.uint32( 4 ),
+    sizeOfStackForThreadsInKB = cms.untracked.uint32( 10*1024 )
 )
 
 # instrument the menu with the modules and EndPath needed for timing studies
@@ -13238,6 +13247,7 @@ process.DQMStore.enableMultiThread = True
 
 #process.DQMOutput = cms.EndPath( process.dqmOutput )
 
+
 from bbbbTrg_nob.ConfdbCustom.QueryForFiles import *
 # add specific customizations
 _customInfo = {}
@@ -13250,11 +13260,13 @@ _customInfo['inputFiles'][True]  = "file:RelVal_Raw_GRun_DATA.root"
 _customInfo['inputFiles'][False] = "file:RelVal_Raw_GRun_MC.root"
 _customInfo['maxEvents' ] = -1
 _customInfo['globalTag' ]= "101X_dataRun2_HLT_v7"
-_customInfo['inputFile' ]=  QueryFilesFromRuns(run=[325022], lumi=[64])
-#_customInfo['inputFile' ]=  QueryFilesFromJson(JSONfile, runs=[323725])
+l = [i for i in range(64, 378)]
+#_customInfo['inputFile' ]=  QueryFilesFromRuns(run=[324878], lumi=l)
+_customInfo['inputFile' ]=  QueryFilesFromJson(JSONfile, runs=[324997])
 _customInfo['realData'  ]=  True
 from HLTrigger.Configuration.customizeHLTforALL import customizeHLTforAll
 process = customizeHLTforAll(process,"GRun",_customInfo)
+
 
 from HLTrigger.Configuration.customizeHLTforCMSSW import customizeHLTforCMSSW
 process = customizeHLTforCMSSW(process,"GRun")

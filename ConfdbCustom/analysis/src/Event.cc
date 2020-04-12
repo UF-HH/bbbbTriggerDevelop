@@ -9,6 +9,18 @@ Event::Event(TFile* f, std::string b){
     event_index = 0;
     infile = f;
     branch = b;
+    eventType = "data";
+    Init();
+};
+
+Event::Event(TFile* f, std::string b, std::string genb){
+
+    event_index = 0;
+    infile = f;
+    branch = b;
+    genBranch = genb;
+    eventType = "MC";
+    //passed two trees, one for MC other for jets
     Init();
 };
 
@@ -17,6 +29,7 @@ void Event::Init(){
     std::cout << "[INFO]: Reading File" << std::endl;
     tree = (TTree*)infile->Get(branch.c_str());
     
+    //This will be red by default for data and MC
     tree->SetBranchAddress("l1_pt", &l1_pt);
     tree->SetBranchAddress("l1_eta", &l1_eta);
     tree->SetBranchAddress("l1_phi", &l1_phi);
@@ -37,9 +50,28 @@ void Event::Init(){
     tree->SetBranchAddress("pf_mass", &pf_mass);
     tree->SetBranchAddress("pf_btag", &pf_btag);
 
-    //tree->SetBranchAddress("event", &event_);
-    //tree->SetBranchAddress("run", &run_);
-    //tree->SetBranchAddress("lumisection", &lumi_);
+    tree->SetBranchAddress("event", &event_);
+    tree->SetBranchAddress("run", &run_);
+    tree->SetBranchAddress("lumi", &lumi_);
+
+    if ( eventType == "MC"){
+
+        treeGen = (TTree*)infile->Get(genBranch.c_str());
+
+        treeGen->SetBranchAddress("gen_H1_m",   &H1.gen_H_m);
+        treeGen->SetBranchAddress("gen_H1_pt",  &H1.gen_H_pt);
+        treeGen->SetBranchAddress("gen_H1_eta", &H1.gen_H_eta);
+        treeGen->SetBranchAddress("gen_H1_phi", &H1.gen_H_phi);
+        treeGen->SetBranchAddress("gen_H1_p4",  &H1.gen_H_p4);
+
+        treeGen->SetBranchAddress("gen_H2_m",   &H2.gen_H_m);
+        treeGen->SetBranchAddress("gen_H2_pt",  &H2.gen_H_pt);
+        treeGen->SetBranchAddress("gen_H2_eta", &H2.gen_H_eta);
+        treeGen->SetBranchAddress("gen_H2_phi", &H2.gen_H_phi);
+        treeGen->SetBranchAddress("gen_H2_p4",  &H2.gen_H_p4);
+
+        //Still need to add b quarks
+    }
 
 }
 
@@ -58,6 +90,9 @@ void Event::clear(){
     PFBJ.clear();
     Matches.clear();
     RecoJ.clear();
+    RecoJM.clear();
+    bs.clear();
+    BMatches.clear();
 
     return; 
 }
@@ -160,6 +195,40 @@ void Event::Generate(){
 
 }
 
+void Event::WeightFactory(std::string kl_map, std::string kl_histo, std::string kl_coeffs){
+
+    if(eventType == "data"){
+        std::cerr<< "Cannot compute weight if data" << std::endl;
+        throw std::runtime_error(("Event type is " + eventType + " while expected MC").c_str());
+    }
+    //initializing the Reweight shared point. This can be done only once so 
+    //doing an external function which creates the pointer once and for all really 
+    //boosts the computation.
+    TFile* fIn = TFile::Open(kl_map.c_str());
+    TH2D*  hIn = (TH2D*) fIn->Get(kl_histo.c_str());
+    hhreweighter = std::shared_ptr<HHReweight5D> (new HHReweight5D(kl_coeffs.c_str(), hIn));
+    fIn->Close();
+
+    return;
+}
+
+void Event::compute_weight(float kl){
+
+    if(eventType == "data"){
+        std::cerr<< "Cannot compute weight if data" << std::endl;
+        throw std::runtime_error(("Event type is " + eventType + " while expected MC").c_str());
+    }
+
+    //loading coeff for the 5D space and building the hhreweighter
+    if(hhreweighter){
+        kl_ev = kl; //saving info in event attribute
+        double gen_mHH = H1.GetMHH(H2); //retireving MHH from the event.
+        weight = hhreweighter->getWeight(kl, 1.0, gen_mHH, H1.gen_costh_H_cm); //computing weight for kl
+    }
+
+    return;
+}
+
 
 void Event::UnpackCollections(){
 
@@ -198,6 +267,13 @@ void Event::UnpackCollections(){
     //this two objects should always exist
     for(int i = 0; i < RecoJets.size(); i++){
         RecoJ.push_back(new hltObj::Jet(RecoJets.pt.at(i), RecoJets.eta.at(i), RecoJets.phi.at(i)));
+    }
+
+    if(eventType == "MC"){
+
+        for(int i = 0; i < BS.size(); i++){
+            bs.push_back(new hltObj::bQuark(BS.pt->at(i), BS.eta->at(i), BS.phi->at(i)));
+        }
     }
 
     return;
@@ -265,6 +341,74 @@ void Event::jetMatch(double R, std::string Reference, std::string SelectedJets){
         }
         else{
             MatchedJets_copy.erase(MatchedJets_copy.begin()+0);
+        }
+
+    }    
+
+    return;
+}
+
+void Event::bMatch(double R, std::string SelectedJets){
+
+    BMatches.clear(); //we have to clear vector in order to make new matches
+
+    std::map<std::string, std::vector<hltObj::Jet*> > StringToObj{
+
+            std::make_pair("RecoJets", RecoJ),
+            std::make_pair("L1Jets", L1J),
+            std::make_pair("CaloJets", CaloJ),  
+            std::make_pair("PFJets", PFJ),
+            std::make_pair("CaloBJets", CaloBJ),
+            std::make_pair("PFBJets", PFBJ),
+
+    };
+
+    //clearing matches before continue, not wasting much time
+    for(auto j : StringToObj[SelectedJets]){
+        j->matched = false;
+    }
+
+    //creating copy. If a jet is matched we delete it from the 
+    //local list.
+    std::vector<hltObj::bQuark*> b_copy = bs;
+
+    while(b_copy.size()!=0 && StringToObj[SelectedJets].size() != 0){
+        std::vector<double> dr;
+        std::vector<int> index_trg;
+        std::vector<int> index_mj;
+        for(int i = 0; i < b_copy.size(); i++){
+            for(int j = 0; j < StringToObj[SelectedJets].size(); j++){
+                if(!StringToObj[SelectedJets].at(j)->matched){
+                    dr.push_back(sqrt(pow(b_copy.at(i)->eta-StringToObj[SelectedJets].at(j)->eta, 2) + 
+                                        pow(b_copy.at(i)->phi-StringToObj[SelectedJets].at(j)->phi, 2)));
+                    index_trg.push_back(j);
+                    index_mj.push_back(i);
+                }
+
+            }
+        }
+
+        int min_index = std::min_element(dr.begin(),dr.end()) - dr.begin();
+
+        //due to the fact that we have if(!StringToObj->matched)  we have to check dr.size()
+        if(dr.size() > 0){
+            if(dr.at(min_index) <= R){
+                
+                hltObj::bQuark mj_match_ref(b_copy.at(index_mj.at(min_index))->pt, 
+                                            b_copy.at(index_mj.at(min_index))->eta,
+                                                b_copy.at(index_mj.at(min_index))->phi);
+            
+                StringToObj[SelectedJets].at(index_trg.at(min_index))->bmatched = true;
+                BMatches.push_back(mj_match_ref);
+                StringToObj[SelectedJets].at(index_trg.at(min_index))->MatchedB = &BMatches.at(BMatches.size()-1);
+                RecoJM.push_back(StringToObj[SelectedJets].at(index_trg.at(min_index)));
+                
+            }
+            b_copy.erase(b_copy.begin()+index_mj.at(min_index));
+
+        }
+        else{
+            b_copy.erase(b_copy.begin()+0);
         }
 
     }    

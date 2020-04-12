@@ -32,9 +32,8 @@ def QueryFilesFromRuns(run=None, lumi=None):
 
     datasets = []
     for i in range(1,9):
-        if i == 5:
-            continue
-        datasets.append('/EphemeralHLTPhysics{}/Run2018D-v1/RAW'.format(i))
+        if (i != 5 and i != 7):
+            datasets.append('/EphemeralHLTPhysics{}/Run2018D-v1/RAW'.format(i))
 
     #REMOVE ONLY FOR THE MOMENT THE DTATASET 5 THAT IS 
     #INACCESSIBLE
@@ -91,9 +90,9 @@ def QueryFilesFromJson(file, runs=None, lumi=None):
     tot_file_list = []
 
     for i in range(1,9):
-        if i==5:
-            continue
-        datasets.append('/EphemeralHLTPhysics{}/Run2018D-v1/RAW'.format(i))
+        if (i!=5 and i!=7):
+            datasets.append('/EphemeralHLTPhysics{}/Run2018D-v1/RAW'.format(i))
+
 
     with open(file) as json_file:
         data = json.load(json_file)

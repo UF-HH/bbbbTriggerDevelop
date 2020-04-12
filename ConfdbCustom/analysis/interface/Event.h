@@ -4,6 +4,7 @@
 #include "Obj.h"
 #include "TFile.h"
 #include "TTree.h"
+#include "../interface/HHReweight5D.h"
 #include <memory>
 
 
@@ -14,6 +15,10 @@ class Event{
         TFile* infile;
         TTree* tree;
         std::string branch;
+
+        std::string eventType = "data";
+        TTree* treeGen;
+        std::string genBranch;
         
         //info on event
         int run_;
@@ -27,6 +32,11 @@ class Event{
         double Pf_HT;
         double Calo_HT;
         double L1_HT;
+
+        //genLevel Objects
+        hltObj::Higgs H1;
+        hltObj::Higgs H2;
+        hltObj::BQuarks BS;
 
         //Jets Collections 
         hltObj::Jets RecoJets;
@@ -43,8 +53,15 @@ class Event{
         std::vector<hltObj::Jet*> CaloBJ;
         std::vector<hltObj::Jet*> PFBJ;
         std::vector<hltObj::Jet*> RecoJ;
+        std::vector<hltObj::Jet*> RecoJM;
         //Storing offline match results
         std::vector<hltObj::Jet> Matches;
+        std::vector<hltObj::bQuark> BMatches;
+        //Quark objects
+        std::vector<hltObj::bQuark*> bs; 
+
+        //reweight obj
+        std::shared_ptr<HHReweight5D> hhreweighter;
 
 
         //Uggly!!!!! double making of vectors...In Obj.h change default
@@ -81,15 +98,18 @@ class Event{
 
         
     public:
-
-        double weight = 1.;
+        float weight = 0; //event weight associated to anomalour coupling, default zero (no multiplication)
+        float kl_ev = 1; //anomalous coupling
         Event() : event_index(0) {};
         Event(TFile* f) : event_index(0), infile(f) {};
         Event(TFile* f, std::string b);
+        Event(TFile* f, std::string b, std::string genb);
         ~Event(){};
-        void Init();
         void SetInFile(TFile* f) {infile = f;};
-        void SetInBranch(std::string b){branch = b, Init(); };
+        void SetBranch(std::string b){branch = b;};
+        void SetGenBranch(std::string b){genBranch = b; eventType = "MC";};
+        void SetEventType(std::string evt){eventType = evt;};
+        void Init();
         int GetRun(){return run_;};
         int GetLS(){return lumi_;};
         ULong64_t GetEvent(){return event_;};
@@ -112,10 +132,16 @@ class Event{
         std::vector<hltObj::Jet*> GetCaloBJets(){ return CaloBJ; };
         std::vector<hltObj::Jet*> GetPFBJets(){ return PFBJ; };
         std::vector<hltObj::Jet*> GetRecoJets(){ return RecoJ; };
+        std::vector<hltObj::bQuark*> GetBQuarks(){ return bs; };
         std::vector<hltObj::Jet> GetMatches(){ return Matches; };
+        std::vector<hltObj::bQuark> GetBMatches(){ return BMatches; };
+        std::pair<hltObj::Higgs, hltObj::Higgs> GetHiggsPair(){ return std::pair<hltObj::Higgs, hltObj::Higgs>(H1, H2); };
         int GetEntries(){ return tree->GetEntries(); }; 
+        void WeightFactory(std::string kl_map, std::string kl_histo, std::string kl_coeffs);
+        void compute_weight(float kl);
         void UnpackCollections();
         void jetMatch(double R, std::string Reference, std::string SelectedJets);
+        void bMatch(double R, std::string SelectedJets);
 
 
 };
