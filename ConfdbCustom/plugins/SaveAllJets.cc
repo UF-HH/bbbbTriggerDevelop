@@ -52,6 +52,7 @@ class SaveAllJets : public edm::EDAnalyzer {
         virtual void clear();
         virtual bool jsonContainsEvent (const edm::Event& iEvent);
 
+
         //check on lumi
         std::vector<edm::LuminosityBlockRange> lumisTemp ;
 
@@ -171,6 +172,7 @@ void SaveAllJets::beginJob()
     tree_->Branch("event", &event_);
     tree_->Branch("run",   &run_);
     tree_->Branch("lumi",  &lumi_);
+
 
     return;
 }

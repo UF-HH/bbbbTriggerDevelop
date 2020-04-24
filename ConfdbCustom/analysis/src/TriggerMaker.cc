@@ -271,18 +271,7 @@ void TriggerMaker::ModifyCut(std::string FilName, std::string Action, double val
 
     for(auto p : Cuts.at(index-1).MappedSetCuts){
         if(p.first == Action){
-            std::cout << "Before" << std::endl;
-            std::cout << Cuts.at(index-1).PtMin << std::endl;
-            std::cout << Cuts.at(index-1).EtaMin << std::endl;
-            std::cout << Cuts.at(index-1).EtaMax << std::endl;
-            std::cout << Cuts.at(index-1).BtagMin << std::endl;
             (Cuts.at(index-1).*p.second)(value);
-            std::cout << "After" << std::endl;
-            std::cout << Cuts.at(index-1).PtMin << std::endl;
-            std::cout << Cuts.at(index-1).EtaMin << std::endl;
-            std::cout << Cuts.at(index-1).EtaMax << std::endl;
-            std::cout << Cuts.at(index-1).BtagMin << std::endl;
-            //std::cout << Cuts.at(index-1).PtMin << std::endl;
         }
         
     }
@@ -301,9 +290,9 @@ void TriggerMaker::CutFromJson(std::string config){
     std::string algo_type;
     
     if (cut_file.is_open()){
-            
+
         while(std::getline(cut_file, line)){
-                        
+            
             std::string delimeter = ",";
             std::string value_delimeter = ":";
             
@@ -324,7 +313,7 @@ void TriggerMaker::CutFromJson(std::string config){
                 line.erase(0, line.find(value_delimeter) + value_delimeter.length());
                 double set = std::stod(line.substr(0, line.find(delimeter)));
                 line.erase(0, line.find(delimeter) + delimeter.length());
-            
+        
                 ModifyCut(mod_name, action , set);                    
             
             }

@@ -105,6 +105,7 @@ void Event::Generate(){
     }
 
     tree->GetEntry(event_index);
+    if(eventType == "MC") treeGen->GetEntry(event_index);
 
     L1Jets.pt = *l1_pt;
     L1Jets.eta = *l1_eta;

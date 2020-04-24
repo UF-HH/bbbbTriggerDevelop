@@ -64,7 +64,7 @@ builder.close()
 
 if(args.cppscript):
     print("...[INFO] Compiling...")
-    os.system("c++ -o exec {} ../src/Event.cc ../src/TriggerMaker.cc `root-config --cflags --glibs`".format(args.cppscript))
+    os.system("c++ -o exec {} ../src/Event.cc ../src/TriggerMaker.cc `root-config --cflags --libs`".format(args.cppscript))
     print("...[INFO] Calling the executable...")
     for trigger_config in tqdm(parsing):
         with open('Build_.txt', 'w') as file_:

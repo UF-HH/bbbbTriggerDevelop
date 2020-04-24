@@ -42,6 +42,8 @@ class TriggerMaker{
         int FindFirstZero(std::vector<double> v);
         std::vector<double> Sequence(Event ev);
         bool SkipL1Seed = false;
+        std::vector<std::string> GetFilNames(){return Fil_Names;};
+        std::string GetTrigName(){return TrigName;};
 
 };
 #endif

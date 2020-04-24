@@ -1,4 +1,14 @@
 //c++ -o rate Rate.cpp ../src/TriggerMaker.cc ../src/Event.cc `root-config --cflags --glibs`
+/* TH: 0.1 Counts: 29179
+TH: 0.2 Counts: 24302
+TH: 0.3 Counts: 20471
+TH: 0.4 Counts: 17039
+TH: 0.5 Counts: 14051
+TH: 0.6 Counts: 11240
+TH: 0.7 Counts: 8562
+TH: 0.8 Counts: 5999
+TH: 0.9 Counts: 3235
+*/
 #include <iostream>
 #include <vector>
 #include <string>
@@ -11,6 +21,7 @@
 #include "TTree.h"
 
 int main(int argc, char* argv[]){
+
 
     //Setting Ephemeral
     TFile* f = new TFile("../../test/datasets/323725_37_57_PU50.root");
@@ -92,6 +103,7 @@ int main(int argc, char* argv[]){
     Accepted = 0; 
     entries = evsig.GetEntries();
 
+
     for(int i = 0; i < entries; i++){
         evsig.Generate();
 
@@ -102,6 +114,7 @@ int main(int argc, char* argv[]){
         if(stop == -1) Accepted++;
         
     }
+
 
     std::cout << TotEvtsSig_ << " " << Accepted << std::endl;
     ofilesig << "Tot: " << TotEvtsSig_ << ", Accepted: " << Accepted << "\n";
