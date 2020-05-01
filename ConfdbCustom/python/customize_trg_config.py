@@ -58,7 +58,8 @@ def customize_trg_config_2018(process):
 
     process.MyHLTAnalyzer.triggerList = cms.vstring(
         'HLT_PFHT330PT30_QuadPFJet_75_60_45_40_v9', #nobtag
-        'HLT_PFHT330PT30_QuadPFJet_75_60_45_40_TriplePFBTagDeepCSV_4p5_v3' #btag
+        'HLT_PFHT330PT30_QuadPFJet_75_60_45_40_TriplePFBTagDeepCSV_4p5_v3', #btag
+        'HLT_PFHT270_180_Double180_Double90_BisectorBTag07'
         #'HLT_PFHT250_v17' #for data, do we have these objects in nanoAOD?
     )
  

@@ -40,6 +40,7 @@ class Event{
 
         //Jets Collections 
         hltObj::Jets RecoJets;
+        hltObj::Jets GenJets;
         hltObj::Jets L1Jets;
         hltObj::Jets CaloJets;
         hltObj::Jets PFJets;
@@ -53,7 +54,9 @@ class Event{
         std::vector<hltObj::Jet*> CaloBJ;
         std::vector<hltObj::Jet*> PFBJ;
         std::vector<hltObj::Jet*> RecoJ;
+        std::vector<hltObj::Jet*> GenJ;
         std::vector<hltObj::Jet*> RecoJM;
+        
         //Storing offline match results
         std::vector<hltObj::Jet> Matches;
         std::vector<hltObj::bQuark> BMatches;
@@ -87,6 +90,12 @@ class Event{
         std::vector<double>* pf_e = 0;
         std::vector<double>* pf_mass = 0;
         std::vector<double>* pf_btag = 0;
+
+        std::vector<double>* gen_pt = 0;
+        std::vector<double>* gen_eta = 0;
+        std::vector<double>* gen_phi = 0;
+        std::vector<double>* gen_e = 0;
+        std::vector<double>* gen_mass = 0;
 
         std::vector<double> *reco_jet_pt = 0;
         std::vector<double> *reco_jet_mass = 0;
@@ -124,16 +133,19 @@ class Event{
         hltObj::Jets GetL1JetsCollection(){return L1Jets; };
         hltObj::Jets GetCaloJetsCollection(){return CaloJets; };
         hltObj::Jets GetPFJetsCollection(){ return PFJets; };
+        hltObj::Jets GetGenJetsCollection(){ return GenJets; };
         hltObj::Jets GetCaloBJetsCollection(){return CaloBJets; };
         hltObj::Jets GetPFBJetsCollection(){ return PFBJets; };
         std::vector<hltObj::Jet*> GetL1Jets(){ return L1J; };
         std::vector<hltObj::Jet*> GetCaloJets(){ return CaloJ; };
         std::vector<hltObj::Jet*> GetPFJets(){ return PFJ; };
+        std::vector<hltObj::Jet*> GetGenJets(){ return GenJ; };
         std::vector<hltObj::Jet*> GetCaloBJets(){ return CaloBJ; };
         std::vector<hltObj::Jet*> GetPFBJets(){ return PFBJ; };
         std::vector<hltObj::Jet*> GetRecoJets(){ return RecoJ; };
-        std::vector<hltObj::bQuark*> GetBQuarks(){ return bs; };
-        std::vector<hltObj::Jet> GetMatches(){ return Matches; };
+        std::vector<hltObj::Jet*> GetMatchJetsToB(){ return RecoJM; }; //Get jets matched to b quarks
+        std::vector<hltObj::bQuark*> GetBQuarks(){ return bs; }; // get bs in random order
+        std::vector<hltObj::Jet> GetMatches(){ return Matches; }; //reference to orded objects of b quarks
         std::vector<hltObj::bQuark> GetBMatches(){ return BMatches; };
         std::pair<hltObj::Higgs, hltObj::Higgs> GetHiggsPair(){ return std::pair<hltObj::Higgs, hltObj::Higgs>(H1, H2); };
         int GetEntries(){ return tree->GetEntries(); }; 
@@ -141,7 +153,9 @@ class Event{
         void compute_weight(float kl);
         void UnpackCollections();
         void jetMatch(double R, std::string Reference, std::string SelectedJets);
+        void jetMatch(double R, std::vector<hltObj::Jet*> Reference, std::string SelectedJets);
         void bMatch(double R, std::string SelectedJets);
+        bool isResolved(double R);
 
 
 };

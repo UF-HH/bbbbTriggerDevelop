@@ -9,8 +9,10 @@ Event::Event(TFile* f, std::string b){
     event_index = 0;
     infile = f;
     branch = b;
+    //default eventtype is "data"
     Init();
 };
+
 
 void Event::Init(){
 

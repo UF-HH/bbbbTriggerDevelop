@@ -55,7 +55,15 @@ void Event::Init(){
     tree->SetBranchAddress("lumi", &lumi_);
 
     if ( eventType == "MC"){
+        
+        //Reading GenJets from SaveAllJets plugin
+        tree->SetBranchAddress("gen_pt", &gen_pt);
+        tree->SetBranchAddress("gen_eta", &gen_eta);
+        tree->SetBranchAddress("gen_phi", &gen_phi);
+        tree->SetBranchAddress("gen_e", &gen_e);
+        tree->SetBranchAddress("gen_mass", &gen_mass);
 
+        //Reading infos from SaveGenHH plugin
         treeGen = (TTree*)infile->Get(genBranch.c_str());
 
         treeGen->SetBranchAddress("gen_H1_m",   &H1.gen_H_m);
@@ -70,7 +78,11 @@ void Event::Init(){
         treeGen->SetBranchAddress("gen_H2_phi", &H2.gen_H_phi);
         treeGen->SetBranchAddress("gen_H2_p4",  &H2.gen_H_p4);
 
-        //Still need to add b quarks
+        treeGen->SetBranchAddress("b_pt", &BS.pt);
+        treeGen->SetBranchAddress("b_eta", &BS.eta);
+        treeGen->SetBranchAddress("b_phi", &BS.phi);
+
+        
     }
 
 }
@@ -81,8 +93,10 @@ void Event::clear(){
     L1Jets.clear();
     CaloJets.clear();
     PFJets.clear();
+    GenJets.clear();
     CaloBJets.clear();
     PFBJets.clear();
+    GenJ.clear();
     L1J.clear();
     CaloJ.clear();
     PFJ.clear();
@@ -105,7 +119,13 @@ void Event::Generate(){
     }
 
     tree->GetEntry(event_index);
-    if(eventType == "MC") treeGen->GetEntry(event_index);
+    if(eventType == "MC"){
+        treeGen->GetEntry(event_index);
+        GenJets.pt = *gen_pt;
+        GenJets.eta = *gen_eta;
+        GenJets.phi = *gen_phi;
+        GenJets.e = *gen_e;
+    }
 
     L1Jets.pt = *l1_pt;
     L1Jets.eta = *l1_eta;
@@ -157,6 +177,7 @@ void Event::Generate(){
 
 
     RecoJets.Type = "RecoJets"; //empty atm
+    GenJets.Type = "GenJets"; 
     L1Jets.Type = "L1Jets"; 
     CaloJets.Type = "CaloJets";
     PFJets.Type = "PFJets";
@@ -167,6 +188,7 @@ void Event::Generate(){
     std::map<std::string, hltObj::Jets* > StringToObj{
 
         std::make_pair("RecoJets", &RecoJets),
+        std::make_pair("GenJets", &GenJets),
         std::make_pair("L1Jets", &L1Jets),
         std::make_pair("CaloJets", &CaloJets),  
         std::make_pair("PFJets", &PFJets),
@@ -272,6 +294,12 @@ void Event::UnpackCollections(){
 
     if(eventType == "MC"){
 
+        for(int i = 0; i < GenJets.size(); i++){
+            if(GenJets.pt.at(i) != 0){
+                GenJ.push_back(new hltObj::Jet(GenJets.pt.at(i), GenJets.eta.at(i), GenJets.phi.at(i)));
+            }
+        }
+
         for(int i = 0; i < BS.size(); i++){
             bs.push_back(new hltObj::bQuark(BS.pt->at(i), BS.eta->at(i), BS.phi->at(i)));
         }
@@ -289,11 +317,13 @@ void Event::jetMatch(double R, std::string Reference, std::string SelectedJets){
     std::map<std::string, std::vector<hltObj::Jet*> > StringToObj{
 
         std::make_pair("RecoJets", RecoJ),
+        std::make_pair("GenJets", GenJ),
         std::make_pair("L1Jets", L1J),
         std::make_pair("CaloJets", CaloJ),  
         std::make_pair("PFJets", PFJ),
         std::make_pair("CaloBJets", CaloBJ),
         std::make_pair("PFBJets", PFBJ),
+        std::make_pair("BMatchedJets", RecoJM),
 
     };
 
@@ -349,6 +379,75 @@ void Event::jetMatch(double R, std::string Reference, std::string SelectedJets){
     return;
 }
 
+//passing vectors by value to do gthe match
+void Event::jetMatch(double R, std::vector<hltObj::Jet*> Reference, std::string SelectedJets){
+
+    Matches.clear(); //we have to clear vector in order to make new matches
+
+    std::map<std::string, std::vector<hltObj::Jet*> > StringToObj{
+
+        std::make_pair("RecoJets", RecoJ),
+        std::make_pair("GenJets", GenJ),
+        std::make_pair("L1Jets", L1J),
+        std::make_pair("CaloJets", CaloJ),  
+        std::make_pair("PFJets", PFJ),
+        std::make_pair("CaloBJets", CaloBJ),
+        std::make_pair("PFBJets", PFBJ),
+
+    };
+
+    //clearing matches before continue
+    for(auto j : StringToObj[SelectedJets]){
+        j->matched = false;
+    }
+    
+
+    //creating copy. If a jet is matched we delete it from the 
+    //local list.
+    std::vector<hltObj::Jet*> MatchedJets_copy = Reference;
+
+    while(MatchedJets_copy.size()!=0 && StringToObj[SelectedJets].size() != 0){
+        std::vector<double> dr;
+        std::vector<int> index_trg;
+        std::vector<int> index_mj;
+        for(int i = 0; i < MatchedJets_copy.size(); i++){
+            for(int j = 0; j < StringToObj[SelectedJets].size(); j++){
+                if(!StringToObj[SelectedJets].at(j)->matched){
+                    dr.push_back(sqrt(pow(MatchedJets_copy.at(i)->eta-StringToObj[SelectedJets].at(j)->eta, 2) + 
+                                        pow(MatchedJets_copy.at(i)->phi-StringToObj[SelectedJets].at(j)->phi, 2)));
+                    index_trg.push_back(j);
+                    index_mj.push_back(i);
+                }
+
+            }
+        }
+
+        int min_index = std::min_element(dr.begin(),dr.end()) - dr.begin();
+
+        //due to the fact that we have if(!StringToObj->matched)  we have to check dr.size()
+        if(dr.size() > 0){
+            if(dr.at(min_index) <= R){
+                hltObj::Jet mj_match_ref(MatchedJets_copy.at(index_mj.at(min_index))->pt, 
+                                            MatchedJets_copy.at(index_mj.at(min_index))->eta,
+                                                MatchedJets_copy.at(index_mj.at(min_index))->phi);
+            
+                StringToObj[SelectedJets].at(index_trg.at(min_index))->matched = true;
+                Matches.push_back(mj_match_ref);
+                StringToObj[SelectedJets].at(index_trg.at(min_index))->MatchedObj = &Matches.at(Matches.size()-1);
+                
+            }
+            MatchedJets_copy.erase(MatchedJets_copy.begin()+index_mj.at(min_index));
+
+        }
+        else{
+            MatchedJets_copy.erase(MatchedJets_copy.begin()+0);
+        }
+
+    }    
+
+    return;
+}
+
 void Event::bMatch(double R, std::string SelectedJets){
 
     BMatches.clear(); //we have to clear vector in order to make new matches
@@ -356,6 +455,7 @@ void Event::bMatch(double R, std::string SelectedJets){
     std::map<std::string, std::vector<hltObj::Jet*> > StringToObj{
 
             std::make_pair("RecoJets", RecoJ),
+            std::make_pair("GenJets", GenJ),
             std::make_pair("L1Jets", L1J),
             std::make_pair("CaloJets", CaloJ),  
             std::make_pair("PFJets", PFJ),
@@ -418,6 +518,9 @@ void Event::bMatch(double R, std::string SelectedJets){
 }
 
 
+
+
+
 double Event::GetCaloHT(){
     double HT = 0;
     for(auto jet : CaloJ){
@@ -470,6 +573,19 @@ double Event::GetHT(hltObj::KinCuts cut){
 
 
     return HT;
+}
+
+bool Event::isResolved(double R){
+
+    bool resolved = true;
+    for(int i = 0; i < bs.size()-1; i++){
+        for(int j = i+1; j < bs.size(); j++){
+            resolved = resolved && sqrt(pow(bs.at(i)->eta - bs.at(j)->eta, 2) + 
+                                            pow(bs.at(i)->phi - bs.at(j)->phi, 2)) >= R;
+        }
+    }
+
+    return resolved;
 }
 
 

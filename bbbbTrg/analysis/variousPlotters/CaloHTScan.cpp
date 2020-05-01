@@ -110,6 +110,7 @@ int main(){
             auto Calojets = ev.GetCaloJets();
             auto Matched = ev.GetMatches();
             ev.compute_weight(klambdas.at(j));
+            std::cout << ev.weight << std::endl;
             weight_sum += ev.weight;
             auto r_1 = Trig2018NoB.Sequence(ev);
 

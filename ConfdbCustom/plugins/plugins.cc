@@ -15,6 +15,9 @@
 #include "HLTHTDouble.cc"
 #include "HLTHTQuad.cc"
 
+#include "../interface/HLT2DJetTag.h"
+#include "HLT2DJetTag.cc"
+
 
 using namespace reco;
 using namespace trigger;
@@ -30,6 +33,9 @@ typedef HLTHTDouble<PFJet> HLTHTPFDouble;
 typedef HLTHTQuad<CaloJet> HLTHTCaloQuad;
 typedef HLTHTQuad<PFJet> HLTHTPFQuad;
 
+typedef HLT2DJetTag<CaloJet> HLT2DJetTagCalo;
+typedef HLT2DJetTag<PFJet> HLT2DJetTagPF;
+
 DEFINE_FWK_MODULE(CaloSaver);
 DEFINE_FWK_MODULE(PFSaver);
 DEFINE_FWK_MODULE(CaloBSaver);
@@ -39,6 +45,9 @@ DEFINE_FWK_MODULE(HLTHTCaloDouble);
 DEFINE_FWK_MODULE(HLTHTPFDouble);
 DEFINE_FWK_MODULE(HLTHTCaloQuad);
 DEFINE_FWK_MODULE(HLTHTPFQuad);
+
+DEFINE_FWK_MODULE(HLT2DJetTagCalo);
+DEFINE_FWK_MODULE(HLT2DJetTagPF);
 
 
 

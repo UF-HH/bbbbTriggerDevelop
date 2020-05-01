@@ -64,7 +64,7 @@ HLTHTDouble<T>::HLTHTDouble(const edm::ParameterSet& iConfig)
       inputTag_(iConfig.template getParameter<edm::InputTag>("inputTag")),
       inputToken_(consumes<std::vector<T>>(inputTag_)),
       triggerType_(iConfig.template getParameter<int>("triggerType")),
-      min_HT(iConfig.template getParameter<int>("MinHT")),
+      min_HT(iConfig.template getParameter<double>("MinHT")),
       min_E_(iConfig.template getParameter<double>("MinE")),
       min_Pt_(iConfig.template getParameter<double>("MinPt")),
       min_Mass_(iConfig.template getParameter<double>("MinMass")),
@@ -134,11 +134,11 @@ bool HLTHTDouble<T>::hltFilter(edm::Event& iEvent,
   int n(0);
   typename TCollection::const_iterator i(objects->begin());
   for (; i != objects->end(); i++) {
-    pts.push_back(i->pt());
+    
     if ((i->energy() >= min_E_) && (i->pt() >= min_Pt_) && (i->mass() >= min_Mass_) &&
         ((max_Mass_ < 0.0) || (i->mass() <= max_Mass_)) && ((min_Eta_ < 0.0) || (std::abs(i->eta()) >= min_Eta_)) &&
         ((max_Eta_ < 0.0) || (std::abs(i->eta()) <= max_Eta_))) {
-      n++;
+      pts.push_back(i->pt());
       ref = TRef(objects, distance(objects->begin(), i));
       int tid = getObjectType<T>(*i);
       if (tid == 0)
