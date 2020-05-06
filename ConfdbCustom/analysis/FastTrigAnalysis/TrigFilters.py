@@ -3,6 +3,10 @@ import pandas
 import matplotlib.pyplot as plt
 import math as mt
 
+"""
+    This filters must me made sooo much faster.
+"""
+
 class Trig2018Filters:
 
     def first(calo_pt, calo_eta):
@@ -152,7 +156,7 @@ class Trig2DFilters:
                 
         btag_er = sorted(btag_er)
         
-        if(btag_er[-3] + btag_er[-2] >= 0.6):
+        if(btag_er[-3] + btag_er[-2] >= 0.7):
             return True
         else:
             return False
@@ -191,7 +195,7 @@ class Trig2DFilters:
                 
         btag_er = sorted(btag_er)
         
-        if(btag_er[-3] + btag_er[-2] >= 0.6):
+        if(btag_er[-3] + btag_er[-2] >= 0.7):
             return True
         else:
             return False
