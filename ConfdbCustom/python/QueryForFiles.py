@@ -249,5 +249,46 @@ def QueryFilesMCgg():
     return to_ret
 
 
+def QueryFilesMCggRAWandAOD():
+
+    tot_file_raw = []
+
+    parse = 'dasgoclient --query="file dataset=/GluGluToHHTo4B_node_SM_TuneCP5_14TeV-madgraph-pythia8/Run3Winter20DRPremixMiniAOD-110X_mcRun3_2021_realistic_v6-v2/GEN-SIM-RAW"'
+    files = subprocess.Popen(shlex.split(parse), stdout=subprocess.PIPE)
+    file_list = files.communicate()[0].split("\n") #dividing single tuple by \n
+    file_list = file_list[:len(file_list)-1] #last element is ''
+
+    for file in file_list:
+        tot_file_raw.append(file)
+
+    tot_file_AOD = []
+
+    parse = 'dasgoclient --query="file dataset=/GluGluToHHTo4B_node_SM_TuneCP5_14TeV-madgraph-pythia8/Run3Winter20DRPremixMiniAOD-110X_mcRun3_2021_realistic_v6-v2/MINIAODSIM"'
+    files = subprocess.Popen(shlex.split(parse), stdout=subprocess.PIPE)
+    file_list = files.communicate()[0].split("\n") #dividing single tuple by \n
+    file_list = file_list[:len(file_list)-1] #last element is ''
+
+    for file in file_list:
+        tot_file_AOD.append(file)
+
+    tot_file_raw = remove_duplicates(tot_file_raw)
+    tot_file_AOD = remove_duplicates(tot_file_AOD)
+    print('...Queried DAS for a total of {} RAW files'.format(len(tot_file_raw)))
+    print('...Queried DAS for a total of {} AOD files'.format(len(tot_file_AOD)))
+
+    return tot_file_raw, tot_file_AOD
+
+
+def CustomRAWandAODInputsMC():
+    tot_file_raw, tot_file_AOD = QueryFilesMCggRAWandAOD()
+    tot_file_raw = cms.untracked.vstring(tot_file_raw)
+    tot_file_AOD = cms.untracked.vstring(tot_file_AOD)
+
+    return tot_file_raw, tot_file_AOD
+
+
+
+
+
         
 
