@@ -1,5 +1,5 @@
 """
-    Function that modify menus
+    Functions that modify menus
 """
 
 def FindModule(menu_file, module_name):
