@@ -1,0 +1,189 @@
+//c++ -o tmp MatchEffSingleJetsGen.cpp ../src/TriggerMaker.cc ../src/Event.cc `root-config --cflags --glibs`
+#include <iostream>
+#include <vector>
+#include <string>
+#include <algorithm>
+#include <numeric>
+#include <valarray>
+#include "../interface/Obj.h"
+#include "../interface/TriggerMaker.h"
+#include "TTree.h"
+#include "TH1F.h"
+#include "TCanvas.h"
+#include "TStyle.h"
+#include "TLegend.h"
+#include "TLatex.h"
+#include "TEfficiency.h"
+
+bool Double90(hltObj::Jets jets, double MinPt){
+
+    std::vector<double> pts;
+    for(int i = 0; i < jets.pt.size(); i++){
+        if(abs(jets.eta.at(i)) <= 2.5){
+            pts.push_back(jets.pt.at(i));
+        }
+    }
+
+    std::sort(pts.begin(), pts.end());
+
+    double sum = pts.at(pts.size()-1) + pts.at(pts.size()-2);
+
+    return sum >= MinPt;
+}
+
+bool Quad40(hltObj::Jets jets, double MinPt){
+
+    std::vector<double> pts;
+    for(int i = 0; i < jets.pt.size(); i++){
+        if(abs(jets.eta.at(i)) <= 2.5){
+            pts.push_back(jets.pt.at(i));
+        }
+    }
+
+    std::sort(pts.begin(), pts.end());
+
+    double sum = pts.at(pts.size()-3) + pts.at(pts.size()-4);
+
+    return sum >= MinPt;
+}
+
+bool Bisector(hltObj::Jets jets, double MinBTag){
+
+    std::vector<double> btags;
+    for(int i = 0; i < jets.pt.size(); i++){
+        if(jets.pt.at(i) >= 30 && abs(jets.eta.at(i)) <= 2.5 ){
+            btags.push_back(jets.btag.at(i));
+        }
+    }
+
+    std::sort(btags.begin(), btags.end());
+
+
+    return ( btags.at(btags.size()-2) + btags.at(btags.size()-3) ) >= MinBTag;
+}
+
+bool myTrigSeq(Event ev){
+    hltObj::Jets pfj = ev.GetPFJetsCollection();
+    hltObj::Jets caloj = ev.GetCaloJetsCollection();
+
+    bool accept(Double90(caloj, 180) && Quad40(caloj, 90) && Bisector(caloj, 0.7) && Double90(pfj, 180) && Quad40(pfj, 90) && Bisector(pfj, 0.7));
+    return accept;
+}
+
+int main(){
+
+
+    TFile* f = new TFile("../../../../../../CMSSW_11_0_0_patch1/src/ggHHRaw/ggHH/test/GenJets_myTER.root");
+    std::string branch = "SaveAllJets/Jets";
+    std::string genbranch = "SaveGenHH/Gen";
+
+    //retrieving infos from HLTAnalyzer which stores the online HLT decision
+    std::vector<int> trigcount_;
+    trigcount_.resize(2);
+    TTree* tree = (TTree*)f->Get("MyHLTAnalyzer/trgObjTree");
+    tree->SetBranchAddress("HLT_PFHT270_180_Double180_Double90_BisectorBTag07", &trigcount_.at(0));
+    tree->SetBranchAddress("HLT_PFHT330PT30_QuadPFJet_75_60_45_40_TriplePFBTagDeepCSV_4p5_v3", &trigcount_.at(1));
+
+    std::vector<int> finalcounts_;
+    finalcounts_.resize(2);
+
+    for(int i = 0; i < tree->GetEntries(); i++){
+        tree->GetEntry(i);
+        for(int j = 0; j < trigcount_.size(); j++){
+            if(trigcount_.at(j)) finalcounts_.at(j)++;
+        }
+    }
+
+    //HLT_PFHT330PT30_QuadPFJet_75_60_45_40_TriplePFBTagDeepCSV_4p5_v3
+    //Building it as default and adding modules in defined positions
+    std::vector<int> results;
+    results.resize(10);
+    TriggerMaker Trig2018; //deafult constructor = 2018 configuration
+    Trig2018.SkipL1Seed = true; //skipping L1 seed 
+
+    hltObj::HLTCuts hltBTagCaloDeepCSVp17Double;
+    hltBTagCaloDeepCSVp17Double.MinN = 2;
+    hltBTagCaloDeepCSVp17Double.EtaMin = -2.4;
+    hltBTagCaloDeepCSVp17Double.EtaMax = 2.4;
+    hltBTagCaloDeepCSVp17Double.PtMin = 30; 
+    hltBTagCaloDeepCSVp17Double.BtagMin = 0.17; //0.17
+
+    hltObj::HLTCuts hltBTagPFDeepCSV4p5Triple;
+    hltBTagPFDeepCSV4p5Triple.MinN = 3;
+    hltBTagPFDeepCSV4p5Triple.EtaMin = -2.6;
+    hltBTagPFDeepCSV4p5Triple.EtaMax = 2.6;
+    hltBTagPFDeepCSV4p5Triple.PtMin = 30; 
+    hltBTagPFDeepCSV4p5Triple.BtagMin = 0.24; //0.24
+
+    //sintax: Name of new module, Type of selector, required objects to compute, HLTCuts object, position in the chain of filters
+    Trig2018.InsertCut("hltBTagCaloDeepCSVp17Double", "CustomFixedBtagSelector", "CaloJets", hltBTagCaloDeepCSVp17Double, 2);
+    //last btag is in last position so we just push it into the module
+    Trig2018.PushCut("hltBTagPFDeepCSV4p5Triple", "CustomFixedBtagSelector", "PFJets", hltBTagPFDeepCSV4p5Triple);
+
+    Event ev(f, branch, genbranch);
+    
+
+    int entries = ev.GetEntries();
+
+    int counter = 0;
+    int counter1 = 0;
+    int count_b = 0;
+
+    for(int i = 0; i < entries; i++){
+
+        std::cout << i << std::endl;
+        ev.Generate();
+        ev.UnpackCollections();
+        ev.bMatch(0.4, "GenJets");
+        ev.jetMatch(0.15, "PFJets", "BMatchedJets");
+
+        bool four_b_match = false;
+        bool four_jets_matched = false;
+
+        std::vector<hltObj::Jet*> pf = ev.GetPFJets();
+        std::vector<hltObj::Jet*> gen_bmatch = ev.GetMatchJetsToB();
+        std::vector<hltObj::bQuark*> bs = ev.GetBQuarks();
+        hltObj::Jets genj = ev.GetGenJetsCollection();
+        hltObj::Jets pfj = ev.GetPFJetsCollection();
+
+        if(gen_bmatch.size() > 4){
+            std::cerr << "non è possibile qvesto" << std::endl;
+            throw std::runtime_error("nope");
+        }
+
+
+        if(gen_bmatch.size() == 4){
+
+            four_b_match = true;
+
+            if(std::count_if(pf.begin(), pf.end(), [](const hltObj::Jet* j){return j->matched == true;}) == gen_bmatch.size()){
+                four_jets_matched = true;
+            }
+        }
+
+        if(four_b_match){
+            count_b++;
+            if(myTrigSeq(ev)) counter++;
+            auto r_1 = Trig2018.Sequence(ev);
+            int stop = Trig2018.FindFirstZero(r_1);
+
+            if(stop == -1){
+                counter1++;
+            }
+        }
+        
+    }
+
+    std::cout << "...ONLINE RESULTS:..." << std::endl;
+    std::cout << "....Events Processed: " << tree->GetEntries() << std::endl;
+    std::cout << "....HLT_PFHT270_180_Double180_Double90_BisectorBTag07: " << finalcounts_.at(0) << std::endl;
+    std::cout << "....HLT_PFHT330PT30_QuadPFJet_75_60_45_40_TriplePFBTagDeepCSV_4p5_v3: " << finalcounts_.at(1) << std::endl;
+
+    std::cout << "...OFFLINE RESULTS... "<< std::endl;
+    std::cout << "....HLT_PFHT270_180_Double180_Double90_BisectorBTag07: "<< counter << (double) counter/count_b << std::endl;
+    std::cout << "....HLT_PFHT330PT30_QuadPFJet_75_60_45_40_TriplePFBTagDeepCSV_4p5_v3: "<< (double) counter1/count_b  << std::endl;
+
+
+    return 0;
+            
+}
