@@ -63,6 +63,14 @@ class_ = pf["class"].values
 val_ = pf.drop(columns="class").values
 
 check_dist = ["leading_pt", "leading_btag", "2leading_pt", "2leading_btag", "3leading_pt", "3leading_btag", "4leading_pt", "4leading_btag"]
+dists_sig= []
+dists_bkg = []
+
+for event, typ in zip(class_, val_):
+    if(loaded_model.predict(event)>= 0.8):
+
+
+    
 
 
 

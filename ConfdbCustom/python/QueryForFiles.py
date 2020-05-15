@@ -249,7 +249,7 @@ def QueryFilesMCgg():
     return to_ret
 
 
-def QueryFilesMCggRAWandAOD():
+def QueryFilesMCggRAWandAOD(convert_to_cms = False):
 
     tot_file_raw = []
 
@@ -276,15 +276,48 @@ def QueryFilesMCggRAWandAOD():
     print('...Queried DAS for a total of {} RAW files'.format(len(tot_file_raw)))
     print('...Queried DAS for a total of {} AOD files'.format(len(tot_file_AOD)))
 
+    if convert_to_cms:
+        tot_file_raw = cms.untracked.vstring(tot_file_raw)
+        tot_file_AOD = cms.untracked.vstring(tot_file_AOD)
+
+    return tot_file_raw, tot_file_AOD
+
+
+def QueryForRAWandAOD(raw_data, aod_data, convert_to_cms = False):
+
+    tot_file_raw = []
+
+    parse = 'dasgoclient --query="file dataset={}"'.format(raw_data)
+    files = subprocess.Popen(shlex.split(parse), stdout=subprocess.PIPE)
+    file_list = files.communicate()[0].split("\n") #dividing single tuple by \n
+    file_list = file_list[:len(file_list)-1] #last element is ''
+
+    for file in file_list:
+        tot_file_raw.append(file)
+
+    tot_file_AOD = []
+
+    parse = 'dasgoclient --query="file dataset={}"'.format(aod_data)
+    files = subprocess.Popen(shlex.split(parse), stdout=subprocess.PIPE)
+    file_list = files.communicate()[0].split("\n") #dividing single tuple by \n
+    file_list = file_list[:len(file_list)-1] #last element is ''
+
+    for file in file_list:
+        tot_file_AOD.append(file)
+
+    tot_file_raw = remove_duplicates(tot_file_raw)
+    tot_file_AOD = remove_duplicates(tot_file_AOD)
+    print('...Queried DAS for a total of {} RAW files'.format(len(tot_file_raw)))
+    print('...Queried DAS for a total of {} AOD files'.format(len(tot_file_AOD)))
+
+    if convert_to_cms:
+        tot_file_raw = cms.untracked.vstring(tot_file_raw)
+        tot_file_AOD = cms.untracked.vstring(tot_file_AOD)
+
     return tot_file_raw, tot_file_AOD
 
 
-def CustomRAWandAODInputsMC():
-    tot_file_raw, tot_file_AOD = QueryFilesMCggRAWandAOD()
-    tot_file_raw = cms.untracked.vstring(tot_file_raw)
-    tot_file_AOD = cms.untracked.vstring(tot_file_AOD)
-
-    return tot_file_raw, tot_file_AOD
+    
 
 
 

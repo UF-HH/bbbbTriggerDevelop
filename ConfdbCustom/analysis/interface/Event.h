@@ -81,6 +81,7 @@ class Event{
         std::vector<double>* calo_eta = 0;
         std::vector<double>* calo_phi = 0;
         std::vector<double>* calo_e = 0;
+        std::vector<double>* calo_et = 0;
         std::vector<double>* calo_mass = 0;
         std::vector<double>* calo_btag = 0;
 
@@ -88,6 +89,7 @@ class Event{
         std::vector<double>* pf_eta = 0;
         std::vector<double>* pf_phi = 0;
         std::vector<double>* pf_e = 0;
+        std::vector<double>* pf_et = 0;
         std::vector<double>* pf_mass = 0;
         std::vector<double>* pf_btag = 0;
 
@@ -95,6 +97,7 @@ class Event{
         std::vector<double>* gen_eta = 0;
         std::vector<double>* gen_phi = 0;
         std::vector<double>* gen_e = 0;
+        std::vector<double>* gen_et = 0;
         std::vector<double>* gen_mass = 0;
 
         std::vector<double> *reco_jet_pt = 0;

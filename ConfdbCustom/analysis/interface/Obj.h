@@ -15,8 +15,9 @@ namespace hltObj{
         public:
             std::string Type;
             double MinPt = -1;
-	    double MaxPt = 99.E99;
+	        double MaxPt = 99.E99;
             double MinEt = -1;
+            double MinE = -1;
             double MinEta = -99E99;
             double MaxEta = 99E99;
     };
@@ -84,6 +85,7 @@ namespace hltObj{
             double phi;
             bQuark(){};
             bQuark(double p, double e, double ph) : pt(p), eta(e), phi(ph) {}; //minimal infos
+            bQuark(double p, double eta_, double ph, double e_) : pt(p), eta(eta_), phi(ph), e(e_) {};
             bQuark(double energy, double p, double tenergy,  double e, double ph) : e(energy), pt(p), et(tenergy), eta(e), phi(ph) {}; //complete infos
             ~bQuark(){};
             void clear(){ e = 0; pt = 0; et = 0; eta = 0; phi = 0; };
@@ -100,6 +102,7 @@ namespace hltObj{
             hltObj::Jet* MatchedObj;
             hltObj::bQuark* MatchedB;
             Jet(double p, double e, double ph) : bQuark(p, e, ph) {}; //minimal infos
+            Jet(double p, double e, double ph, double btag_) : bQuark(p, e, ph), btag(btag_) {}; //with btag info only jets
             Jet(double energy, double p, double tenergy,  double e, double ph) : bQuark(energy, p, tenergy, e, ph) {}; //complete infos
             ~Jet(){};
             void clear(){ mass = 0; e = 0; pt = 0; et = 0; eta = 0; phi = 0; btag = 0;};

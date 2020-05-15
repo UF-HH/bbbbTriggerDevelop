@@ -156,6 +156,7 @@ int main(){
     h_3b_->SetTitle("");
 
 
+
     for(int i = 0; i < entries; i++){
     //for(int i = 0; i < 1000; i++){
 
@@ -172,6 +173,11 @@ int main(){
         std::vector<hltObj::bQuark*> bs = ev.GetBQuarks();
         hltObj::Jets genj = ev.GetGenJetsCollection();
         hltObj::Jets pfj = ev.GetPFJetsCollection();
+
+        for (auto c: gen_bmatch){
+            std::cout << c->pt << " ";
+        }
+        std::cout << std::endl;
 
 
         if(gen_bmatch.size() > 4){
@@ -190,7 +196,7 @@ int main(){
 
         if(myTrigSeq(ev)){
             counter++;
-            if(ev.isResolved(0.8)){
+            if(ev.isResolved(0.4)){
                 if(four_b_match) b_match_my++;
                 if(four_jets_matched) match_my++;
 
@@ -216,7 +222,7 @@ int main(){
 
         if(stop == -1){
             counter1++;
-            if(ev.isResolved(0.8)){
+            if(ev.isResolved(0.4)){
                 if(four_b_match) b_match_2018++;
                 if(four_jets_matched) match_2018++;
 
@@ -261,8 +267,6 @@ int main(){
 
     gStyle->SetOptStat(0);
 
-    h_3b->Scale(1./h_3b->Integral());
-    h_3b_->Scale(1./h_3b_->Integral());
     TCanvas* c = new TCanvas("c", "c", 1000, 1000, 1000, 700);
     h_3b->Draw("hist");
     h_3b_->Draw("hist same");

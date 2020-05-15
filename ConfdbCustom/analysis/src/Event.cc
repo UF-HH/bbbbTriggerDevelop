@@ -40,6 +40,7 @@ void Event::Init(){
     tree->SetBranchAddress("calo_eta", &calo_eta);
     tree->SetBranchAddress("calo_phi", &calo_phi);
     tree->SetBranchAddress("calo_e", &calo_e);
+    tree->SetBranchAddress("calo_et", &calo_et);
     tree->SetBranchAddress("calo_mass", &calo_mass);
     tree->SetBranchAddress("calo_btag", &calo_btag);
 
@@ -47,6 +48,7 @@ void Event::Init(){
     tree->SetBranchAddress("pf_eta", &pf_eta);
     tree->SetBranchAddress("pf_phi", &pf_phi);
     tree->SetBranchAddress("pf_e", &pf_e);
+    tree->SetBranchAddress("pf_et", &pf_et);
     tree->SetBranchAddress("pf_mass", &pf_mass);
     tree->SetBranchAddress("pf_btag", &pf_btag);
 
@@ -61,6 +63,7 @@ void Event::Init(){
         tree->SetBranchAddress("gen_eta", &gen_eta);
         tree->SetBranchAddress("gen_phi", &gen_phi);
         tree->SetBranchAddress("gen_e", &gen_e);
+        tree->SetBranchAddress("gen_et", &gen_et);
         tree->SetBranchAddress("gen_mass", &gen_mass);
 
         //Reading infos from SaveGenHH plugin
@@ -125,6 +128,7 @@ void Event::Generate(){
         GenJets.eta = *gen_eta;
         GenJets.phi = *gen_phi;
         GenJets.e = *gen_e;
+        GenJets.et = *gen_et;
     }
 
     L1Jets.pt = *l1_pt;
@@ -136,13 +140,16 @@ void Event::Generate(){
     CaloJets.eta = *calo_eta;
     CaloJets.phi = *calo_phi;
     CaloJets.e = *calo_e;
+    CaloJets.et = *calo_et;
     CaloJets.btag = *calo_btag;
 
     PFJets.pt = *pf_pt;
     PFJets.eta = *pf_eta;
     PFJets.phi = *pf_phi;
     PFJets.e = *pf_e;
+    PFJets.et = *pf_et;
     PFJets.btag = *pf_btag;
+
     
     /*
     RecoJets.pt = *reco_jet_pt;
@@ -171,6 +178,7 @@ void Event::Generate(){
             PFBJets.eta.push_back(PFJets.eta.at(i));
             PFBJets.phi.push_back(PFJets.phi.at(i));
             PFBJets.e.push_back(PFJets.e.at(i));
+            PFBJets.et.push_back(PFJets.et.at(i));
             PFBJets.btag.push_back(PFJets.btag.at(i));
         }
     }
@@ -200,9 +208,8 @@ void Event::Generate(){
     //cuts on objects
     for(int i = 0; i < Cut_.size(); i++){
         if(StringToObj.count(Cut_.at(i).Type)){
-            std::vector<int> index_to_delete;
             for(int j = 0; j < StringToObj[Cut_.at(i).Type]->size(); j++){
-                if(StringToObj[Cut_.at(i).Type]->pt.at(j) < Cut_.at(i).MinPt || StringToObj[Cut_.at(i).Type]->pt.at(j) > Cut_.at(i).MaxPt || StringToObj[Cut_.at(i).Type]->et.at(j) < Cut_.at(i).MinEt ||
+                if(StringToObj[Cut_.at(i).Type]->pt.at(j) < Cut_.at(i).MinPt || StringToObj[Cut_.at(i).Type]->e.at(j) < Cut_.at(i).MinE || StringToObj[Cut_.at(i).Type]->pt.at(j) > Cut_.at(i).MaxPt || StringToObj[Cut_.at(i).Type]->et.at(j) < Cut_.at(i).MinEt ||
                     StringToObj[Cut_.at(i).Type]->eta.at(j) < Cut_.at(i).MinEta || StringToObj[Cut_.at(i).Type]->eta.at(j) > Cut_.at(i).MaxEta){
                     
                     StringToObj[Cut_.at(i).Type]->clear(j);
@@ -264,14 +271,16 @@ void Event::UnpackCollections(){
     
     for(int i = 0; i < CaloJets.size(); i++){
         if(CaloJets.pt.at(i) != 0){
-            CaloJ.push_back(new hltObj::Jet(CaloJets.pt.at(i), CaloJets.eta.at(i), CaloJets.phi.at(i)));
+            CaloJ.push_back(new hltObj::Jet(CaloJets.pt.at(i), CaloJets.eta.at(i), CaloJets.phi.at(i), CaloJets.btag.at(i)));
+            CaloJ.at(CaloJ.size()-1)->e = CaloJets.e.at(i); //last jet added, add info about energy
         }
     }
 
 
     for(int i = 0; i < PFJets.size(); i++){
         if(PFJets.pt.at(i) != 0){
-            PFJ.push_back(new hltObj::Jet(PFJets.pt.at(i), PFJets.eta.at(i), PFJets.phi.at(i)));
+            PFJ.push_back(new hltObj::Jet(PFJets.pt.at(i), PFJets.eta.at(i), PFJets.phi.at(i), PFJets.btag.at(i)));
+            PFJ.at(PFJ.size()-1)->e = PFJets.e.at(i); //last jet added, add info about energy
         }
     }
 
@@ -297,6 +306,7 @@ void Event::UnpackCollections(){
         for(int i = 0; i < GenJets.size(); i++){
             if(GenJets.pt.at(i) != 0){
                 GenJ.push_back(new hltObj::Jet(GenJets.pt.at(i), GenJets.eta.at(i), GenJets.phi.at(i)));
+                GenJ.at(GenJ.size()-1)->e = GenJets.e.at(i); //last jet added, add info about energy
             }
         }
 
@@ -361,7 +371,7 @@ void Event::jetMatch(double R, std::string Reference, std::string SelectedJets){
                 hltObj::Jet mj_match_ref(MatchedJets_copy.at(index_mj.at(min_index))->pt, 
                                             MatchedJets_copy.at(index_mj.at(min_index))->eta,
                                                 MatchedJets_copy.at(index_mj.at(min_index))->phi);
-            
+                mj_match_ref.e = MatchedJets_copy.at(index_mj.at(min_index))->e; //filling energy
                 StringToObj[SelectedJets].at(index_trg.at(min_index))->matched = true;
                 Matches.push_back(mj_match_ref);
                 StringToObj[SelectedJets].at(index_trg.at(min_index))->MatchedObj = &Matches.at(Matches.size()-1);
@@ -379,7 +389,7 @@ void Event::jetMatch(double R, std::string Reference, std::string SelectedJets){
     return;
 }
 
-//passing vectors by value to do gthe match
+//passing vectors by value to do the match
 void Event::jetMatch(double R, std::vector<hltObj::Jet*> Reference, std::string SelectedJets){
 
     Matches.clear(); //we have to clear vector in order to make new matches
@@ -430,6 +440,7 @@ void Event::jetMatch(double R, std::vector<hltObj::Jet*> Reference, std::string 
                 hltObj::Jet mj_match_ref(MatchedJets_copy.at(index_mj.at(min_index))->pt, 
                                             MatchedJets_copy.at(index_mj.at(min_index))->eta,
                                                 MatchedJets_copy.at(index_mj.at(min_index))->phi);
+                mj_match_ref.e = MatchedJets_copy.at(index_mj.at(min_index))->e; //filling energy
             
                 StringToObj[SelectedJets].at(index_trg.at(min_index))->matched = true;
                 Matches.push_back(mj_match_ref);
