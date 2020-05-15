@@ -14704,13 +14704,14 @@ from customize_trg_config import *
 customize_trg_config_2018(process)
 
 process.TFileService = cms.Service('TFileService',
-    fileName = cms.string("GenJets_myTER.root")
+    fileName = cms.string("ggMCRAW_GenJets_NoNu.root")
 )
 
-process.SaveAllJets = cms.EDAnalyzer("SaveAllJets",
+process.SaveAllJets = cms.EDAnalyzer("SaveAllJetsMC",
     L1JetTag = cms.InputTag( 'hltGtStage2Digis','Jet' ),
     PFJetTag = cms.InputTag('hltAK4PFJetsLooseIDCorrected'),
     GenJetTag = cms.InputTag('ak4GenJets'),
+    GenNoNuJetTag = cms.InputTag('ak4GenJetsNoNu'),
     CaloJetTag = cms.InputTag('hltAK4CaloJetsCorrectedIDPassed'),
     PFBJetTag = cms.InputTag('hltDeepCombinedSecondaryVertexBJetTagsPF','probb'),
     CaloBJetTag = cms.InputTag('hltDeepCombinedSecondaryVertexBJetTagsCalo','probb'),
@@ -14837,6 +14838,51 @@ process.hltBTagBisector23Calo = cms.EDFilter( "HLT2DJetTagCalo",
     MaxTag = cms.double( 999999.0 )
 )
 
+#Path from sum of two leading btags
+process.hltDoubleCentralJet60 = cms.EDFilter( "HLT1CaloJet",
+    saveTags = cms.bool( True ),
+    MinPt = cms.double( 60.0 ),
+    MinN = cms.int32( 2 ),
+    MaxEta = cms.double( 2.5 ),
+    MinEta = cms.double( -1.0 ),
+    MinMass = cms.double( -1.0 ),
+    inputTag = cms.InputTag( "hltAK4CaloJetsCorrectedIDPassed" ),
+    MinE = cms.double( -1.0 ),
+    triggerType = cms.int32( 86 ),
+    MaxMass = cms.double( -1.0 )
+)
+
+process.hltDoubleLeadingBTagSumCentralJet30 = cms.EDFilter("HLTBTagSumCalo",
+    saveTags = cms.bool( True ),
+    Jets = cms.InputTag( "hltSelector8CentralJetsL1FastJet" ),
+    JetTags = cms.InputTag( 'hltDeepCombinedSecondaryVertexBJetTagsCalo','probb' ),
+    MinTag = cms.double( 0.0 ),
+    MaxTag = cms.double( 999999.0 ),
+    TriggerType = cms.int32( 86 ),
+    MinEta = cms.double( -1.0 ),
+    MaxEta = cms.double( 2.5 ),
+    MinPt = cms.double( 30.0 ),
+    MaxPt = cms.double( 999999.0 ),
+    SumN = cms.uint32(2),
+    MinBTagSum = cms.double(1.3)
+)
+
+process.hltDoublePFLeadingBTagSumCentralJet30 = cms.EDFilter("HLTBTagSumPF",
+    saveTags = cms.bool( True ),
+    Jets = cms.InputTag( "hltPFJetForBtag" ),
+    JetTags = cms.InputTag( 'hltDeepCombinedSecondaryVertexBJetTagsPF','probb' ),
+    MinTag = cms.double( 0.0 ),
+    MaxTag = cms.double( 999999.0 ),
+    TriggerType = cms.int32( 86 ),
+    MinEta = cms.double( -1.0 ),
+    MaxEta = cms.double( 2.5 ),
+    MinPt = cms.double( 30.0 ),
+    MaxPt = cms.double( 999999.0 ),
+    SumN = cms.uint32(2),
+    MinBTagSum = cms.double(1.3)
+)
+
+
 #-------PATH OF 2018 MENU--------------------
 
 process.HLTL1UnpackerSequence = cms.Sequence( process.hltGtStage2Digis + process.hltGtStage2ObjectMap )
@@ -14909,6 +14955,7 @@ process.SaveGen = cms.Sequence( process.prunedGenParticles + process.SaveGenHH)
 process.SaveJets = cms.Path( process.HLTBeginSequence + process.hltL1sQuadJetC50to60IorHTT280to500IorHTT250to340QuadJet + process.hltPrePFHT330PT30QuadPFJet75604540TriplePFBTagDeepCSV4p5 +process.HLTAK4CaloJetsSequence + process.HLTBtagDeepCSVSequenceL3 + process.HLTAK4PFJetsSequence + process.HLTBtagDeepCSVSequencePF + process.SaveGen + process.SaveAllJets + process.HLTEndSequence)
 
 process.HLTriggerFirstPath = cms.Path( process.hltGetConditions + process.hltGetRaw + process.hltBoolFalse )
+process.HLT_Quad30_Double60_Sum2LeadingBTag015 = cms.Path( process.HLTBeginSequence + process.hltL1sQuadJetC50to60IorHTT280to500IorHTT250to340QuadJet + process.hltPrePFHT330PT30QuadPFJet75604540TriplePFBTagDeepCSV4p5 + process.HLTAK4CaloJetsSequence + process.hltQuadCentralJet30 + process.hltDoubleCentralJet60 + process.HLTBtagDeepCSVSequenceL3 + process.hltDoubleLeadingBTagSumCentralJet30 + process.HLTAK4PFJetsSequence + process.hltPFCentralJetLooseIDQuad30 + process.hlt2PFCentralJetLooseID60 + process.HLTBtagDeepCSVSequencePF + process.hltDoublePFLeadingBTagSumCentralJet30  + process.HLTEndSequence )
 process.HLT_PFHT270_180_Double180_Double90_BisectorBTag07 = cms.Path( process.HLTBeginSequence + process.hltL1sQuadJetC50to60IorHTT280to500IorHTT250to340QuadJet + process.hltPrePFHT330PT30QuadPFJet75604540TriplePFBTagDeepCSV4p5 + process.HLTAK4CaloJetsSequence + process.hltDoubleCentralCaloHT180 + process.hltDoubleCentralCaloHT90 + process.HLTBtagDeepCSVSequenceL3 + process.hltBTagBisector23Calo + process.HLTAK4PFJetsSequence + process.hltDoubleCentralPFHT180 + process.hltDoubleCentralPFHT90  + process.HLTBtagDeepCSVSequencePF + process.hltBTagBisector23PF + process.HLTEndSequence )
 process.HLT_PFHT330PT30_QuadPFJet_75_60_45_40_TriplePFBTagDeepCSV_4p5_v3 = cms.Path( process.HLTBeginSequence + process.hltL1sQuadJetC50to60IorHTT280to500IorHTT250to340QuadJet + process.hltPrePFHT330PT30QuadPFJet75604540TriplePFBTagDeepCSV4p5 + process.HLTAK4CaloJetsSequence + process.hltQuadCentralJet30 + process.hltCaloJetsQuad30ForHt + process.hltHtMhtCaloJetsQuadC30 + process.hltCaloQuadJet30HT320 + process.HLTBtagDeepCSVSequenceL3 + process.hltBTagCaloDeepCSVp17Double + process.HLTAK4PFJetsSequence + process.hltPFCentralJetLooseIDQuad30 + process.hlt1PFCentralJetLooseID75 + process.hlt2PFCentralJetLooseID60 + process.hlt3PFCentralJetLooseID45 + process.hlt4PFCentralJetLooseID40 + process.hltPFCentralJetLooseIDQuad30forHt + process.hltHtMhtPFCentralJetsLooseIDQuadC30 + process.hltPFCentralJetsLooseIDQuad30HT330 + process.HLTBtagDeepCSVSequencePF + process.hltBTagPFDeepCSV4p5Triple + process.HLTEndSequence )
 process.HLTriggerFinalPath = cms.Path( process.hltGtStage2Digis + process.hltScalersRawToDigi + process.hltFEDSelector + process.hltTriggerSummaryAOD + process.hltTriggerSummaryRAW + process.hltBoolFalse )

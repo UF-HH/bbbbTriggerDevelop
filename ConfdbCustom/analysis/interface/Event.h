@@ -41,6 +41,7 @@ class Event{
         //Jets Collections 
         hltObj::Jets RecoJets;
         hltObj::Jets GenJets;
+        hltObj::Jets GenNNJets;
         hltObj::Jets L1Jets;
         hltObj::Jets CaloJets;
         hltObj::Jets PFJets;
@@ -55,6 +56,7 @@ class Event{
         std::vector<hltObj::Jet*> PFBJ;
         std::vector<hltObj::Jet*> RecoJ;
         std::vector<hltObj::Jet*> GenJ;
+        std::vector<hltObj::Jet*> GenNNJ;
         std::vector<hltObj::Jet*> RecoJM;
         
         //Storing offline match results
@@ -100,6 +102,13 @@ class Event{
         std::vector<double>* gen_et = 0;
         std::vector<double>* gen_mass = 0;
 
+        std::vector<double>* gen_nonu_pt = 0;
+        std::vector<double>* gen_nonu_eta = 0;
+        std::vector<double>* gen_nonu_phi = 0;
+        std::vector<double>* gen_nonu_e = 0;
+        std::vector<double>* gen_nonu_et = 0;
+        std::vector<double>* gen_nonu_mass = 0;
+
         std::vector<double> *reco_jet_pt = 0;
         std::vector<double> *reco_jet_mass = 0;
         std::vector<double> *reco_jet_eta = 0;
@@ -137,12 +146,14 @@ class Event{
         hltObj::Jets GetCaloJetsCollection(){return CaloJets; };
         hltObj::Jets GetPFJetsCollection(){ return PFJets; };
         hltObj::Jets GetGenJetsCollection(){ return GenJets; };
+        hltObj::Jets GetGenNNJetsCollection(){ return GenNNJets; };
         hltObj::Jets GetCaloBJetsCollection(){return CaloBJets; };
         hltObj::Jets GetPFBJetsCollection(){ return PFBJets; };
         std::vector<hltObj::Jet*> GetL1Jets(){ return L1J; };
         std::vector<hltObj::Jet*> GetCaloJets(){ return CaloJ; };
         std::vector<hltObj::Jet*> GetPFJets(){ return PFJ; };
         std::vector<hltObj::Jet*> GetGenJets(){ return GenJ; };
+        std::vector<hltObj::Jet*> GetGenNNJets(){ return GenNNJ; };
         std::vector<hltObj::Jet*> GetCaloBJets(){ return CaloBJ; };
         std::vector<hltObj::Jet*> GetPFBJets(){ return PFBJ; };
         std::vector<hltObj::Jet*> GetRecoJets(){ return RecoJ; };

@@ -66,6 +66,14 @@ void Event::Init(){
         tree->SetBranchAddress("gen_et", &gen_et);
         tree->SetBranchAddress("gen_mass", &gen_mass);
 
+        tree->SetBranchAddress("gen_nonu_pt", &gen_nonu_pt);
+        tree->SetBranchAddress("gen_nonu_eta", &gen_nonu_eta);
+        tree->SetBranchAddress("gen_nonu_phi", &gen_nonu_phi);
+        tree->SetBranchAddress("gen_nonu_e", &gen_nonu_e);
+        tree->SetBranchAddress("gen_nonu_et", &gen_nonu_et);
+        tree->SetBranchAddress("gen_nonu_mass", &gen_nonu_mass);
+
+
         //Reading infos from SaveGenHH plugin
         treeGen = (TTree*)infile->Get(genBranch.c_str());
 
@@ -97,9 +105,11 @@ void Event::clear(){
     CaloJets.clear();
     PFJets.clear();
     GenJets.clear();
+    GenNNJets.clear();
     CaloBJets.clear();
     PFBJets.clear();
     GenJ.clear();
+    GenNNJ.clear();
     L1J.clear();
     CaloJ.clear();
     PFJ.clear();
@@ -117,18 +127,27 @@ void Event::Generate(){
 
     clear();
 
-    if(event_index%10000 == 0){
+    if(event_index%1000 == 0){
         std::cout << event_index << std::endl;
     }
 
     tree->GetEntry(event_index);
+
     if(eventType == "MC"){
+
         treeGen->GetEntry(event_index);
+
         GenJets.pt = *gen_pt;
         GenJets.eta = *gen_eta;
         GenJets.phi = *gen_phi;
         GenJets.e = *gen_e;
         GenJets.et = *gen_et;
+
+        GenNNJets.pt = *gen_nonu_pt;
+        GenNNJets.eta = *gen_nonu_eta;
+        GenNNJets.phi = *gen_nonu_phi;
+        GenNNJets.e = *gen_nonu_e;
+        GenNNJets.et = *gen_nonu_et;
     }
 
     L1Jets.pt = *l1_pt;
@@ -186,6 +205,7 @@ void Event::Generate(){
 
     RecoJets.Type = "RecoJets"; //empty atm
     GenJets.Type = "GenJets"; 
+    GenNNJets.Type = "GenNNJets"; 
     L1Jets.Type = "L1Jets"; 
     CaloJets.Type = "CaloJets";
     PFJets.Type = "PFJets";
@@ -197,6 +217,7 @@ void Event::Generate(){
 
         std::make_pair("RecoJets", &RecoJets),
         std::make_pair("GenJets", &GenJets),
+        std::make_pair("GenNNJets", &GenNNJets),
         std::make_pair("L1Jets", &L1Jets),
         std::make_pair("CaloJets", &CaloJets),  
         std::make_pair("PFJets", &PFJets),
@@ -310,6 +331,13 @@ void Event::UnpackCollections(){
             }
         }
 
+        for(int i = 0; i < GenNNJets.size(); i++){
+            if(GenNNJets.pt.at(i) != 0){
+                GenNNJ.push_back(new hltObj::Jet(GenNNJets.pt.at(i), GenNNJets.eta.at(i), GenNNJets.phi.at(i)));
+                GenNNJ.at(GenNNJ.size()-1)->e = GenNNJets.e.at(i); //last jet added, add info about energy
+            }
+        }
+
         for(int i = 0; i < BS.size(); i++){
             bs.push_back(new hltObj::bQuark(BS.pt->at(i), BS.eta->at(i), BS.phi->at(i)));
         }
@@ -328,6 +356,7 @@ void Event::jetMatch(double R, std::string Reference, std::string SelectedJets){
 
         std::make_pair("RecoJets", RecoJ),
         std::make_pair("GenJets", GenJ),
+        std::make_pair("GenNNJets", GenNNJ),
         std::make_pair("L1Jets", L1J),
         std::make_pair("CaloJets", CaloJ),  
         std::make_pair("PFJets", PFJ),
@@ -398,6 +427,7 @@ void Event::jetMatch(double R, std::vector<hltObj::Jet*> Reference, std::string 
 
         std::make_pair("RecoJets", RecoJ),
         std::make_pair("GenJets", GenJ),
+        std::make_pair("GenNNJets", GenNNJ),
         std::make_pair("L1Jets", L1J),
         std::make_pair("CaloJets", CaloJ),  
         std::make_pair("PFJets", PFJ),
@@ -467,6 +497,7 @@ void Event::bMatch(double R, std::string SelectedJets){
 
             std::make_pair("RecoJets", RecoJ),
             std::make_pair("GenJets", GenJ),
+            std::make_pair("GenNNJets", GenNNJ),
             std::make_pair("L1Jets", L1J),
             std::make_pair("CaloJets", CaloJ),  
             std::make_pair("PFJets", PFJ),
