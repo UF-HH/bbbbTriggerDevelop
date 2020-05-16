@@ -31,6 +31,8 @@
 #include "DataFormats/JetReco/interface/GenJetCollection.h"
 #include "DataFormats/HLTReco/interface/TriggerTypeDefs.h"
 #include "DataFormats/BTauReco/interface/JetTag.h"
+#include "DataFormats/PatCandidates/interface/Jet.h"
+#include "DataFormats/PatCandidates/interface/PackedCandidate.h"
 #include "DataFormats/L1GlobalTrigger/interface/L1GlobalTriggerReadoutSetupFwd.h"
 #include "CondFormats/L1TObjects/interface/L1GtTriggerMenuFwd.h"
 #include "DataFormats/L1TGlobal/interface/GlobalObjectMapFwd.h"
@@ -124,6 +126,7 @@ class SaveAllJetsMC : public edm::EDAnalyzer {
         std::vector<double>* gen_nonu_phi_ = new std::vector<double>;
         std::vector<double>* gen_nonu_e_ = new std::vector<double>;
         std::vector<double>* gen_nonu_mass_ = new std::vector<double>;
+
 
 };
 
@@ -296,6 +299,7 @@ void SaveAllJetsMC::analyze(const edm::Event& iEvent, const edm::EventSetup& iSe
 
     edm::Handle<std::vector<reco::CaloJet>> Calojets;
     iEvent.getByToken(CaloToken_, Calojets);
+
     edm::Handle<std::vector<reco::PFJet>> PFjets;
     iEvent.getByToken(PFToken_, PFjets);
 

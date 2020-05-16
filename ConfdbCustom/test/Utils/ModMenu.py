@@ -158,8 +158,8 @@ def AddPrimarySecondaryPoolSource(menu, primaryDataset, secondaryDataset, line):
     line +=1
     contents.insert(line, "fileNames=cms.untracked.vstring(")
     line+=1
-    for file_ in primaryDataset:
-        ins = "'file:" + file_ + "', \n"
+    for file_ in secondaryDataset:
+        ins = "'" + file_ + "', \n"
         contents.insert(line, ins)
         line+=1
     contents[line-1] = contents[line-1][:-1]
@@ -168,8 +168,8 @@ def AddPrimarySecondaryPoolSource(menu, primaryDataset, secondaryDataset, line):
     line+=1
     contents.insert(line, "secondaryFileNames=cms.untracked.vstring( \n")
     line += 1
-    for file_ in secondaryDataset:
-        ins = "'file:" + file_ + "', \n"
+    for file_ in primaryDataset:
+        ins = "'" + file_ + "', \n"
         contents.insert(line, ins)
         line+=1
     #contents[line-1] = contents[line-1][:-1]

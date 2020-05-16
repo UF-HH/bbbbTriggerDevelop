@@ -1,9 +1,21 @@
+"""
+
+Add lines in menu to query for primary/secondary dataset RAW/AOD. Only works in current directory
+Due to sys.path.insert. Example:
+
+python AddPrimarySecondaryDatasets.py -d_P=/GluGluToHHTo4B_node_SM_TuneCP5_14TeV-madgraph-pythia8/Run3Winter20DRPremixMiniAOD-110X_mcRun3_2021_realistic_v6-v2/GEN-SIM-RAW \
+-d_S=/GluGluToHHTo4B_node_SM_TuneCP5_14TeV-madgraph-pythia8/Run3Winter20DRPremixMiniAOD-110X_mcRun3_2021_realistic_v6-v2/MINIAODSIM -menu=../MC/hlt_gg_MyTrigger.py -keep \
+ -out=hlt_gg_myTrigger_PS.py -line 14967
+
+"""
+
 import os
 import sys
 import argparse
 import shutil
 from ModMenu import *
-from python.QueryForFiles import *
+sys.path.insert(1, os.path.dirname(os.path.realpath("../../python/QueryForFiles.py")))
+from QueryForFiles import *
 
 parser = argparse.ArgumentParser()
 parser.add_argument('-d_P', '--primaryDataset', type=str, required=True, help="Add primary dataset to query")
