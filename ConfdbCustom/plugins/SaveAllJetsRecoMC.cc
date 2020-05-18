@@ -149,7 +149,7 @@ SaveAllJetsRecoMC::SaveAllJetsRecoMC(const edm::ParameterSet& iConfig):
     GenTag_(iConfig.getParameter<edm::InputTag>("GenJetTag")),
     GenToken_(consumes<std::vector<GenJet>>(GenTag_)),
     GenNNTag_(iConfig.getParameter<edm::InputTag>("GenNoNuJetTag")),
-    GenNNToken_(consumes<std::vector<GenJet>>(GenTag_)),
+    GenNNToken_(consumes<std::vector<GenJet>>(GenNNTag_)),
     CaloTag_(iConfig.getParameter<edm::InputTag>("CaloJetTag")),
     CaloToken_(consumes<std::vector<CaloJet>>(CaloTag_)),
     PFBTag_(iConfig.getParameter<edm::InputTag>("PFBJetTag")),
@@ -166,6 +166,7 @@ SaveAllJetsRecoMC::SaveAllJetsRecoMC(const edm::ParameterSet& iConfig):
         std::cout << "Initializing with: " << PFTag_.encode() << std::endl;
         std::cout << "Initializing with: " << RecoTag_.encode() << std::endl;
         std::cout << "Initializing with: " << GenTag_.encode() << std::endl;
+        std::cout << "Initializing with: " << GenNNTag_.encode() << std::endl;
         std::cout << "Initializing with: " << CaloTag_.encode() << std::endl;
         std::cout << "Initializing with: " << CaloBTag_.encode() << std::endl;
         std::cout << "Initializing with: " << PFBTag_.encode() << std::endl;
@@ -386,13 +387,13 @@ void SaveAllJetsRecoMC::analyze(const edm::Event& iEvent, const edm::EventSetup&
     typename std::vector<pat::Jet>::const_iterator m(Recojets->begin());
 
     for (; m != Recojets->end(); m++) {
-        std::cout << m->pt() << std::endl;
         reco_pt_->push_back(m->pt());
         reco_et_->push_back(m->et());
         reco_eta_->push_back(m->eta());
         reco_phi_->push_back(m->phi());
         reco_e_->push_back(m->energy());
         reco_mass_->push_back(m->mass());
+        reco_btag_->push_back(m->bDiscriminator("pfDeepFlavourJetTags:probb") + m->bDiscriminator("pfDeepFlavourJetTags:probbb") + m->bDiscriminator("pfDeepFlavourJetTags:problepb"));
 
     }
 
@@ -407,6 +408,7 @@ void SaveAllJetsRecoMC::analyze(const edm::Event& iEvent, const edm::EventSetup&
         gen_mass_->push_back(k->mass());
 
     }
+    std::cout << std::endl;
 
     typename std::vector<reco::GenJet>::const_iterator l(GenNNjets->begin());
 
@@ -419,6 +421,7 @@ void SaveAllJetsRecoMC::analyze(const edm::Event& iEvent, const edm::EventSetup&
         gen_nonu_mass_->push_back(l->mass());
 
     }
+    std::cout << std::endl;
 
     std::vector<double> pfb_pt;
     std::vector<double> pfb_btag;
