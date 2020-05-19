@@ -70,7 +70,7 @@ double invMass(hltObj::Jet* j1, hltObj::Jet* j2){
 int main(){
 
 
-    TFile* f = new TFile("../../../../../../CMSSW_11_0_0_patch1/src/ggHHRaw/ggHH/test/roots/ggMCRAW_GenJets.root");
+    TFile* f = new TFile("../../../../../../CMSSW_11_0_0_patch1/src/ggHHRaw/ggHH/test/roots/ggHLT_RAWAOD_GenRECO.root");
     std::string branch = "SaveAllJets/Jets";
     std::string genbranch = "SaveGenHH/Gen";
 
@@ -86,29 +86,64 @@ int main(){
     
     int entries = ev.GetEntries();
 
-    TH1F* h_q = new TH1F("h_quark","h_quark",  20, 50, 200);
+    TH1F* h_q = new TH1F("h_quark","h_quark",  50, 50, 200);
     h_q->SetLineColor(kBlue);
     h_q->SetLineStyle(2);
     
-    TH1F* h_j = new TH1F("h_jet","h_jet",  20, 50, 200);
-    h_j->SetLineColor(kMagenta);
-    h_j->SetLineStyle(1);
+    TH1F* h_gen = new TH1F("h_gen","h_gen",  50, 50, 200);
+    h_gen->SetLineColor(kBlack);
+    h_gen->SetLineStyle(2);
+    h_gen->SetMarkerStyle(8);
+    h_gen->SetMarkerColor(kBlack);
 
-    TH1F* h_pf = new TH1F("h_pf","h_pf",  20, 50, 200);
-    h_pf->SetLineColor(kBlack);
+
+    TH1F* h_pf = new TH1F("h_pf","h_pf",  50, 50, 200);
+    h_pf->SetLineColor(kBlue);
     h_pf->SetLineStyle(1);
 
+    TH1F* h_calo = new TH1F("h_calo","h_calo",  50, 50, 200);
+    h_calo->SetLineColor(kOrange);
+    h_calo->SetLineStyle(1);
 
+    TH1F* h_reco = new TH1F("h_reco","h_reco",  50, 50, 200);
+    h_reco->SetLineColor(kMagenta);
+    h_reco->SetLineStyle(1);
+
+    TH1F* h_gen_nn = new TH1F("h_gen_nn","h_gen_nn",  50, 50, 200);
+    h_gen_nn->SetLineColor(kBlack);
+    h_gen_nn->SetLineStyle(2);
+    h_gen_nn->SetMarkerStyle(8);
+    h_gen_nn->SetMarkerColor(kBlack);
+
+
+    TH1F* h_pf_nn = new TH1F("h_pf_nn","h_pf_nn",  50, 50, 200);
+    h_pf_nn->SetLineColor(kBlue);
+    h_pf_nn->SetLineStyle(1);
+
+    TH1F* h_calo_nn = new TH1F("h_calo_nn","h_calo_nn",  50, 50, 200);
+    h_calo_nn->SetLineColor(kOrange);
+    h_calo_nn->SetLineStyle(1);
+
+    TH1F* h_reco_nn = new TH1F("h_reco_nn","h_reco_nn",  50, 50, 200);
+    h_reco_nn->SetLineColor(kMagenta);
+    h_reco_nn->SetLineStyle(1);
+
+
+    //Matching GenJets
     for(int i = 0; i < entries; i++){
+    //for(int i = 0; i < 100; i++){
+
+        //PFJets
 
         ev.Generate();
         ev.UnpackCollections();
         ev.bMatch(0.4, "GenJets");
-        ev.jetMatch(0.2, "PFJets", "BMatchedJets");
+        ev.jetMatch(0.1, "PFJets", "BMatchedJets");
 
-        std::vector<hltObj::Jet*> pf = ev.GetPFJets();
-        std::vector<hltObj::bQuark> bs = ev.GetBMatches();
-        std::vector<hltObj::Jet*> gen_bmatch = ev.GetMatchJetsToB();
+        std::vector<hltObj::bQuark> bs = ev.GetBMatches(); //same for everyone
+
+        std::vector<hltObj::Jet*> gen_bmatch = ev.GetMatchJetsToB(); //specific for pairing
+        std::vector<hltObj::Jet*> pf = ev.GetPFJets(); //specific for pairing gen/PF
 
         if(gen_bmatch.size() > 4){
             std::cerr << "non è possibile qvesto" << std::endl;
@@ -141,51 +176,306 @@ int main(){
                 
                 for(int m = 0; m < 2; m++){
                     h_q->Fill(H_cand.at(m).invMass);
-                    h_j->Fill(invMass(gen_bmatch.at(H_cand.at(m).j_index.first), gen_bmatch.at(H_cand.at(m).j_index.second)));
-                    //std::cout << invMass(gen_bmatch.at(H_cand.at(m).j_index.first)->MatchedObj, gen_bmatch.at(H_cand.at(m).j_index.second)->MatchedObj)<< std::endl;
+                    h_gen->Fill(invMass(gen_bmatch.at(H_cand.at(m).j_index.first), gen_bmatch.at(H_cand.at(m).j_index.second)));
                     h_pf->Fill(invMass(gen_bmatch.at(H_cand.at(m).j_index.first)->MatchedObj, gen_bmatch.at(H_cand.at(m).j_index.second)->MatchedObj));
 
                 }
 
-                //std::cout << "First: " << H_cand.at(0).invMass << " Q index: " << H_cand.at(0).index.first << " " << H_cand.at(0).index.second << " J index: " << H_cand.at(0).j_index.first << " " << H_cand.at(0).j_index.second << std::endl;
-                //std::cout << "Second: " << H_cand.at(1).invMass << " Q index: " << H_cand.at(1).index.first << " " << H_cand.at(1).index.second << " J index: " << H_cand.at(1).j_index.first << " " << H_cand.at(1).j_index.second << std::endl;
+            }
+        }
+
+        ev.jetMatch(0.1, "CaloJets", "BMatchedJets");
+
+        gen_bmatch = ev.GetMatchJetsToB(); //specific for pairing
+        std::vector<hltObj::Jet*> calo = ev.GetCaloJets(); //specific for pairing gen/calo
+
+        if(gen_bmatch.size() > 4){
+            std::cerr << "non è possibile qvesto" << std::endl;
+            throw std::runtime_error("nope");
+        }
+        
+        if(gen_bmatch.size() == 4){
+            if(std::count_if(gen_bmatch.begin(), gen_bmatch.end(), [](const hltObj::Jet* j){return j->matched == true;}) == gen_bmatch.size()){
+
+                std::vector<B2Jet> bs_m;
+                for(int ind = 0; ind < gen_bmatch.size(); ind++){
+                    if(gen_bmatch.at(ind)->bmatched){
+                        B2Jet J_{gen_bmatch.at(ind)->MatchedB, ind};
+                        bs_m.push_back(J_);
+                    }
+                }
+
+                std::vector<JetHReco> H_cand;
+                double H_m = 125.;
+                
+                for(int i = 0; i < bs_m.size()-1; i++){
+                    for(int j = i+1; j < bs_m.size(); j++){
+                        JetHReco H{invMass(bs_m.at(i).b, bs_m.at(j).b), std::pair<int,int>(i,j), std::pair<int,int>(bs_m.at(i).index, bs_m.at(j).index) };
+                        H_cand.push_back(H);
+                    }
+                }
+
+                //finding pairs closest to higgs mass
+                std::sort(H_cand.begin(), H_cand.end(), [=] (JetHReco x, JetHReco y){ return abs(x.invMass - H_m) < abs(y.invMass - H_m); });
+                
+                for(int m = 0; m < 2; m++){
+                    h_calo->Fill(invMass(gen_bmatch.at(H_cand.at(m).j_index.first)->MatchedObj, gen_bmatch.at(H_cand.at(m).j_index.second)->MatchedObj));
+
+                }
+
+            }
+        }
+
+        ev.jetMatch(0.1, "RecoJets", "BMatchedJets");
+
+        gen_bmatch = ev.GetMatchJetsToB(); //specific for pairing
+        std::vector<hltObj::Jet*> reco = ev.GetRecoJets(); //specific for pairing gen/calo
+
+        if(gen_bmatch.size() > 4){
+            std::cerr << "non è possibile qvesto" << std::endl;
+            throw std::runtime_error("nope");
+        }
+        
+        if(gen_bmatch.size() == 4){
+            if(std::count_if(gen_bmatch.begin(), gen_bmatch.end(), [](const hltObj::Jet* j){return j->matched == true;}) == gen_bmatch.size()){
+
+                std::vector<B2Jet> bs_m;
+                for(int ind = 0; ind < gen_bmatch.size(); ind++){
+                    if(gen_bmatch.at(ind)->bmatched){
+                        B2Jet J_{gen_bmatch.at(ind)->MatchedB, ind};
+                        bs_m.push_back(J_);
+                    }
+                }
+
+                std::vector<JetHReco> H_cand;
+                double H_m = 125.;
+                
+                for(int i = 0; i < bs_m.size()-1; i++){
+                    for(int j = i+1; j < bs_m.size(); j++){
+                        JetHReco H{invMass(bs_m.at(i).b, bs_m.at(j).b), std::pair<int,int>(i,j), std::pair<int,int>(bs_m.at(i).index, bs_m.at(j).index) };
+                        H_cand.push_back(H);
+                    }
+                }
+
+                //finding pairs closest to higgs mass
+                std::sort(H_cand.begin(), H_cand.end(), [=] (JetHReco x, JetHReco y){ return abs(x.invMass - H_m) < abs(y.invMass - H_m); });
+                
+                for(int m = 0; m < 2; m++){
+                    h_reco->Fill(invMass(gen_bmatch.at(H_cand.at(m).j_index.first)->MatchedObj, gen_bmatch.at(H_cand.at(m).j_index.second)->MatchedObj));
+
+                }
+
             }
         }
         
     }
 
+    ev.SetStart(0); //Reading again the whole tree
+
+    //Matching GenJets
+    for(int i = 0; i < entries; i++){
+    //for(int i = 0; i < 100; i++){
+
+        //PFJets
+
+        ev.Generate();
+        ev.UnpackCollections();
+        ev.bMatch(0.4, "GenNNJets");
+        ev.jetMatch(0.1, "PFJets", "BMatchedJets");
+
+        std::vector<hltObj::bQuark> bs = ev.GetBMatches(); //same for everyone
+
+        std::vector<hltObj::Jet*> gen_bmatch = ev.GetMatchJetsToB(); //specific for pairing
+        std::vector<hltObj::Jet*> pf = ev.GetPFJets(); //specific for pairing gen/PF
+
+        if(gen_bmatch.size() > 4){
+            std::cerr << "non è possibile qvesto" << std::endl;
+            throw std::runtime_error("nope");
+        }
+        
+        if(gen_bmatch.size() == 4){
+            if(std::count_if(gen_bmatch.begin(), gen_bmatch.end(), [](const hltObj::Jet* j){return j->matched == true;}) == gen_bmatch.size()){
+
+                std::vector<B2Jet> bs_m;
+                for(int ind = 0; ind < gen_bmatch.size(); ind++){
+                    if(gen_bmatch.at(ind)->bmatched){
+                        B2Jet J_{gen_bmatch.at(ind)->MatchedB, ind};
+                        bs_m.push_back(J_);
+                    }
+                }
+
+                std::vector<JetHReco> H_cand;
+                double H_m = 125.;
+                
+                for(int i = 0; i < bs_m.size()-1; i++){
+                    for(int j = i+1; j < bs_m.size(); j++){
+                        JetHReco H{invMass(bs_m.at(i).b, bs_m.at(j).b), std::pair<int,int>(i,j), std::pair<int,int>(bs_m.at(i).index, bs_m.at(j).index) };
+                        H_cand.push_back(H);
+                    }
+                }
+
+                //finding pairs closest to higgs mass
+                std::sort(H_cand.begin(), H_cand.end(), [=] (JetHReco x, JetHReco y){ return abs(x.invMass - H_m) < abs(y.invMass - H_m); });
+                
+                for(int m = 0; m < 2; m++){
+                    //h_q->Fill(H_cand.at(m).invMass);
+                    h_gen_nn->Fill(invMass(gen_bmatch.at(H_cand.at(m).j_index.first), gen_bmatch.at(H_cand.at(m).j_index.second)));
+                    h_pf_nn->Fill(invMass(gen_bmatch.at(H_cand.at(m).j_index.first)->MatchedObj, gen_bmatch.at(H_cand.at(m).j_index.second)->MatchedObj));
+
+                }
+
+            }
+        }
+
+        ev.jetMatch(0.1, "CaloJets", "BMatchedJets");
+
+        gen_bmatch = ev.GetMatchJetsToB(); //specific for pairing
+        std::vector<hltObj::Jet*> calo = ev.GetCaloJets(); //specific for pairing gen/calo
+
+        if(gen_bmatch.size() > 4){
+            std::cerr << "non è possibile qvesto" << std::endl;
+            throw std::runtime_error("nope");
+        }
+        
+        if(gen_bmatch.size() == 4){
+            if(std::count_if(gen_bmatch.begin(), gen_bmatch.end(), [](const hltObj::Jet* j){return j->matched == true;}) == gen_bmatch.size()){
+
+                std::vector<B2Jet> bs_m;
+                for(int ind = 0; ind < gen_bmatch.size(); ind++){
+                    if(gen_bmatch.at(ind)->bmatched){
+                        B2Jet J_{gen_bmatch.at(ind)->MatchedB, ind};
+                        bs_m.push_back(J_);
+                    }
+                }
+
+                std::vector<JetHReco> H_cand;
+                double H_m = 125.;
+                
+                for(int i = 0; i < bs_m.size()-1; i++){
+                    for(int j = i+1; j < bs_m.size(); j++){
+                        JetHReco H{invMass(bs_m.at(i).b, bs_m.at(j).b), std::pair<int,int>(i,j), std::pair<int,int>(bs_m.at(i).index, bs_m.at(j).index) };
+                        H_cand.push_back(H);
+                    }
+                }
+
+                //finding pairs closest to higgs mass
+                std::sort(H_cand.begin(), H_cand.end(), [=] (JetHReco x, JetHReco y){ return abs(x.invMass - H_m) < abs(y.invMass - H_m); });
+                
+                for(int m = 0; m < 2; m++){
+                    h_calo_nn->Fill(invMass(gen_bmatch.at(H_cand.at(m).j_index.first)->MatchedObj, gen_bmatch.at(H_cand.at(m).j_index.second)->MatchedObj));
+
+                }
+
+            }
+        }
+
+        ev.jetMatch(0.1, "RecoJets", "BMatchedJets");
+
+        gen_bmatch = ev.GetMatchJetsToB(); //specific for pairing
+        std::vector<hltObj::Jet*> reco = ev.GetRecoJets(); //specific for pairing gen/calo
+
+        if(gen_bmatch.size() > 4){
+            std::cerr << "non è possibile qvesto" << std::endl;
+            throw std::runtime_error("nope");
+        }
+        
+        if(gen_bmatch.size() == 4){
+            if(std::count_if(gen_bmatch.begin(), gen_bmatch.end(), [](const hltObj::Jet* j){return j->matched == true;}) == gen_bmatch.size()){
+
+                std::vector<B2Jet> bs_m;
+                for(int ind = 0; ind < gen_bmatch.size(); ind++){
+                    if(gen_bmatch.at(ind)->bmatched){
+                        B2Jet J_{gen_bmatch.at(ind)->MatchedB, ind};
+                        bs_m.push_back(J_);
+                    }
+                }
+
+                std::vector<JetHReco> H_cand;
+                double H_m = 125.;
+                
+                for(int i = 0; i < bs_m.size()-1; i++){
+                    for(int j = i+1; j < bs_m.size(); j++){
+                        JetHReco H{invMass(bs_m.at(i).b, bs_m.at(j).b), std::pair<int,int>(i,j), std::pair<int,int>(bs_m.at(i).index, bs_m.at(j).index) };
+                        H_cand.push_back(H);
+                    }
+                }
+
+                //finding pairs closest to higgs mass
+                std::sort(H_cand.begin(), H_cand.end(), [=] (JetHReco x, JetHReco y){ return abs(x.invMass - H_m) < abs(y.invMass - H_m); });
+                
+                for(int m = 0; m < 2; m++){
+                    h_reco_nn->Fill(invMass(gen_bmatch.at(H_cand.at(m).j_index.first)->MatchedObj, gen_bmatch.at(H_cand.at(m).j_index.second)->MatchedObj));
+
+                }
+
+            }
+        }
+        
+    }
+
+
     gStyle->SetOptStat(0);
 
-    h_j->GetXaxis()->SetTitle("#font[52]{m_{jj}}");
-    h_j->GetYaxis()->SetTitle("#font[52]{Events}");
-    h_j->SetTitle("");
+    h_gen->GetXaxis()->SetTitle("#font[52]{m_{jj}}");
+    h_gen->GetYaxis()->SetTitle("#font[52]{Events}");
+    h_gen->SetTitle("");
+
+    h_gen_nn->GetXaxis()->SetTitle("#font[52]{m_{jj}}");
+    //h_gen_nn->GetYaxis()->SetTitle("#font[52]{Events}");
+    h_gen_nn->SetTitle("");
+
+    h_pf->GetXaxis()->SetTitle("#font[52]{m_{jj}}");
+    h_pf->GetYaxis()->SetTitle("#font[52]{Events}");
+    h_pf->SetTitle("");
+
+    h_calo->GetXaxis()->SetTitle("#font[52]{m_{jj}}");
+    h_calo->GetYaxis()->SetTitle("#font[52]{Events}");
+    h_calo->SetTitle("");
+
+    h_reco->GetXaxis()->SetTitle("#font[52]{m_{jj}}");
+    h_reco->GetYaxis()->SetTitle("#font[52]{Events}");
+    h_reco->SetTitle("");
 
     h_q->GetXaxis()->SetTitle("#font[52]{m_{jj}}");
     h_q->GetYaxis()->SetTitle("#font[52]{Events}");
     h_q->SetTitle("");
 
     TLegend* leg = new TLegend(.89, .89, .6, .7);
-    leg->AddEntry(h_j, "#font[42]{GenJets}");
-    leg->AddEntry(h_q, "#font[42]{bQuarks}");
+    leg->AddEntry(h_gen, "#font[42]{GenJets}", "P");
     leg->AddEntry(h_pf, "#font[42]{PFJets}");
+    leg->AddEntry(h_calo, "#font[42]{CaloJets}");
+    leg->AddEntry(h_reco, "#font[42]{RecoJets}");
     leg->SetBorderSize(0);
 
-    TLegend* leg1 = new TLegend(.89, .89, .7, .7);
-    leg1->AddEntry(h_j, "#font[42]{GenJets}");
-    leg1->AddEntry(h_pf, "#font[42]{PFJets}");
+    TLegend* leg1 = new TLegend(.89, .89, .6, .7);
+    leg1->AddEntry(h_gen_nn, "#font[42]{GenNNJets}", "P");
+    leg1->AddEntry(h_pf_nn, "#font[42]{PFJets}");
+    leg1->AddEntry(h_calo_nn, "#font[42]{CaloJets}");
+    leg1->AddEntry(h_reco_nn, "#font[42]{RecoJets}");
     leg1->SetBorderSize(0);
 
-    TCanvas* c = new TCanvas("c", "c", 1000, 1000, 1000, 1500);
-    c->Divide(1,2);
+    double max = std::max(h_gen->GetMaximum(), h_gen_nn->GetMaximum());
+    h_gen->SetAxisRange(0., max+200,"Y");
+    h_gen_nn->SetAxisRange(0., max+200,"Y");
+
+    TCanvas* c = new TCanvas("c", "c", 1000, 1000, 2400, 1400);
+    c->Divide(2,1);
     c->cd(1);
-    h_q->Draw("hist");
-    h_j->Draw("hist same");
+    h_gen->Draw("hist");
     h_pf->Draw("hist same");
+    h_calo->Draw("hist same");
+    h_reco->Draw("hist same");
+    TLatex T1 = TLatex();
+    T1.DrawLatexNDC(.57, .92, "#scale[0.8]{#font[52]{ggF#rightarrow HH #rightarrow bbbb }}");
     leg->Draw();
 
     c->cd(2);
-    h_j->Draw("hist");
-    h_pf->Draw("hist same");
+    h_gen_nn->Draw("hist");
+    h_pf_nn->Draw("hist same");
+    h_calo_nn->Draw("hist same");
+    h_reco_nn->Draw("hist same");
+    TLatex T = TLatex();
+    T.DrawLatexNDC(.57, .92, "#scale[0.8]{#font[52]{ggF#rightarrow HH #rightarrow bbbb }}");
     leg1->Draw();
 
     c->cd();
