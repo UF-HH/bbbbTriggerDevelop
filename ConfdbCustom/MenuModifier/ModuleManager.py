@@ -2,6 +2,8 @@ import sys
 import os
 import ModMenu
 import re
+sys.path.append(os.path.dirname("QueryForFiles.py"))
+import QueryForFiles
 
 class ModMan:
 
@@ -156,6 +158,8 @@ class ModMan:
 
     def AddDASQuery(self, QueryType="QueryFilesMCgg()", at = "_customInfo['inputFile' ]"):
         line = ModMenu.FindLine(self.menu, at)
-        to_add = at + " = " + QueryType + "\n"
+        querier = getattr(QueryForFiles, QueryType)
+        query = querier()
+        to_add = at + " = " + str(querier) + "\n"
         ModMenu.ReplaceLine(self.menu, line, to_add)
         

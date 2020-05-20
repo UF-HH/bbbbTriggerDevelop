@@ -33,7 +33,7 @@ def HLTBTagSumPF(saveTags = True, Jets = "'hltPFJetForBtag'", JetTags = "'hltDee
     module = 'cms.EDFilter("HLTBTagSumPF",\nsaveTags = cms.bool( {} ),\nJets = cms.InputTag( {} ),\nJetTags = cms.InputTag( {},{} ),\nMinTag = cms.double( {} ),\nMaxTag = cms.double( {} ),\nTriggerType = cms.int32( {} ),\nMinEta = cms.double( {} ),\nMaxEta = cms.double( {} ),\nMinPt = cms.double( {} ),\nMaxPt = cms.double( {} ),\nSumN = cms.uint32({}),\nMinBTagSum = cms.double({})\n\n)\n'.format(saveTags, Jets, JetTags, BTag, MinTag,  MaxTag, TriggerType, MinEta, MaxEta, MinPt, MaxPt, SumN, MinBTagSum)
     return module
 
-def MyHLTAnalyzer(triggerResults = "'TriggerResults'", TRsecond = "''", process = "'@currentProcess'", triggerList = None, filterList = None, verbose = False):
+def MyHLTAnalyzer(triggerResults = "'TriggerResults'", TRsecond = "''", process = "'@currentProcess'", triggerList = "", filterList = "", verbose = False):
     module = 'cms.EDAnalyzer("HLTAn",\ntriggerResults = cms.InputTag({}, {}, {}),\ntriggerList = cms.vstring({}),\nfilterList = cms.vstring({}),\nverbose = cms.bool({})\n)\n'.format(triggerResults, TRsecond, process, triggerList, filterList, verbose)
     return module
 

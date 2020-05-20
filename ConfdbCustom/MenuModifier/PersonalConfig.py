@@ -64,7 +64,6 @@ man = ModMan(menu_path)
 #ADD MY MODULES FOR CUSTOMIZATION OF HLT MENU
 print("@[Info]: Adding Analyzers... ")
 
-man.Insert("from QueryForFiles import *\n", ind=3)
 man.Insert("import FWCore.PythonUtilities.LumiList as LumiList\n", ind=3)
 man.Insert("import FWCore.ParameterSet.Types as CfgTypes\n", ind=3)
 man.Insert("#-------------My Analyzers-------------\n", ind=FindFirstSequence(menu_path)-1)
