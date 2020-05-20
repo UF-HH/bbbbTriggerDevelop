@@ -75,7 +75,7 @@ class ModMan:
         prNm = "process.{} = ".format(process_name) + "cms.{}( ".format(module_dict["cmssw"]) + module_dict["type"] + ",\n"
         for key, value in zip(module_dict.keys(), module_dict.values()):
             if key == "cmssw" or key == "name" or key=="type": continue
-            prNm += "\t\t" + str(key) + " = " + str(value[0]) + " ( " + str(value[1]) + " ),\n"
+            prNm += str(key) + " = " + str(value[0]) + " ( " + str(value[1]) + " ),\n"
         prNm = prNm[:-2] + "\n" #deleting last comma
         prNm += ")\n"
 
@@ -155,7 +155,7 @@ class ModMan:
         self.Insert( to_add, self.currentline)
 
     def AddDASQuery(self, QueryType="QueryFilesMCgg()", at = "_customInfo['inputFile' ]"):
-        line = self.FindLine(self.menu, at)
-        to_add = at + " = " + QueryType
+        line = ModMenu.FindLine(self.menu, at)
+        to_add = at + " = " + QueryType + "\n"
         ModMenu.ReplaceLine(self.menu, line, to_add)
         
