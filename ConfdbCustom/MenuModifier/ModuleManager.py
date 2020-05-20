@@ -156,7 +156,7 @@ class ModMan:
         to_add = ModMenu.AddTFile(file_name)
         self.Insert( to_add, self.currentline)
 
-    def AddDASQuery(self, QueryType="QueryFilesMCgg()", at = "_customInfo['inputFile' ]"):
+    def AddDASQuery(self, QueryType="QueryFilesMCgg", at = "_customInfo['inputFile' ]"):
         line = ModMenu.FindLine(self.menu, at)
         querier = getattr(QueryForFiles, QueryType)
         query = querier()
