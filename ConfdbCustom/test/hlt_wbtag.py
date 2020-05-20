@@ -7,31 +7,6 @@ import FWCore.PythonUtilities.LumiList as LumiList
 import FWCore.ParameterSet.Types as CfgTypes
 import FWCore.ParameterSet.VarParsing as VarParsing
 
-op = VarParsing.VarParsing ('analysis')
-
-"""
-op.register ('json',
-                  'Json/json_2018D_Ephemeral_20181022_PU50.txt', # default value
-                  VarParsing.VarParsing.multiplicity.singleton, # singleton or list
-                  VarParsing.VarParsing.varType.string,            # string, int, or float
-                  "Golden Json")
-op.register ('nev',
-                  -1, # default value
-                  VarParsing.VarParsing.multiplicity.singleton, # singleton or list
-                  VarParsing.VarParsing.varType.int,            # string, int, or float
-                  "Number of event to process (Does not consider json discards)")
-op.register ('out',
-                  '323727_3.root', # default value
-                  VarParsing.VarParsing.multiplicity.singleton, # singleton or list
-                  VarParsing.VarParsing.varType.string,            # string, int, or float
-                  "TFileService output file name")
-
-op.parseArguments()
-
-out = op.out
-inputnev = op.nev
-json_file = op.json
-"""
 
 process = cms.Process( "HLTest" )
 process.load("setup_cff")

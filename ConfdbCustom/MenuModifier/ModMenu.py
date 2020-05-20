@@ -336,12 +336,13 @@ def AddLumiAsInput(json_file):
 
     return inputs + def_list + global_json
 
-def AddLumiToModule(module_name):
+def AddLumiToModule(module_name, empty=True):
 
     def_inputs = 'process.{}.inputs = cms.PSet (\n\t\tlumisToProcess = CfgTypes.untracked(CfgTypes.VLuminosityBlockRange())\n)\n'.format(module_name)
-    extend_with_lumi = 'process.{}.inputs.lumisToProcess.extend(myList)\n'.format(module_name)
+    if not empty:
+        def_inputs += 'process.{}.inputs.lumisToProcess.extend(myList)\n'.format(module_name)
 
-    return def_inputs + extend_with_lumi
+    return def_inputs
 
 def AddTFile(output_name):
     Service = 'process.TFileService = cms.Service("TFileService",\n\t\tfileName = cms.string("{}")\n)\n'.format(output_name)

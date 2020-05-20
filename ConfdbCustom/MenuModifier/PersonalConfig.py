@@ -4,7 +4,7 @@
 # HLT menu with modules and
 # triggers from the analysis
 #
-# example usage: python prova.py --menu=/dev/CMSSW_11_0_0/GRun/V7 -out=myHLT.py -gt=110X_mcRun3_2021_realistic_v6-v2 -pr=myHLT.py
+# example usage: python PersonalConfig.py --menu=/dev/CMSSW_11_0_0/GRun/V7 -out=myHLT.py -gt=110X_mcRun3_2021_realistic_v6-v2 -pr=myHLT.py
 #
 #--------------------------------------------------------------------------------------------------------------------------------
 
@@ -59,16 +59,15 @@ os.system(to_os)
 if os.path.isfile(args.out):
     menu_path = args.out 
 
-print(FindFirstPath(menu_path))
+man = ModMan(menu_path)
 
 #ADD MY MODULES FOR CUSTOMIZATION OF HLT MENU
 print("@[Info]: Adding Analyzers... ")
 
-Insert(menu_path, "\n#-------------My Analyzers-------------\n", FindFirstSequence(menu_path))
-
-man = ModMan(menu_path)
-
-man.SetCurrentLine("after:#-------------My Analyzers-------------")
+man.Insert("#-------------My Analyzers-------------\n", ind=FindFirstSequence(menu_path)-1)
+man.SetCurrentLine(option_str="after:#-------------My Analyzers-------------")
+man.MakeSpace(n=20) #caveat, does not work without this, problem with indexing inside man...Need to work on this
+man.SetCurrentLine(option_str="after:#-------------My Analyzers-------------")
 
 trigger_list = "'HLT_Quad30_Double60_Sum2LeadingBTag015','HLT_PFHT330PT30_QuadPFJet_75_60_45_40_TriplePFBTagDeepCSV_4p5_v3','HLT_PFHT270_180_Double180_Double90_BisectorBTag07'"
 
@@ -109,6 +108,7 @@ man.InsertInMenu(in_class="hltBTagBisector23PF",process_name = 'in_class')
 man.CreateFromLocal(in_class="hltBTagBisector23Calo",mod_name="HLT2DJetTagCalo")
 man.InsertInMenu(in_class="hltBTagBisector23Calo",process_name = 'in_class')
 
+#This module is present in /dev/CMSSW_11_0_0/GRun/V7, does not work if not present in the menu
 man.CloneModule("process.hltDoubleCentralCaloJet60", in_class="hltDoubleCentralCaloJet60")
 man.ModifyPar("hltDoubleCentralCaloJet60", "MaxEta", 2.5)
 man.ModifyPar("hltDoubleCentralCaloJet60", "inputTag", "hltAK4CaloJetsCorrectedIDPassed")
@@ -132,16 +132,18 @@ print("@[Info]: Adding Services... ")
 man.AddTFileService(file_name=prova.root)
 
 man.SetCurrentLine(FindLastPath(menu_path))
-man.Insert("")
+man.Insert("\n")
 
 #inserting my paths
 
 print("@[Info]: Adding Paths... ")
 
-man.Insert("\n#-----------------My Paths-----------------\n")
+man.Insert("#-----------------My Paths-----------------\n")
 man.Insert("process.HLT_Quad30_Double60_Sum2LeadingBTag015 = cms.Path( process.HLTBeginSequence + process.hltL1sQuadJetC50to60IorHTT280to500IorHTT250to340QuadJet + process.hltPrePFHT330PT30QuadPFJet75604540TriplePFBTagDeepCSV4p5 + process.HLTAK4CaloJetsSequence + process.hltQuadCentralJet30 + process.hltDoubleCentralJet60 + process.HLTBtagDeepCSVSequenceL3 + process.hltDoubleLeadingBTagSumCentralJet30 + process.HLTAK4PFJetsSequence + process.hltPFCentralJetLooseIDQuad30 + process.hlt2PFCentralJetLooseID60 + process.HLTBtagDeepCSVSequencePF + process.hltDoublePFLeadingBTagSumCentralJet30  + process.HLTEndSequence )\n")
 man.Insert("process.HLT_PFHT270_180_Double180_Double90_BisectorBTag07 = cms.Path( process.HLTBeginSequence + process.hltL1sQuadJetC50to60IorHTT280to500IorHTT250to340QuadJet + process.hltPrePFHT330PT30QuadPFJet75604540TriplePFBTagDeepCSV4p5 + process.HLTAK4CaloJetsSequence + process.hltDoubleCentralCaloHT180 + process.hltDoubleCentralCaloHT90 + process.HLTBtagDeepCSVSequenceL3 + process.hltBTagBisector23Calo + process.HLTAK4PFJetsSequence + process.hltDoubleCentralPFHT180 + process.hltDoubleCentralPFHT90  + process.HLTBtagDeepCSVSequencePF + process.hltBTagBisector23PF + process.HLTEndSequence )\n")
 man.Insert("process.HLT_PFHT330PT30_QuadPFJet_75_60_45_40_TriplePFBTagDeepCSV_4p5_v3 = cms.Path( process.HLTBeginSequence + process.hltL1sQuadJetC50to60IorHTT280to500IorHTT250to340QuadJet + process.hltPrePFHT330PT30QuadPFJet75604540TriplePFBTagDeepCSV4p5 + process.HLTAK4CaloJetsSequence + process.hltQuadCentralJet30 + process.hltCaloJetsQuad30ForHt + process.hltHtMhtCaloJetsQuadC30 + process.hltCaloQuadJet30HT320 + process.HLTBtagDeepCSVSequenceL3 + process.hltBTagCaloDeepCSVp17Double + process.HLTAK4PFJetsSequence + process.hltPFCentralJetLooseIDQuad30 + process.hlt1PFCentralJetLooseID75 + process.hlt2PFCentralJetLooseID60 + process.hlt3PFCentralJetLooseID45 + process.hlt4PFCentralJetLooseID40 + process.hltPFCentralJetLooseIDQuad30forHt + process.hltHtMhtPFCentralJetsLooseIDQuadC30 + process.hltPFCentralJetsLooseIDQuad30HT330 + process.HLTBtagDeepCSVSequencePF + process.hltBTagPFDeepCSV4p5Triple + process.HLTEndSequence )\n")
+man.Insert("process.SaveGen = cms.Sequence( process.prunedGenParticles + process.SaveGenHH)\n")
+man.Insert("process.SaveJets = cms.Path( process.HLTBeginSequence + process.hltL1sQuadJetC50to60IorHTT280to500IorHTT250to340QuadJet + process.hltPrePFHT330PT30QuadPFJet75604540TriplePFBTagDeepCSV4p5 +process.HLTAK4CaloJetsSequence + process.HLTBtagDeepCSVSequenceL3 + process.HLTAK4PFJetsSequence + process.HLTBtagDeepCSVSequencePF + process.SaveGen + process.SaveAllJets + process.HLTEndSequence)\n")
 
 print("@[EndJob]: Done")
 

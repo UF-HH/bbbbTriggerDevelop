@@ -14704,10 +14704,10 @@ from customize_trg_config import *
 customize_trg_config_2018(process)
 
 process.TFileService = cms.Service('TFileService',
-    fileName = cms.string("prova_PS.root")
+    fileName = cms.string("prova_PS_btagreco.root")
 )
 
-process.SaveAllJets = cms.EDAnalyzer("SaveAllJetsMC",
+process.SaveAllJets = cms.EDAnalyzer("SaveAllJetsRecoMC",
     L1JetTag = cms.InputTag( 'hltGtStage2Digis','Jet' ),
     PFJetTag = cms.InputTag('hltAK4PFJetsLooseIDCorrected'),
     GenJetTag = cms.InputTag('ak4GenJets'),
@@ -14715,6 +14715,7 @@ process.SaveAllJets = cms.EDAnalyzer("SaveAllJetsMC",
     CaloJetTag = cms.InputTag('hltAK4CaloJetsCorrectedIDPassed'),
     PFBJetTag = cms.InputTag('hltDeepCombinedSecondaryVertexBJetTagsPF','probb'),
     CaloBJetTag = cms.InputTag('hltDeepCombinedSecondaryVertexBJetTagsCalo','probb'),
+    RecoTag = cms.InputTag('slimmedJets'),
     verbose = cms.bool(True),
     tree = cms.string("Jets")
 )
@@ -14965,47 +14966,6 @@ process.HLTriggerFinalPath = cms.Path( process.hltGtStage2Digis + process.hltSca
 process.HLTSchedule = cms.Schedule( *(process.SaveJets, process.HLTriggerFirstPath, process.HLT_PFHT270_180_Double180_Double90_BisectorBTag07, process.HLT_PFHT330PT30_QuadPFJet_75_60_45_40_TriplePFBTagDeepCSV_4p5_v3, process.HLTriggerFinalPath, process.HLTAnalyzerEndpath ))
 
 
-process.source = cms.Source ("PoolSource", 
-fileNames=cms.untracked.vstring('/store/mc/Run3Winter20DRPremixMiniAOD/GluGluToHHTo4B_node_SM_TuneCP5_14TeV-madgraph-pythia8/MINIAODSIM/110X_mcRun3_2021_realistic_v6-v2/250000/A04E2AAF-071A-B548-8DE3-7F3FBFF57EC1.root', 
-'/store/mc/Run3Winter20DRPremixMiniAOD/GluGluToHHTo4B_node_SM_TuneCP5_14TeV-madgraph-pythia8/MINIAODSIM/110X_mcRun3_2021_realistic_v6-v2/250000/F062A01A-9F3D-3146-B225-5051306D814D.root', 
-'/store/mc/Run3Winter20DRPremixMiniAOD/GluGluToHHTo4B_node_SM_TuneCP5_14TeV-madgraph-pythia8/MINIAODSIM/110X_mcRun3_2021_realistic_v6-v2/250000/2BD716F1-515B-1B42-8D54-AE75F599F644.root', 
-'/store/mc/Run3Winter20DRPremixMiniAOD/GluGluToHHTo4B_node_SM_TuneCP5_14TeV-madgraph-pythia8/MINIAODSIM/110X_mcRun3_2021_realistic_v6-v2/250000/89A65549-ED75-1743-A28E-ADA6899EDA1B.root', 
-'/store/mc/Run3Winter20DRPremixMiniAOD/GluGluToHHTo4B_node_SM_TuneCP5_14TeV-madgraph-pythia8/MINIAODSIM/110X_mcRun3_2021_realistic_v6-v2/250000/AC51D797-2D13-B94E-929D-6633C486C37A.root', 
-'/store/mc/Run3Winter20DRPremixMiniAOD/GluGluToHHTo4B_node_SM_TuneCP5_14TeV-madgraph-pythia8/MINIAODSIM/110X_mcRun3_2021_realistic_v6-v2/250000/4F0996C3-7C23-2547-A27F-3D05A9F900F7.root', 
-'/store/mc/Run3Winter20DRPremixMiniAOD/GluGluToHHTo4B_node_SM_TuneCP5_14TeV-madgraph-pythia8/MINIAODSIM/110X_mcRun3_2021_realistic_v6-v2/250000/1CFD067E-0B5C-3944-BFB6-BDE6EDC29B98.root', 
-'/store/mc/Run3Winter20DRPremixMiniAOD/GluGluToHHTo4B_node_SM_TuneCP5_14TeV-madgraph-pythia8/MINIAODSIM/110X_mcRun3_2021_realistic_v6-v2/250000/62C99F14-0F34-564F-9309-68FD37E5B04B.root', 
-'/store/mc/Run3Winter20DRPremixMiniAOD/GluGluToHHTo4B_node_SM_TuneCP5_14TeV-madgraph-pythia8/MINIAODSIM/110X_mcRun3_2021_realistic_v6-v2/250000/18260FD1-5C35-364F-8685-F76863082090.root', 
-'/store/mc/Run3Winter20DRPremixMiniAOD/GluGluToHHTo4B_node_SM_TuneCP5_14TeV-madgraph-pythia8/MINIAODSIM/110X_mcRun3_2021_realistic_v6-v2/250000/70AA74AA-9243-0249-9BE9-9FEABE82DD8B.root', 
-'/store/mc/Run3Winter20DRPremixMiniAOD/GluGluToHHTo4B_node_SM_TuneCP5_14TeV-madgraph-pythia8/MINIAODSIM/110X_mcRun3_2021_realistic_v6-v2/250000/824E951E-B4CD-EE4A-9908-A10145AC74CB.root', ), 
-secondaryFileNames=cms.untracked.vstring( 
-'/store/mc/Run3Winter20DRPremixMiniAOD/GluGluToHHTo4B_node_SM_TuneCP5_14TeV-madgraph-pythia8/GEN-SIM-RAW/110X_mcRun3_2021_realistic_v6-v2/250000/904FDC0F-6179-7E44-9988-C20E997EFFA8.root', 
-'/store/mc/Run3Winter20DRPremixMiniAOD/GluGluToHHTo4B_node_SM_TuneCP5_14TeV-madgraph-pythia8/GEN-SIM-RAW/110X_mcRun3_2021_realistic_v6-v2/250000/AC07ABCE-D06D-DE48-AA3D-FC988CF56D1E.root', 
-'/store/mc/Run3Winter20DRPremixMiniAOD/GluGluToHHTo4B_node_SM_TuneCP5_14TeV-madgraph-pythia8/GEN-SIM-RAW/110X_mcRun3_2021_realistic_v6-v2/250000/B17D5D50-296B-374A-85A2-A9BC00387DFE.root', 
-'/store/mc/Run3Winter20DRPremixMiniAOD/GluGluToHHTo4B_node_SM_TuneCP5_14TeV-madgraph-pythia8/GEN-SIM-RAW/110X_mcRun3_2021_realistic_v6-v2/250000/A55F53BC-A3DC-7E4F-A8D9-93DF88FB95C2.root', 
-'/store/mc/Run3Winter20DRPremixMiniAOD/GluGluToHHTo4B_node_SM_TuneCP5_14TeV-madgraph-pythia8/GEN-SIM-RAW/110X_mcRun3_2021_realistic_v6-v2/250000/5A07BD34-037F-2248-9CED-CAEFC1EB9D0B.root', 
-'/store/mc/Run3Winter20DRPremixMiniAOD/GluGluToHHTo4B_node_SM_TuneCP5_14TeV-madgraph-pythia8/GEN-SIM-RAW/110X_mcRun3_2021_realistic_v6-v2/250000/E397C06C-DECB-8F4B-870B-0FF24803E323.root', 
-'/store/mc/Run3Winter20DRPremixMiniAOD/GluGluToHHTo4B_node_SM_TuneCP5_14TeV-madgraph-pythia8/GEN-SIM-RAW/110X_mcRun3_2021_realistic_v6-v2/250000/3EE3AA66-D222-1A48-B54D-F9164BCF581C.root', 
-'/store/mc/Run3Winter20DRPremixMiniAOD/GluGluToHHTo4B_node_SM_TuneCP5_14TeV-madgraph-pythia8/GEN-SIM-RAW/110X_mcRun3_2021_realistic_v6-v2/250000/00AA4A2B-2BF6-5D48-A33A-6076126E8D92.root', 
-'/store/mc/Run3Winter20DRPremixMiniAOD/GluGluToHHTo4B_node_SM_TuneCP5_14TeV-madgraph-pythia8/GEN-SIM-RAW/110X_mcRun3_2021_realistic_v6-v2/250000/F576177A-AB4E-7E4E-A360-93957D4C6731.root', 
-'/store/mc/Run3Winter20DRPremixMiniAOD/GluGluToHHTo4B_node_SM_TuneCP5_14TeV-madgraph-pythia8/GEN-SIM-RAW/110X_mcRun3_2021_realistic_v6-v2/250000/A8D0282B-B782-9347-B4EA-96DABC11620D.root', 
-'/store/mc/Run3Winter20DRPremixMiniAOD/GluGluToHHTo4B_node_SM_TuneCP5_14TeV-madgraph-pythia8/GEN-SIM-RAW/110X_mcRun3_2021_realistic_v6-v2/250000/C512DB65-7B39-1445-9C4E-909FBA0CAECF.root', 
-'/store/mc/Run3Winter20DRPremixMiniAOD/GluGluToHHTo4B_node_SM_TuneCP5_14TeV-madgraph-pythia8/GEN-SIM-RAW/110X_mcRun3_2021_realistic_v6-v2/250000/E65BB621-36FA-3F43-AC16-1D8FE9A99701.root', 
-'/store/mc/Run3Winter20DRPremixMiniAOD/GluGluToHHTo4B_node_SM_TuneCP5_14TeV-madgraph-pythia8/GEN-SIM-RAW/110X_mcRun3_2021_realistic_v6-v2/250000/BBD3414A-D217-A64D-91EB-58041E1C4F48.root', 
-'/store/mc/Run3Winter20DRPremixMiniAOD/GluGluToHHTo4B_node_SM_TuneCP5_14TeV-madgraph-pythia8/GEN-SIM-RAW/110X_mcRun3_2021_realistic_v6-v2/250000/F37733EF-FEDE-7145-AA2C-41757039F18E.root', 
-'/store/mc/Run3Winter20DRPremixMiniAOD/GluGluToHHTo4B_node_SM_TuneCP5_14TeV-madgraph-pythia8/GEN-SIM-RAW/110X_mcRun3_2021_realistic_v6-v2/250000/801D3D84-31BD-4741-8261-74E0BBA978FC.root', 
-'/store/mc/Run3Winter20DRPremixMiniAOD/GluGluToHHTo4B_node_SM_TuneCP5_14TeV-madgraph-pythia8/GEN-SIM-RAW/110X_mcRun3_2021_realistic_v6-v2/250000/97A3E398-115C-6845-9A09-57C2050B8ABD.root', 
-'/store/mc/Run3Winter20DRPremixMiniAOD/GluGluToHHTo4B_node_SM_TuneCP5_14TeV-madgraph-pythia8/GEN-SIM-RAW/110X_mcRun3_2021_realistic_v6-v2/250000/FEBF18A6-A8BD-B844-ACCA-69964D5744B5.root', 
-'/store/mc/Run3Winter20DRPremixMiniAOD/GluGluToHHTo4B_node_SM_TuneCP5_14TeV-madgraph-pythia8/GEN-SIM-RAW/110X_mcRun3_2021_realistic_v6-v2/250000/AC8157AE-5AEF-3A41-9082-6F9874AA9FD3.root', 
-'/store/mc/Run3Winter20DRPremixMiniAOD/GluGluToHHTo4B_node_SM_TuneCP5_14TeV-madgraph-pythia8/GEN-SIM-RAW/110X_mcRun3_2021_realistic_v6-v2/250000/F38E00AD-4D85-8845-A29F-E983E0220AFE.root', 
-'/store/mc/Run3Winter20DRPremixMiniAOD/GluGluToHHTo4B_node_SM_TuneCP5_14TeV-madgraph-pythia8/GEN-SIM-RAW/110X_mcRun3_2021_realistic_v6-v2/250000/5C084D77-3090-FD46-9F2C-6A3E0E2CBE76.root', 
-'/store/mc/Run3Winter20DRPremixMiniAOD/GluGluToHHTo4B_node_SM_TuneCP5_14TeV-madgraph-pythia8/GEN-SIM-RAW/110X_mcRun3_2021_realistic_v6-v2/250000/512C9263-B7CA-664F-BB6E-7007E46273CE.root', 
-'/store/mc/Run3Winter20DRPremixMiniAOD/GluGluToHHTo4B_node_SM_TuneCP5_14TeV-madgraph-pythia8/GEN-SIM-RAW/110X_mcRun3_2021_realistic_v6-v2/250000/A3853B9E-3B28-BC46-A9D1-41E66C2A35AA.root', 
-'/store/mc/Run3Winter20DRPremixMiniAOD/GluGluToHHTo4B_node_SM_TuneCP5_14TeV-madgraph-pythia8/GEN-SIM-RAW/110X_mcRun3_2021_realistic_v6-v2/250000/D09D4295-0D30-8D40-A02B-497F903D93E1.root', 
-'/store/mc/Run3Winter20DRPremixMiniAOD/GluGluToHHTo4B_node_SM_TuneCP5_14TeV-madgraph-pythia8/GEN-SIM-RAW/110X_mcRun3_2021_realistic_v6-v2/250000/AC074D10-DE22-E24D-8FA9-908B8D76025A.root', 
-'/store/mc/Run3Winter20DRPremixMiniAOD/GluGluToHHTo4B_node_SM_TuneCP5_14TeV-madgraph-pythia8/GEN-SIM-RAW/110X_mcRun3_2021_realistic_v6-v2/250000/1046EFBD-94AE-E342-BD0B-E894A1D48CD5.root', 
-) 
-) 
-
 
 # instrument the menu with the modules and EndPath needed for timing studies
 
@@ -15099,4 +15059,45 @@ process = customizeHLTforCMSSW(process,"GRun")
 # Eras-based customisations
 from HLTrigger.Configuration.Eras import modifyHLTforEras
 modifyHLTforEras(process)
+
+process.source = cms.Source ("PoolSource", 
+fileNames=cms.untracked.vstring('/store/mc/Run3Winter20DRPremixMiniAOD/GluGluToHHTo4B_node_SM_TuneCP5_14TeV-madgraph-pythia8/MINIAODSIM/110X_mcRun3_2021_realistic_v6-v2/250000/A04E2AAF-071A-B548-8DE3-7F3FBFF57EC1.root', 
+'/store/mc/Run3Winter20DRPremixMiniAOD/GluGluToHHTo4B_node_SM_TuneCP5_14TeV-madgraph-pythia8/MINIAODSIM/110X_mcRun3_2021_realistic_v6-v2/250000/F062A01A-9F3D-3146-B225-5051306D814D.root', 
+'/store/mc/Run3Winter20DRPremixMiniAOD/GluGluToHHTo4B_node_SM_TuneCP5_14TeV-madgraph-pythia8/MINIAODSIM/110X_mcRun3_2021_realistic_v6-v2/250000/2BD716F1-515B-1B42-8D54-AE75F599F644.root', 
+'/store/mc/Run3Winter20DRPremixMiniAOD/GluGluToHHTo4B_node_SM_TuneCP5_14TeV-madgraph-pythia8/MINIAODSIM/110X_mcRun3_2021_realistic_v6-v2/250000/89A65549-ED75-1743-A28E-ADA6899EDA1B.root', 
+'/store/mc/Run3Winter20DRPremixMiniAOD/GluGluToHHTo4B_node_SM_TuneCP5_14TeV-madgraph-pythia8/MINIAODSIM/110X_mcRun3_2021_realistic_v6-v2/250000/AC51D797-2D13-B94E-929D-6633C486C37A.root', 
+'/store/mc/Run3Winter20DRPremixMiniAOD/GluGluToHHTo4B_node_SM_TuneCP5_14TeV-madgraph-pythia8/MINIAODSIM/110X_mcRun3_2021_realistic_v6-v2/250000/4F0996C3-7C23-2547-A27F-3D05A9F900F7.root', 
+'/store/mc/Run3Winter20DRPremixMiniAOD/GluGluToHHTo4B_node_SM_TuneCP5_14TeV-madgraph-pythia8/MINIAODSIM/110X_mcRun3_2021_realistic_v6-v2/250000/1CFD067E-0B5C-3944-BFB6-BDE6EDC29B98.root', 
+'/store/mc/Run3Winter20DRPremixMiniAOD/GluGluToHHTo4B_node_SM_TuneCP5_14TeV-madgraph-pythia8/MINIAODSIM/110X_mcRun3_2021_realistic_v6-v2/250000/62C99F14-0F34-564F-9309-68FD37E5B04B.root', 
+'/store/mc/Run3Winter20DRPremixMiniAOD/GluGluToHHTo4B_node_SM_TuneCP5_14TeV-madgraph-pythia8/MINIAODSIM/110X_mcRun3_2021_realistic_v6-v2/250000/18260FD1-5C35-364F-8685-F76863082090.root', 
+'/store/mc/Run3Winter20DRPremixMiniAOD/GluGluToHHTo4B_node_SM_TuneCP5_14TeV-madgraph-pythia8/MINIAODSIM/110X_mcRun3_2021_realistic_v6-v2/250000/70AA74AA-9243-0249-9BE9-9FEABE82DD8B.root', 
+'/store/mc/Run3Winter20DRPremixMiniAOD/GluGluToHHTo4B_node_SM_TuneCP5_14TeV-madgraph-pythia8/MINIAODSIM/110X_mcRun3_2021_realistic_v6-v2/250000/824E951E-B4CD-EE4A-9908-A10145AC74CB.root', ), 
+secondaryFileNames=cms.untracked.vstring( 
+'/store/mc/Run3Winter20DRPremixMiniAOD/GluGluToHHTo4B_node_SM_TuneCP5_14TeV-madgraph-pythia8/GEN-SIM-RAW/110X_mcRun3_2021_realistic_v6-v2/250000/904FDC0F-6179-7E44-9988-C20E997EFFA8.root', 
+'/store/mc/Run3Winter20DRPremixMiniAOD/GluGluToHHTo4B_node_SM_TuneCP5_14TeV-madgraph-pythia8/GEN-SIM-RAW/110X_mcRun3_2021_realistic_v6-v2/250000/AC07ABCE-D06D-DE48-AA3D-FC988CF56D1E.root', 
+'/store/mc/Run3Winter20DRPremixMiniAOD/GluGluToHHTo4B_node_SM_TuneCP5_14TeV-madgraph-pythia8/GEN-SIM-RAW/110X_mcRun3_2021_realistic_v6-v2/250000/B17D5D50-296B-374A-85A2-A9BC00387DFE.root', 
+'/store/mc/Run3Winter20DRPremixMiniAOD/GluGluToHHTo4B_node_SM_TuneCP5_14TeV-madgraph-pythia8/GEN-SIM-RAW/110X_mcRun3_2021_realistic_v6-v2/250000/A55F53BC-A3DC-7E4F-A8D9-93DF88FB95C2.root', 
+'/store/mc/Run3Winter20DRPremixMiniAOD/GluGluToHHTo4B_node_SM_TuneCP5_14TeV-madgraph-pythia8/GEN-SIM-RAW/110X_mcRun3_2021_realistic_v6-v2/250000/5A07BD34-037F-2248-9CED-CAEFC1EB9D0B.root', 
+'/store/mc/Run3Winter20DRPremixMiniAOD/GluGluToHHTo4B_node_SM_TuneCP5_14TeV-madgraph-pythia8/GEN-SIM-RAW/110X_mcRun3_2021_realistic_v6-v2/250000/E397C06C-DECB-8F4B-870B-0FF24803E323.root', 
+'/store/mc/Run3Winter20DRPremixMiniAOD/GluGluToHHTo4B_node_SM_TuneCP5_14TeV-madgraph-pythia8/GEN-SIM-RAW/110X_mcRun3_2021_realistic_v6-v2/250000/3EE3AA66-D222-1A48-B54D-F9164BCF581C.root', 
+'/store/mc/Run3Winter20DRPremixMiniAOD/GluGluToHHTo4B_node_SM_TuneCP5_14TeV-madgraph-pythia8/GEN-SIM-RAW/110X_mcRun3_2021_realistic_v6-v2/250000/00AA4A2B-2BF6-5D48-A33A-6076126E8D92.root', 
+'/store/mc/Run3Winter20DRPremixMiniAOD/GluGluToHHTo4B_node_SM_TuneCP5_14TeV-madgraph-pythia8/GEN-SIM-RAW/110X_mcRun3_2021_realistic_v6-v2/250000/F576177A-AB4E-7E4E-A360-93957D4C6731.root', 
+'/store/mc/Run3Winter20DRPremixMiniAOD/GluGluToHHTo4B_node_SM_TuneCP5_14TeV-madgraph-pythia8/GEN-SIM-RAW/110X_mcRun3_2021_realistic_v6-v2/250000/A8D0282B-B782-9347-B4EA-96DABC11620D.root', 
+'/store/mc/Run3Winter20DRPremixMiniAOD/GluGluToHHTo4B_node_SM_TuneCP5_14TeV-madgraph-pythia8/GEN-SIM-RAW/110X_mcRun3_2021_realistic_v6-v2/250000/C512DB65-7B39-1445-9C4E-909FBA0CAECF.root', 
+'/store/mc/Run3Winter20DRPremixMiniAOD/GluGluToHHTo4B_node_SM_TuneCP5_14TeV-madgraph-pythia8/GEN-SIM-RAW/110X_mcRun3_2021_realistic_v6-v2/250000/E65BB621-36FA-3F43-AC16-1D8FE9A99701.root', 
+'/store/mc/Run3Winter20DRPremixMiniAOD/GluGluToHHTo4B_node_SM_TuneCP5_14TeV-madgraph-pythia8/GEN-SIM-RAW/110X_mcRun3_2021_realistic_v6-v2/250000/BBD3414A-D217-A64D-91EB-58041E1C4F48.root', 
+'/store/mc/Run3Winter20DRPremixMiniAOD/GluGluToHHTo4B_node_SM_TuneCP5_14TeV-madgraph-pythia8/GEN-SIM-RAW/110X_mcRun3_2021_realistic_v6-v2/250000/F37733EF-FEDE-7145-AA2C-41757039F18E.root', 
+'/store/mc/Run3Winter20DRPremixMiniAOD/GluGluToHHTo4B_node_SM_TuneCP5_14TeV-madgraph-pythia8/GEN-SIM-RAW/110X_mcRun3_2021_realistic_v6-v2/250000/801D3D84-31BD-4741-8261-74E0BBA978FC.root', 
+'/store/mc/Run3Winter20DRPremixMiniAOD/GluGluToHHTo4B_node_SM_TuneCP5_14TeV-madgraph-pythia8/GEN-SIM-RAW/110X_mcRun3_2021_realistic_v6-v2/250000/97A3E398-115C-6845-9A09-57C2050B8ABD.root', 
+'/store/mc/Run3Winter20DRPremixMiniAOD/GluGluToHHTo4B_node_SM_TuneCP5_14TeV-madgraph-pythia8/GEN-SIM-RAW/110X_mcRun3_2021_realistic_v6-v2/250000/FEBF18A6-A8BD-B844-ACCA-69964D5744B5.root', 
+'/store/mc/Run3Winter20DRPremixMiniAOD/GluGluToHHTo4B_node_SM_TuneCP5_14TeV-madgraph-pythia8/GEN-SIM-RAW/110X_mcRun3_2021_realistic_v6-v2/250000/AC8157AE-5AEF-3A41-9082-6F9874AA9FD3.root', 
+'/store/mc/Run3Winter20DRPremixMiniAOD/GluGluToHHTo4B_node_SM_TuneCP5_14TeV-madgraph-pythia8/GEN-SIM-RAW/110X_mcRun3_2021_realistic_v6-v2/250000/F38E00AD-4D85-8845-A29F-E983E0220AFE.root', 
+'/store/mc/Run3Winter20DRPremixMiniAOD/GluGluToHHTo4B_node_SM_TuneCP5_14TeV-madgraph-pythia8/GEN-SIM-RAW/110X_mcRun3_2021_realistic_v6-v2/250000/5C084D77-3090-FD46-9F2C-6A3E0E2CBE76.root', 
+'/store/mc/Run3Winter20DRPremixMiniAOD/GluGluToHHTo4B_node_SM_TuneCP5_14TeV-madgraph-pythia8/GEN-SIM-RAW/110X_mcRun3_2021_realistic_v6-v2/250000/512C9263-B7CA-664F-BB6E-7007E46273CE.root', 
+'/store/mc/Run3Winter20DRPremixMiniAOD/GluGluToHHTo4B_node_SM_TuneCP5_14TeV-madgraph-pythia8/GEN-SIM-RAW/110X_mcRun3_2021_realistic_v6-v2/250000/A3853B9E-3B28-BC46-A9D1-41E66C2A35AA.root', 
+'/store/mc/Run3Winter20DRPremixMiniAOD/GluGluToHHTo4B_node_SM_TuneCP5_14TeV-madgraph-pythia8/GEN-SIM-RAW/110X_mcRun3_2021_realistic_v6-v2/250000/D09D4295-0D30-8D40-A02B-497F903D93E1.root', 
+'/store/mc/Run3Winter20DRPremixMiniAOD/GluGluToHHTo4B_node_SM_TuneCP5_14TeV-madgraph-pythia8/GEN-SIM-RAW/110X_mcRun3_2021_realistic_v6-v2/250000/AC074D10-DE22-E24D-8FA9-908B8D76025A.root', 
+'/store/mc/Run3Winter20DRPremixMiniAOD/GluGluToHHTo4B_node_SM_TuneCP5_14TeV-madgraph-pythia8/GEN-SIM-RAW/110X_mcRun3_2021_realistic_v6-v2/250000/1046EFBD-94AE-E342-BD0B-E894A1D48CD5.root', 
+) 
+) 
 
