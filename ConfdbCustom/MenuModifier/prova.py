@@ -64,7 +64,7 @@ print(FindFirstPath(menu_path))
 #ADD MY MODULES FOR CUSTOMIZATION OF HLT MENU
 print("@[Info]: Adding Analyzers... ")
 
-Insert(menu_path, "\n#-------------My Analyzers-------------\n", FindFirstPath(menu_path))
+Insert(menu_path, "\n#-------------My Analyzers-------------\n", FindFirstSequence(menu_path))
 
 man = ModMan(menu_path)
 

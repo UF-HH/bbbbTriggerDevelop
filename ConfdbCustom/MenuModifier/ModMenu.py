@@ -107,6 +107,17 @@ def FindFirstPath(menu_file):
             else:
                 return count_lines-1
 
+def FindFirstSequence(menu_file):
+    count_lines = 0
+    with open(menu_file) as file:
+        line = file.readline()
+        while(line):
+            count_lines+=1
+            if "cms.Sequence" not in line:
+                line = file.readline()
+            else:
+                return count_lines-1
+
 def FindLastPath(menu_file):
     count_lines = 0
     with open(menu_file) as file:
@@ -118,6 +129,22 @@ def FindLastPath(menu_file):
             else:
                 while(1):
                     if "cms.Path"  in line:
+                        count_lines+=1
+                        line = file.readline()
+                    else:
+                        return count_lines-1
+
+def FindLastPath(menu_file):
+    count_lines = 0
+    with open(menu_file) as file:
+        line = file.readline()
+        while(line):
+            count_lines+=1
+            if "cms.Sequence" not in line:
+                line = file.readline()
+            else:
+                while(1):
+                    if "cms.Sequence"  in line:
                         count_lines+=1
                         line = file.readline()
                     else:

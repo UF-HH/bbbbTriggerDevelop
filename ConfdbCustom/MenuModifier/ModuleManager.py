@@ -94,7 +94,7 @@ class ModMan:
     def Insert(self, line):
         ModMenu.Insert(self.menu, line, self.currentline)
         n_ = len(line.split("\n"))
-        self.currentline += n_-1
+        self.currentline += n_
 
     def SetCurrentLine(self, option):
         assert isinstance(option, int) or isinstance(option, str), "[Error] Invalid option type"
