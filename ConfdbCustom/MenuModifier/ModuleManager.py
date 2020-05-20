@@ -29,6 +29,8 @@ class ModMan:
                 attr_value = [attr_type, attr_value]
                 if "True" in attr_value[1] or "False" in attr_value[1]:
                     attr_value[1] = bool(attr_value[1]) #then it was a float
+                if "int" in attr_value[0]:
+                    attr_value[1] = int(attr_value[1])
                 else:
                     try:
                         attr_value[1] = float(attr_value[1]) #try if it is a float convertible

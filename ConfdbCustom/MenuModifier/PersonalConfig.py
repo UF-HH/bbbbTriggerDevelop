@@ -110,11 +110,15 @@ man.CreateFromLocal(in_class="hltBTagBisector23Calo",mod_name="HLT2DJetTagCalo")
 man.InsertInMenu(in_class="hltBTagBisector23Calo",process_name = 'in_class')
 
 #This module is present in /dev/CMSSW_11_0_0/GRun/V7, does not work if not present in the menu
-man.CloneModule("process.hltDoubleCentralCaloJetpt60", in_class="hltDoubleCentralCaloJet60")
-man.ModifyPar("hltDoubleCentralCaloJet60", "MaxEta", 2.5)
-man.ModifyPar("hltDoubleCentralCaloJet60", "inputTag", "'hltAK4CaloJetsCorrectedIDPassed'")
-man.ModifyPar("hltDoubleCentralCaloJet60", "triggerType", 86)
-man.InsertInMenu(in_class="hltDoubleCentralCaloJet60",process_name = 'in_class')
+man.CloneModule("process.hltDoubleCentralCaloJetpt60", in_class="hltDoubleCentralJet60")
+man.ModifyPar("hltDoubleCentralJet60", "MaxEta", 2.5)
+man.ModifyPar("hltDoubleCentralJet60", "inputTag", "'hltAK4CaloJetsCorrectedIDPassed'")
+man.ModifyPar("hltDoubleCentralJet60", "triggerType", 86)
+man.InsertInMenu(in_class="hltDoubleCentralJet60",process_name = 'in_class')
+
+man.CloneModule("process.hltDoubleCentralJet60", in_class="hlt2PFCentralJetLooseID60")
+man.ModifyPar("hlt2PFCentralJetLooseID60", "inputTag", "'hltAK4PFJetsLooseIDCorrected'")
+man.InsertInMenu(in_class="hlt2PFCentralJetLooseID60",process_name = 'in_class')
 
 man.CreateFromLocal(in_class="hltDoubleLeadingBTagSumCentralJet30",mod_name="HLTBTagSumCalo")
 man.InsertInMenu(in_class="hltDoubleLeadingBTagSumCentralJet30",process_name = 'in_class')
