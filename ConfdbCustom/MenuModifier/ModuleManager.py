@@ -118,8 +118,8 @@ class ModMan:
     def AddTFileService(self, file_name, line=False):
         if line:
             self.currentline = line
-         to_add = ModMenu.AddTFile(file_name)
-         ModMenu.Insert(self.menu, to_add, self.currentline)
+        to_add = ModMenu.AddTFile(file_name)
+        ModMenu.Insert(self.menu, to_add, self.currentline)
 
 
 

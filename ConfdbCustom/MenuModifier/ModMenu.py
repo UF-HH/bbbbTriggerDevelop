@@ -123,7 +123,7 @@ def FindLastPath(menu_file):
                     else:
                         return count_lines-1
 
-def AddToPath(menu, Path):
+def AddPath(menu, Path):
 
     lastpath_index = FindLastPath(menu)
     f = open(menu, "r")
@@ -136,6 +136,36 @@ def AddToPath(menu, Path):
     contents = "".join(contents)
     f.write(contents)
     f.close() 
+
+def AddToPath(menu, path, module, pos = "last"):
+    assert "process" in module, "[Error] module not valid"
+
+    f = open(menu, "r")
+    contents = f.readlines()
+    f.close()
+
+    line = FindLine(menu, path)
+
+    if pos == "last":
+        to_add = " + {} ".format(module)
+        ind = contents[line].index(")")-1
+        contents[line] = contents[line][:ind] + to_add + contents[line][ind:]
+    
+    elif pos == "first":
+        to_add = " {} + ".format(module)
+        ind = contents[line].index("(")+1
+        contents[line] = contents[line][:ind] + to_add + contents[line][ind:]
+
+    else:
+        assert isinstance(pos, int), "[Error] pos not int neither first or last"
+        to_add = " + {} + ".format(module)
+        contents[line] = contents[line][:pos] + to_add + contents[line][pos:]
+
+    f = open(menu, "w")
+    contents = "".join(contents)
+    f.write(contents)
+    f.close() 
+
 
 def RemoveLines(menu, Lines):
 
