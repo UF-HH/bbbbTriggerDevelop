@@ -110,7 +110,7 @@ man.InsertInMenu(in_class="hltBTagBisector23Calo",process_name = 'in_class')
 #This module is present in /dev/CMSSW_11_0_0/GRun/V7, does not work if not present in the menu
 man.CloneModule("process.hltDoubleCentralCaloJetpt60", in_class="hltDoubleCentralCaloJet60")
 man.ModifyPar("hltDoubleCentralCaloJet60", "MaxEta", 2.5)
-man.ModifyPar("hltDoubleCentralCaloJet60", "inputTag", "hltAK4CaloJetsCorrectedIDPassed")
+man.ModifyPar("hltDoubleCentralCaloJet60", "inputTag", "'hltAK4CaloJetsCorrectedIDPassed'")
 man.ModifyPar("hltDoubleCentralCaloJet60", "triggerType", 86)
 man.InsertInMenu(in_class="hltDoubleCentralCaloJet60",process_name = 'in_class')
 
