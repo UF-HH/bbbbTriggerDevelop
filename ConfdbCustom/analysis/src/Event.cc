@@ -73,6 +73,14 @@ void Event::Init(){
         tree->SetBranchAddress("gen_nonu_et", &gen_nonu_et);
         tree->SetBranchAddress("gen_nonu_mass", &gen_nonu_mass);
 
+        tree->SetBranchAddress("reco_pt", &reco_jet_pt);
+        tree->SetBranchAddress("reco_eta", &reco_jet_eta);
+        tree->SetBranchAddress("reco_phi", &reco_jet_phi);
+        tree->SetBranchAddress("reco_e", &reco_jet_e);
+        tree->SetBranchAddress("reco_et", &reco_jet_et);
+        tree->SetBranchAddress("reco_mass", &reco_jet_mass);
+        tree->SetBranchAddress("reco_btag", &reco_jet_btag);
+
 
         //Reading infos from SaveGenHH plugin
         treeGen = (TTree*)infile->Get(genBranch.c_str());
@@ -169,16 +177,14 @@ void Event::Generate(){
     PFJets.et = *pf_et;
     PFJets.btag = *pf_btag;
 
-    
-    /*
     RecoJets.pt = *reco_jet_pt;
     RecoJets.mass = *reco_jet_mass;
     RecoJets.eta = *reco_jet_eta;
     RecoJets.phi = *reco_jet_phi;
-    RecoJets.e = *reco_jet_energy;
+    RecoJets.e = *reco_jet_e;
     RecoJets.et = *reco_jet_et;
-    RecoJets.btag = *reco_jet_b_tag;
-    */
+    RecoJets.btag = *reco_jet_btag;
+    
     
     //building the bjets
     for(uint i = 0; i < CaloJets.pt.size(); i++){
@@ -203,7 +209,7 @@ void Event::Generate(){
     }
 
 
-    RecoJets.Type = "RecoJets"; //empty atm
+    RecoJets.Type = "RecoJets"; 
     GenJets.Type = "GenJets"; 
     GenNNJets.Type = "GenNNJets"; 
     L1Jets.Type = "L1Jets"; 
@@ -320,6 +326,7 @@ void Event::UnpackCollections(){
     //this two objects should always exist
     for(int i = 0; i < RecoJets.size(); i++){
         RecoJ.push_back(new hltObj::Jet(RecoJets.pt.at(i), RecoJets.eta.at(i), RecoJets.phi.at(i)));
+        RecoJ.at(RecoJ.size()-1)->e = RecoJets.e.at(i); //last jet added, add info about energy
     }
 
     if(eventType == "MC"){
@@ -433,7 +440,7 @@ void Event::jetMatch(double R, std::vector<hltObj::Jet*> Reference, std::string 
         std::make_pair("PFJets", PFJ),
         std::make_pair("CaloBJets", CaloBJ),
         std::make_pair("PFBJets", PFBJ),
-
+        std::make_pair("BMatchedJets", RecoJM)
     };
 
     //clearing matches before continue
@@ -560,35 +567,6 @@ void Event::bMatch(double R, std::string SelectedJets){
 }
 
 
-
-
-
-double Event::GetCaloHT(){
-    double HT = 0;
-    for(auto jet : CaloJ){
-        HT += jet->pt;
-    }
-
-    return HT;
-}
-
-double Event::GetPFHT(){
-    double HT = 0;
-    for(auto jet : PFJ){
-        HT += jet->pt;
-    }
-
-    return HT;
-}
-
-double Event::GetL1HT(){
-    double HT = 0;
-    for(auto jet : L1J){
-        HT += jet->pt;
-    }
-
-    return HT;
-}
 
 double Event::GetHT(hltObj::KinCuts cut){
     double HT = 0;

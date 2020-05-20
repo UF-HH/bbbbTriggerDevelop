@@ -113,9 +113,9 @@ class Event{
         std::vector<double> *reco_jet_mass = 0;
         std::vector<double> *reco_jet_eta = 0;
         std::vector<double> *reco_jet_phi = 0;
-        std::vector<double> *reco_jet_energy = 0;
+        std::vector<double> *reco_jet_e = 0;
         std::vector<double> *reco_jet_et = 0;
-        std::vector<double> *reco_jet_b_tag = 0;
+        std::vector<double> *reco_jet_btag = 0;
 
         
     public:
