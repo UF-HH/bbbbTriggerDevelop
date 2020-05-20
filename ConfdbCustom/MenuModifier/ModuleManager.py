@@ -109,17 +109,25 @@ class ModMan:
             elif where == "before":
                 self.currentline = l-len(m)+1
 
-    def AddLuminosity(self, process, json_file, line=False):
+    def AddLuminosity(self,json_file, line=False):
         if line:
             self.currentline = line
-        to_add = ModMenu.AddLumiAsInput(process, json_file)
+        to_add = ModMenu.AddLumiAsInput(json_file)
         ModMenu.Insert(self.menu, to_add, self.currentline)
+
+    def AddLuminosityToModule(self, process, line=False):
+        if line:
+            self.currentline = line
+        to_add = ModMenu.AddLumiToModule(process)
+        ModMenu.Insert(self.menu, to_add, self.currentline)
+        
 
     def AddTFileService(self, file_name, line=False):
         if line:
             self.currentline = line
         to_add = ModMenu.AddTFile(file_name)
         ModMenu.Insert(self.menu, to_add, self.currentline)
+
 
 
 

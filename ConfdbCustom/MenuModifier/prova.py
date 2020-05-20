@@ -1,3 +1,13 @@
+#--------------------------------------------------------------------------------------------------------------------------------
+# author: Giacomo Boldrini
+# This script reproduces the
+# HLT menu with modules and
+# triggers from the analysis
+#
+# example usage: python prova.py --menu=/dev/CMSSW_11_0_0/GRun/V7 -out=myHLT.py -gt=110X_mcRun3_2021_realistic_v6-v2 -pr=myHLT.py
+#
+#--------------------------------------------------------------------------------------------------------------------------------
+
 import os
 import sys
 import argparse
@@ -22,6 +32,8 @@ parser.add_argument('-output', '--output', type=str, required=False, help="Outpu
 parser.add_argument('-input', '--input', type=str, required=False, help="Input files")
 
 args = parser.parse_args()
+
+print("@[BeginJob]: Initiating... ")
 
 to_os = "hltGetConfiguration {} --globaltag {} --process {} --full".format(args.menu, args.globaltag, args.process)
 
@@ -49,23 +61,93 @@ if os.path.isfile(args.out):
 
 print(FindFirstPath(menu_path))
 
-#Insert(menu_path, "\n#-------------My Modules Insert-------------\n", FindFirstPath(menu_path)-1)
-#AddModule(menu_path, "ciao", "HLTHTCaloDouble", 13063)
-#AddToPath(menu_path,"process.HLTriggerFinalPath",  "process.ciao", pos = "first")
-#man = ModMan(menu_path)
-"""
-man.SetCurrentLine("before:process.hltDoubleCentralCaloHT180")
-#man.Insert("#-----Added Modules-----\n")
-man.CloneModule("process.hltBTagBisector23PF", in_class="Module")
-str_ = man.ConvertModuleToString("Module")
-print(str_)
+#ADD MY MODULES FOR CUSTOMIZATION OF HLT MENU
+print("@[Info]: Adding Analyzers... ")
 
-"""
-#man.ModifyPar("Module", "saveTags", False)
-#man.InsertInMenu(in_class="Module",process_name = 'in_class')
-#man.CreateFromLocal(in_class="hltProvaInsert",mod_name="HLTHTCaloQuad")
-#str_ = man.ConvertModuleToString("hltProvaInsert")
-#man.ModifyPar(in_class = "hltProvaInsert", attr_name="saveTags", attr_value=False)
-#strs = man.ConvertModuleToString(in_class="HLTHTCaloQuad", process_name = "HLTHTCaloQuad")
-#man.InsertInMenu(in_class="hltProvaInsert",process_name = 'in_class', line=13061)
+Insert(menu_path, "\n#-------------My Analyzers-------------\n", FindFirstPath(menu_path))
+
+man = ModMan(menu_path)
+
+man.SetCurrentLine("after:#-------------My Analyzers-------------")
+
+trigger_list = "'HLT_Quad30_Double60_Sum2LeadingBTag015','HLT_PFHT330PT30_QuadPFJet_75_60_45_40_TriplePFBTagDeepCSV_4p5_v3','HLT_PFHT270_180_Double180_Double90_BisectorBTag07'"
+
+man.CreateFromLocal(in_class="MyHLTAnalyzer",mod_name="MyHLTAnalyzer", triggerList = trigger_list)
+man.InsertInMenu(in_class="MyHLTAnalyzer",process_name = 'in_class')
+man.AddLuminosityToModule("MyHLTAnalyzer", line=False) #MC no need to specify json but analyzer wants an input
+man.InsertInMenu(in_class="MyHLTAnalyzer",process_name = 'in_class')
+
+man.CreateFromLocal(in_class="SaveAllJetsMC",mod_name="SaveAllJetsMC")
+man.AddLuminosityToModule("SaveAllJetsMC") #MC no need to specify json but analyzer wants an input
+man.InsertInMenu(in_class="SaveAllJetsMC",process_name = 'in_class')
+
+man.CreateFromLocal(in_class="SaveGenHH", mod_name="SaveGenHH")
+man.InsertInMenu(in_class="SaveGenHH",process_name = 'in_class')
+
+man.Insert("\n")
+
+man.Insert("\n#------------- My Filters -------------------\n")
+
+print("@[Info]: Adding Filters definintions... ")
+
+man.SetCurrentLine("after:#------------- My Filters -------------------")
+man.CreateFromLocal(in_class="hltDoubleCentralCaloHT180",mod_name="HLTHTCaloDouble")
+man.InsertInMenu(in_class="hltDoubleCentralCaloHT180",process_name = 'in_class')
+
+man.CreateFromLocal(in_class="hltDoubleCentralCaloHT90",mod_name="HLTHTCaloQuad")
+man.InsertInMenu(in_class="hltDoubleCentralCaloHT90",process_name = 'in_class')
+
+man.CreateFromLocal(in_class="hltDoubleCentralPFHT180",mod_name="HLTHTPFDouble")
+man.InsertInMenu(in_class="hltDoubleCentralPFHT180",process_name = 'in_class')
+
+man.CreateFromLocal(in_class="hltDoubleCentralPFHT90",mod_name="HLTHTPFQuad")
+man.InsertInMenu(in_class="hltDoubleCentralPFHT90",process_name = 'in_class')
+
+man.CreateFromLocal(in_class="hltBTagBisector23PF",mod_name="HLT2DJetTagPF")
+man.InsertInMenu(in_class="hltBTagBisector23PF",process_name = 'in_class')
+
+man.CreateFromLocal(in_class="hltBTagBisector23Calo",mod_name="HLT2DJetTagCalo")
+man.InsertInMenu(in_class="hltBTagBisector23Calo",process_name = 'in_class')
+
+man.CloneModule("process.hltDoubleCentralCaloJet60", in_class="hltDoubleCentralCaloJet60")
+man.ModifyPar("hltDoubleCentralCaloJet60", "MaxEta", 2.5)
+man.ModifyPar("hltDoubleCentralCaloJet60", "inputTag", "hltAK4CaloJetsCorrectedIDPassed")
+man.ModifyPar("hltDoubleCentralCaloJet60", "triggerType", 86)
+man.InsertInMenu(in_class="hltDoubleCentralCaloJet60",process_name = 'in_class')
+
+man.CreateFromLocal(in_class="hltDoubleLeadingBTagSumCentralJet30",mod_name="HLTBTagSumCalo")
+man.InsertInMenu(in_class="hltDoubleLeadingBTagSumCentralJet30",process_name = 'in_class')
+
+man.CreateFromLocal(in_class="hltDoublePFLeadingBTagSumCentralJet30",mod_name="HLTBTagSumPF")
+man.InsertInMenu(in_class="hltDoublePFLeadingBTagSumCentralJet30",process_name = 'in_class')
+
+man.CreateFromLocal(in_class="hltDoublePFLeadingBTagSumCentralJet30",mod_name="HLTBTagSumPF")
+man.InsertInMenu(in_class="hltDoublePFLeadingBTagSumCentralJet30",process_name = 'in_class')
+
+man.Insert("\n")
+man.Insert("\n#------------- Services ------------ \n")
+
+print("@[Info]: Adding Services... ")
+
+man.AddTFileService(file_name=prova.root)
+
+man.SetCurrentLine(FindLastPath(menu_path))
+man.Insert("")
+
+#inserting my paths
+
+print("@[Info]: Adding Paths... ")
+
+man.Insert("\n#-----------------My Paths-----------------\n")
+man.Insert("process.HLT_Quad30_Double60_Sum2LeadingBTag015 = cms.Path( process.HLTBeginSequence + process.hltL1sQuadJetC50to60IorHTT280to500IorHTT250to340QuadJet + process.hltPrePFHT330PT30QuadPFJet75604540TriplePFBTagDeepCSV4p5 + process.HLTAK4CaloJetsSequence + process.hltQuadCentralJet30 + process.hltDoubleCentralJet60 + process.HLTBtagDeepCSVSequenceL3 + process.hltDoubleLeadingBTagSumCentralJet30 + process.HLTAK4PFJetsSequence + process.hltPFCentralJetLooseIDQuad30 + process.hlt2PFCentralJetLooseID60 + process.HLTBtagDeepCSVSequencePF + process.hltDoublePFLeadingBTagSumCentralJet30  + process.HLTEndSequence )\n")
+man.Insert("process.HLT_PFHT270_180_Double180_Double90_BisectorBTag07 = cms.Path( process.HLTBeginSequence + process.hltL1sQuadJetC50to60IorHTT280to500IorHTT250to340QuadJet + process.hltPrePFHT330PT30QuadPFJet75604540TriplePFBTagDeepCSV4p5 + process.HLTAK4CaloJetsSequence + process.hltDoubleCentralCaloHT180 + process.hltDoubleCentralCaloHT90 + process.HLTBtagDeepCSVSequenceL3 + process.hltBTagBisector23Calo + process.HLTAK4PFJetsSequence + process.hltDoubleCentralPFHT180 + process.hltDoubleCentralPFHT90  + process.HLTBtagDeepCSVSequencePF + process.hltBTagBisector23PF + process.HLTEndSequence )\n")
+man.Insert("process.HLT_PFHT330PT30_QuadPFJet_75_60_45_40_TriplePFBTagDeepCSV_4p5_v3 = cms.Path( process.HLTBeginSequence + process.hltL1sQuadJetC50to60IorHTT280to500IorHTT250to340QuadJet + process.hltPrePFHT330PT30QuadPFJet75604540TriplePFBTagDeepCSV4p5 + process.HLTAK4CaloJetsSequence + process.hltQuadCentralJet30 + process.hltCaloJetsQuad30ForHt + process.hltHtMhtCaloJetsQuadC30 + process.hltCaloQuadJet30HT320 + process.HLTBtagDeepCSVSequenceL3 + process.hltBTagCaloDeepCSVp17Double + process.HLTAK4PFJetsSequence + process.hltPFCentralJetLooseIDQuad30 + process.hlt1PFCentralJetLooseID75 + process.hlt2PFCentralJetLooseID60 + process.hlt3PFCentralJetLooseID45 + process.hlt4PFCentralJetLooseID40 + process.hltPFCentralJetLooseIDQuad30forHt + process.hltHtMhtPFCentralJetsLooseIDQuadC30 + process.hltPFCentralJetsLooseIDQuad30HT330 + process.HLTBtagDeepCSVSequencePF + process.hltBTagPFDeepCSV4p5Triple + process.HLTEndSequence )\n")
+
+print("@[EndJob]: Done")
+
+
+
+
+
+
 
