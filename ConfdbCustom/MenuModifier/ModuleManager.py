@@ -164,4 +164,8 @@ class ModMan:
         query = querier()
         to_add = at + " = " + str(query) + "\n"
         ModMenu.ReplaceLine(self.menu, line, to_add)
+
+    def AddGenParticleProd(self):
+        genp = ModMenu.AddGenParticleProducer()
+        self.Insert( genp, self.currentline)
         
