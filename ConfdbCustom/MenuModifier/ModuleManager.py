@@ -13,9 +13,11 @@ class ModMan:
         named_dict = {}
         mod_name = (mod_def[0].split("."))[1].split(" ")[0].strip()
         mod_type = mod_def[0][mod_def[0].index("(")+1:mod_def[0].index(",")].strip()
+        mod_cmssw = mod_def[0][mod_def[0].index("ED"):mod_def[0].index("(")]
 
         named_dict["name"] = mod_name
         named_dict["type"] = mod_type
+        named_dict["cmssw"] = mod_cmssw
         
         for line in mod_def[1:]:
             line = line.split(" ")
@@ -71,7 +73,7 @@ class ModMan:
         module_dict = dict(getattr(self, in_class))
         if process_name == 'in_class': process_name = in_class
 
-        prNm = "process.{} = ".format(process_name) + "cms.EDFilter( " + module_dict["type"] + ",\n"
+        prNm = "process.{} = ".format(process_name) + "cms.{}( ".format(module_dict["cmssw"]) + module_dict["type"] + ",\n"
         for key, value in zip(module_dict.keys(), module_dict.values()):
             if key == "type" or key == "name": continue
             prNm += "\t\t" + str(key) + " = " + str(value[0]) + " " + str(value[1]) + " ),\n"
@@ -106,6 +108,19 @@ class ModMan:
                 self.currentline = l+1
             elif where == "before":
                 self.currentline = l-len(m)+1
+
+    def AddLuminosity(self, process, json_file, line=False):
+        if line:
+            self.currentline = line
+        to_add = ModMenu.AddLumiAsInput(process, json_file)
+        ModMenu.Insert(self.menu, to_add, self.currentline)
+
+    def AddTFileService(self, file_name, line=False):
+        if line:
+            self.currentline = line
+         to_add = ModMenu.AddTFile(file_name)
+         ModMenu.Insert(self.menu, to_add, self.currentline)
+
 
 
 

@@ -32,3 +32,19 @@ def HLTBTagSumCalo(saveTags = True, Jets = "hltSelector8CentralJetsL1FastJet", J
 def HLTBTagSumPF(saveTags = True, Jets = "hltPFJetForBtag", JetTags = "hltDeepCombinedSecondaryVertexBJetTagsPF", BTag = "probb", MinTag = 0.0,  MaxTag = 999999.0, TriggerType = 86 , MinEta = -1.0 , MaxEta = 2.5 , MinPt = 30.0, MaxPt = 999999.0 , SumN = 2, MinBTagSum = 1.3):
     module = 'cms.EDFilter("HLTBTagSumPF",\nsaveTags = cms.bool( {} ),\nJets = cms.InputTag( {} ),\nJetTags = cms.InputTag( {},{} ),\nMinTag = cms.double( {} ),\nMaxTag = cms.double( {} ),\nTriggerType = cms.int32( {} ),\nMinEta = cms.double( {} ),\nMaxEta = cms.double( {} ),\nMinPt = cms.double( {} ),\nMaxPt = cms.double( {} ),\nSumN = cms.uint32({}),\nMinBTagSum = cms.double({})\n\n)\n'.format(saveTags, Jets, JetTags, BTag, MinTag,  MaxTag, TriggerType, MinEta, MaxEta, MinPt, MaxPt, SumN, MinBTagSum)
     return module
+
+def MyHLTAnalyzer(triggerResults = "TriggerResults", TRsecond = "", process = "@currentProcess", triggerList = None, filterList = None, verbose = False):
+    module = 'cms.EDAnalyzer("HLTAn",\ntriggerResults = cms.InputTag({}, {}, {}),\ntriggerList = cms.vstring({}),\nfilterList = cms.vstring({}),\nverbose = cms.bool({})\n)\n'.format(triggerResults, TRsecond, process, triggerList, filterList, verbose)
+    return module
+
+def SaveAllJetsSignal(L1JetTag = 'hltGtStage2Digis', L1Jet = 'Jet', PFJetTag = 'hltAK4PFJetsLooseIDCorrected', CaloJetTag = 'hltAK4CaloJetsCorrectedIDPassed', PFBJetTag = 'hltDeepCombinedSecondaryVertexBJetTagsPF', PFBTag = 'probb', CaloBJetTag = 'hltDeepCombinedSecondaryVertexBJetTagsCalo', CaloBTag = 'probb', verbose = True, tree = "Jets"):
+    module = 'cms.EDAnalyzer("SaveAllJets",\n\t\tL1JetTag = cms.InputTag( {},{} ),\n\t\tPFJetTag = cms.InputTag({}),\n\t\tCaloJetTag = cms.InputTag({}),\n\t\tPFBJetTag = cms.InputTag({},{}),\n\t\tCaloBJetTag = cms.InputTag({},{}),\n\t\tverbose = cms.bool({}),\n\t\ttree = cms.string({})\n'.format(L1JetTag, L1Jet, PFJetTag, CaloJetTag, PFBJetTag, PFBTag, CaloBJetTag, CaloBTag, verbose, tree)
+    return module
+
+def SaveAllJetsMC(L1JetTag = 'hltGtStage2Digis', L1Jet = 'Jet', PFJetTag = 'hltAK4PFJetsLooseIDCorrected', GenJetTag = 'ak4GenJets', GenNoNuJetTag = 'ak4GenJetsNoNu', CaloJetTag = 'hltAK4CaloJetsCorrectedIDPassed', PFBJetTag = 'hltDeepCombinedSecondaryVertexBJetTagsPF', PFBTag = 'probb', CaloBJetTag = 'hltDeepCombinedSecondaryVertexBJetTagsCalo', CaloBTag = 'probb', RecoTag = 'slimmedJets', verbose = True, tree = "Jets"):
+    module = 'cms.EDAnalyzer("SaveAllJetsRecoMC",\n\t\tL1JetTag = cms.InputTag( {},{} ),\n\t\tPFJetTag = cms.InputTag({}),\n\t\tGenJetTag = cms.InputTag({}),\n\t\tGenNoNuJetTag = cms.InputTag({}),\n\t\tCaloJetTag = cms.InputTag({}),\n\t\tPFBJetTag = cms.InputTag({},{}),\n\t\tCaloBJetTag = cms.InputTag({},{}),\n\t\tRecoTag = cms.InputTag({}),\n\t\tverbose = cms.bool({}),\n\t\ttree = cms.string({})\n)\n'.format(L1JetTag, L1Jet, PFJetTag, GenJetTag, GenNoNuJetTag, CaloJetTag, PFBJetTag, PFBTag, CaloBJetTag, CaloBTag, RecoTag, verbose, tree)
+    return module
+
+def SaveGenHH(genP = "prunedGenParticles", verbose = False, tree = "Gen"):
+    module = 'cms.EDAnalyzer("SaveGenHH",\n\t\tgenP = cms.InputTag({}),\n\t\tverbose = cms.bool({}),\n\t\ttree = cms.string({})\n)\n'.format(genP, verbose, tree)
+    return module
