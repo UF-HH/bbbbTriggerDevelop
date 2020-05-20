@@ -64,6 +64,7 @@ man = ModMan(menu_path)
 #ADD MY MODULES FOR CUSTOMIZATION OF HLT MENU
 print("@[Info]: Adding Analyzers... ")
 
+man.Insert("from bbbbTrg_nob.ConfdbCustom.QueryForFiles import *", ind=3)
 man.Insert("#-------------My Analyzers-------------\n", ind=FindFirstSequence(menu_path)-1)
 man.SetCurrentLine(option_str="after:#-------------My Analyzers-------------")
 man.MakeSpace(n=20) #caveat, does not work without this, problem with indexing inside man...Need to work on this
@@ -143,6 +144,9 @@ man.Insert("process.HLT_PFHT270_180_Double180_Double90_BisectorBTag07 = cms.Path
 man.Insert("process.HLT_PFHT330PT30_QuadPFJet_75_60_45_40_TriplePFBTagDeepCSV_4p5_v3 = cms.Path( process.HLTBeginSequence + process.hltL1sQuadJetC50to60IorHTT280to500IorHTT250to340QuadJet + process.hltPrePFHT330PT30QuadPFJet75604540TriplePFBTagDeepCSV4p5 + process.HLTAK4CaloJetsSequence + process.hltQuadCentralJet30 + process.hltCaloJetsQuad30ForHt + process.hltHtMhtCaloJetsQuadC30 + process.hltCaloQuadJet30HT320 + process.HLTBtagDeepCSVSequenceL3 + process.hltBTagCaloDeepCSVp17Double + process.HLTAK4PFJetsSequence + process.hltPFCentralJetLooseIDQuad30 + process.hlt1PFCentralJetLooseID75 + process.hlt2PFCentralJetLooseID60 + process.hlt3PFCentralJetLooseID45 + process.hlt4PFCentralJetLooseID40 + process.hltPFCentralJetLooseIDQuad30forHt + process.hltHtMhtPFCentralJetsLooseIDQuadC30 + process.hltPFCentralJetsLooseIDQuad30HT330 + process.HLTBtagDeepCSVSequencePF + process.hltBTagPFDeepCSV4p5Triple + process.HLTEndSequence )\n")
 man.Insert("process.SaveGen = cms.Sequence( process.prunedGenParticles + process.SaveGenHH)\n")
 man.Insert("process.SaveJets = cms.Path( process.HLTBeginSequence + process.hltL1sQuadJetC50to60IorHTT280to500IorHTT250to340QuadJet + process.hltPrePFHT330PT30QuadPFJet75604540TriplePFBTagDeepCSV4p5 +process.HLTAK4CaloJetsSequence + process.HLTBtagDeepCSVSequenceL3 + process.HLTAK4PFJetsSequence + process.HLTBtagDeepCSVSequencePF + process.SaveGen + process.SaveAllJets + process.HLTEndSequence)\n")
+
+print("@[Info]: Adding Query for MC samples... ")
+man.AddDASQuery()
 
 print("@[EndJob]: Done")
 

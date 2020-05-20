@@ -95,6 +95,32 @@ def Insert(menu, line, index):
     f.write(contents)
     f.close()  
 
+def AddToLine(menu, line, to_add):
+
+    f = open(menu, "r")
+    contents = f.readlines()
+    f.close()
+
+    contents[line] += to_add
+
+    f = open(menu, "w")
+    contents = "".join(contents)
+    f.write(contents)
+    f.close()  
+
+def ReplaceLine(menu, line, to_add):
+
+    f = open(menu, "r")
+    contents = f.readlines()
+    f.close()
+
+    contents[line] = to_add
+
+    f = open(menu, "w")
+    contents = "".join(contents)
+    f.write(contents)
+    f.close()  
+
 
 def FindFirstPath(menu_file):
     count_lines = 0

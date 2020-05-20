@@ -76,6 +76,7 @@ class ModMan:
         for key, value in zip(module_dict.keys(), module_dict.values()):
             if key == "cmssw" or key == "name" or key=="type": continue
             prNm += "\t\t" + str(key) + " = " + str(value[0]) + " ( " + str(value[1]) + " ),\n"
+        prNm = prNm[:-2] + "\n" #deleting last comma
         prNm += ")\n"
 
         return prNm
@@ -153,15 +154,8 @@ class ModMan:
         to_add = ModMenu.AddTFile(file_name)
         self.Insert( to_add, self.currentline)
 
-
-
-
-
+    def AddDASQuery(self, QueryType="QueryFilesMCgg()", at = "_customInfo['inputFile' ]"):
+        line = self.FindLine(self.menu, at)
+        to_add = at + " = " + QueryType
+        ModMenu.ReplaceLine(self.menu, line, to_add)
         
-
-
-
-    
-        
-
-
