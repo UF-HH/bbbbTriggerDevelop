@@ -51,7 +51,12 @@ class ModMan:
             in_class = [in_class, in_class] #list first element to access the attribute, second to save into class. If equal overwriting
     
         dic_ = dict(getattr(self, in_class[0])) #redefine dict to not modify attribute 
-        dic_[attr_name] = attr_value
+
+        if isinstance(attr_value, list):
+            dic_[attr_name] = attr_value
+        else:
+            dic_[attr_name][1] = attr_value
+            
         setattr(self, in_class[1], dic_)
 
     def CreateFromLocal(self, in_class, mod_name, **kwargs):

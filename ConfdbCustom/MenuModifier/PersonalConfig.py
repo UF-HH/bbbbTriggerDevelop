@@ -74,18 +74,17 @@ trigger_list = "'HLT_Quad30_Double60_Sum2LeadingBTag015','HLT_PFHT330PT30_QuadPF
 man.CreateFromLocal(in_class="MyHLTAnalyzer",mod_name="MyHLTAnalyzer", triggerList = trigger_list)
 man.InsertInMenu(in_class="MyHLTAnalyzer",process_name = 'in_class')
 man.AddLuminosityToModule("MyHLTAnalyzer", line=False) #MC no need to specify json but analyzer wants an input
-man.InsertInMenu(in_class="MyHLTAnalyzer",process_name = 'in_class')
 
 man.CreateFromLocal(in_class="SaveAllJetsMC",mod_name="SaveAllJetsMC")
-man.AddLuminosityToModule("SaveAllJetsMC") #MC no need to specify json but analyzer wants an input
 man.InsertInMenu(in_class="SaveAllJetsMC",process_name = 'in_class')
+man.AddLuminosityToModule("SaveAllJetsMC") #MC no need to specify json but analyzer wants an input
 
 man.CreateFromLocal(in_class="SaveGenHH", mod_name="SaveGenHH")
 man.InsertInMenu(in_class="SaveGenHH",process_name = 'in_class')
 
 man.Insert("\n")
 
-man.Insert("\n#------------- My Filters -------------------\n")
+man.Insert("#------------- My Filters -------------------\n")
 
 print("@[Info]: Adding Filters definintions... ")
 
@@ -109,7 +108,7 @@ man.CreateFromLocal(in_class="hltBTagBisector23Calo",mod_name="HLT2DJetTagCalo")
 man.InsertInMenu(in_class="hltBTagBisector23Calo",process_name = 'in_class')
 
 #This module is present in /dev/CMSSW_11_0_0/GRun/V7, does not work if not present in the menu
-man.CloneModule("process.hltDoubleCentralCaloJet60", in_class="hltDoubleCentralCaloJet60")
+man.CloneModule("process.hltDoubleCentralCaloJetpt60", in_class="hltDoubleCentralCaloJet60")
 man.ModifyPar("hltDoubleCentralCaloJet60", "MaxEta", 2.5)
 man.ModifyPar("hltDoubleCentralCaloJet60", "inputTag", "hltAK4CaloJetsCorrectedIDPassed")
 man.ModifyPar("hltDoubleCentralCaloJet60", "triggerType", 86)
@@ -125,11 +124,11 @@ man.CreateFromLocal(in_class="hltDoublePFLeadingBTagSumCentralJet30",mod_name="H
 man.InsertInMenu(in_class="hltDoublePFLeadingBTagSumCentralJet30",process_name = 'in_class')
 
 man.Insert("\n")
-man.Insert("\n#------------- Services ------------ \n")
+man.Insert("#------------- Services ------------ \n")
 
 print("@[Info]: Adding Services... ")
 
-man.AddTFileService(file_name=prova.root)
+man.AddTFileService(file_name="prova.root")
 
 man.SetCurrentLine(FindLastPath(menu_path))
 man.Insert("\n")
