@@ -182,7 +182,7 @@ def FindLastLine(menu_file):
     contents = f.readlines()
     f.close()
 
-    return len(contents)
+    return len(contents)-1
 
 
 def AddPath(menu, Path):
