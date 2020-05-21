@@ -40,16 +40,23 @@ if args.keep:
 #querying for raw and aod from parsed inputs
 raw_data, aod_data = QueryForRAWandAOD(args.primaryDataset, args.secondaryDataset)
 
-#if no line passed, we search for the PoolSource, present by default when you dump a menu (empty if not --inputs)
+#if no line passed the we find line for previous poolsource
 if not args.line:
     print("...Finding process.source line")
     line, mod_def = FindModule(menu_path, "PoolSource")
     line = line -len(mod_def) #after removing module
     print("...Found in line {} ".format(line))
-    RemoveModule(menu_path, "cms.Source")
     
 else:
-    line = args.line
+    if args.line == "first":
+        line = 0
+    elif args.line == "last":
+        line = FindLastLine(menu_path)
+    elif isinstance(args.line, int):
+        line = args.line
+
+# we search for the PoolSource, present by default when you dump a menu (empty if not --inputs) annd delete it
+RemoveModule(menu_path, "PoolSource")
 
 #obscuring inputs if present:
 line_inputs = FindLine(menu_path, "_customInfo['inputFile' ]")

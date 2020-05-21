@@ -160,7 +160,7 @@ def FindLastPath(menu_file):
                     else:
                         return count_lines-1
 
-def FindLastPath(menu_file):
+def FindLastSequence(menu_file):
     count_lines = 0
     with open(menu_file) as file:
         line = file.readline()
@@ -175,6 +175,16 @@ def FindLastPath(menu_file):
                         line = file.readline()
                     else:
                         return count_lines-1
+
+def FindLastLine(menu_file):
+
+    lastpath_index = FindLastPath(menu)
+    f = open(menu, "r")
+    contents = f.readlines()
+    f.close()
+
+    return len(contents)
+
 
 def AddPath(menu, Path):
 
