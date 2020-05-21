@@ -11,5 +11,7 @@
 <use name="DataFormats/PatCandidates" />
 <use name="HLTrigger/HLTcore" />
 <use name="DataFormats/JetReco" />
+<use name="DataFormats/HepMCCandidate" />
+<use name="PhysicsTools/HepMCCandAlgos" />
 
 <flags EDM_PLUGIN="1"/>

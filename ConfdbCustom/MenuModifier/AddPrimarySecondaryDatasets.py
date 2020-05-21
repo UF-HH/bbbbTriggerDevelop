@@ -42,6 +42,7 @@ raw_data, aod_data = QueryForRAWandAOD(args.primaryDataset, args.secondaryDatase
 if not args.line:
     print("...Finding process.source line")
     line, modDef = FindLine(menu_path, "cms.Source")
+    RemoveModule(menu_path, "cms.Source")
     print("...Found in line {} ".format(line))
 else:
     line = args.line
