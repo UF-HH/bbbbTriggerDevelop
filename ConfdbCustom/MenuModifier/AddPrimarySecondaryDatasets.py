@@ -52,7 +52,7 @@ if not args.line:
     
 else:
     RemoveModule(menu_path, "PoolSource")
-    
+
     if args.line == "first":
         line = 0
     elif args.line == "last":
@@ -65,7 +65,7 @@ else:
 #obscuring inputs if present:
 line_inputs = FindLine(menu_path, "_customInfo['inputFile' ]")
 if line_inputs != None:
-    to_add = "_customInfo['inputFile' ]= ['@']\n" #this line has to be present otherwise HLTrigger.Configuration.customizeHLTforALL will crash
+    to_add = '_customInfo["inputFile" ]= ["@"]\n' #this line has to be present otherwise HLTrigger.Configuration.customizeHLTforALL will crash
     ReplaceLine(menu_path, line_inputs, to_add)
 
 
