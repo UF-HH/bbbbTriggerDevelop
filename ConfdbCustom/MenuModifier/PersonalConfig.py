@@ -4,7 +4,7 @@
 # HLT menu with modules and
 # triggers from the analysis
 #
-# example usage: python PersonalConfig.py --menu=/dev/CMSSW_11_0_0/GRun/V7 -out=myHLT.py -gt=110X_mcRun3_2021_realistic_v6-v2 -pr=myHLT -out=myHLT.py
+# example usage MC: python PersonalConfig.py --menu=/dev/CMSSW_11_1_0/GRun -out=myHLT.py -gt=110X_mcRun3_2021_realistic_v6 -pr=myHLT -out=myHLT.py
 #
 #--------------------------------------------------------------------------------------------------------------------------------
 
