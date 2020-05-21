@@ -61,13 +61,13 @@ else:
         line = args.line
 
 
-"""
+
 #obscuring inputs if present:
 line_inputs = FindLine(menu_path, "_customInfo['inputFile' ]")
 if line_inputs != None:
     to_add = '_customInfo["inputFile" ]= ["@"]\n' #this line has to be present otherwise HLTrigger.Configuration.customizeHLTforALL will crash
     ReplaceLine(menu_path, line_inputs, to_add)
-"""
+
 
 #finally adding the source 
 AddPrimarySecondaryPoolSource(menu_path, raw_data, aod_data, line)

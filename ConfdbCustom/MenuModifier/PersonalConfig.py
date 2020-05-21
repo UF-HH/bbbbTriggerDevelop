@@ -4,7 +4,7 @@
 # HLT menu with modules and
 # triggers from the analysis
 #
-# example usage MC: python PersonalConfig.py --menu=/dev/CMSSW_11_1_0/GRun -out=myHLT.py -gt=110X_mcRun3_2021_realistic_v6 -pr=myHLT -out=myHLT.py \
+# example usage MC: python PersonalConfig.py --menu=/dev/CMSSW_11_0_0_pre9/GRun -out=myHLT.py -gt=110X_mcRun3_2021_realistic_v6 -pr=myHLT -out=myHLT.py \
 # -paths=HLT_PFHT330PT30_QuadPFJet_75_60_45_40_TriplePFBTagDeepCSV_4p5_v3
 #
 #--------------------------------------------------------------------------------------------------------------------------------
@@ -31,6 +31,7 @@ parser.add_argument('-nev', '--nev', type=int, default=-1, required=False, help=
 parser.add_argument('-prescale', '--prescale', type=float, required=False, help="Prescale")
 parser.add_argument('-output', '--output', type=str, required=False, help="Outputmodules inside the menu")
 parser.add_argument('-input', '--input', type=str, required=False, help="Input files")
+parser.add_argument('-setup', '--setup', default="setup_cff", required=False, help="setup name")
 
 args = parser.parse_args()
 
@@ -60,13 +61,24 @@ os.system(to_os)
 if os.path.isfile(args.out):
     menu_path = args.out 
 
+
+print("@[Info]: Dumping Setup: ")
+to_os = "hltConfigFromDB --cff --configName {} --nopaths --services -PrescaleService,-EvFDaqDirector,-FastMonitoringService > {}.py".format(args.menu, args.setup)
+print(to_os)
+os.system(to_os)
+
 man = ModMan(menu_path)
 
 #ADD MY MODULES FOR CUSTOMIZATION OF HLT MENU
-print("@[Info]: Adding Analyzers... ")
+print("@[Info]: Adding Imports and setup... ")
 
 man.Insert("import FWCore.PythonUtilities.LumiList as LumiList\n", ind=3)
 man.Insert("import FWCore.ParameterSet.Types as CfgTypes\n", ind=3)
+man.SetCurrentLine(option_str="after:process = cms.Process(")
+man.Insert('process.load("{}")'.format(args.setup))
+
+print("@[Info]: Adding Analyzers... ")
+
 man.Insert("#-------------My Analyzers-------------\n", ind=FindFirstSequence(menu_path)-1)
 man.SetCurrentLine(option_str="after:#-------------My Analyzers-------------")
 man.MakeSpace(n=20) #caveat, does not work without this, problem with indexing inside man...Need to work on this
