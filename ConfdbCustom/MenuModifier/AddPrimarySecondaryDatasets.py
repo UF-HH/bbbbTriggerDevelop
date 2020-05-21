@@ -22,7 +22,7 @@ parser.add_argument('-d_S', '--secondaryDataset', type=str, required=True, help=
 parser.add_argument('-menu', '--menu', type=str, required=True, help="Path of the menu to modified")
 parser.add_argument('-keep', '--keep', default=False, action='store_true', required=False, help="Keep The menu and create copy")
 parser.add_argument('-out', '--out', type=str, required=False, help="output for the new menu if keep is true")
-parser.add_argument('-line', '--line', type=int, required=False, help="Line of the menu to insert the code")
+parser.add_argument('-line', '--line', required=False, help="Line of the menu to insert the code")
 
 args = parser.parse_args()
 
