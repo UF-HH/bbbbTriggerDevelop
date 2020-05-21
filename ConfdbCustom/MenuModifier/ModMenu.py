@@ -178,7 +178,7 @@ def FindLastSequence(menu_file):
 
 def FindLastLine(menu_file):
 
-    lastpath_index = FindLastPath(menu)
+    lastpath_index = FindLastPath(menu_file)
     f = open(menu, "r")
     contents = f.readlines()
     f.close()
