@@ -4,7 +4,8 @@
 # HLT menu with modules and
 # triggers from the analysis
 #
-# example usage MC: python PersonalConfig.py --menu=/dev/CMSSW_11_1_0/GRun -out=myHLT.py -gt=110X_mcRun3_2021_realistic_v6 -pr=myHLT -out=myHLT.py
+# example usage MC: python PersonalConfig.py --menu=/dev/CMSSW_11_1_0/GRun -out=myHLT.py -gt=110X_mcRun3_2021_realistic_v6 -pr=myHLT -out=myHLT.py \
+# -paths=HLT_PFHT330PT30_QuadPFJet_75_60_45_40_TriplePFBTagDeepCSV_4p5_v3
 #
 #--------------------------------------------------------------------------------------------------------------------------------
 
@@ -113,15 +114,12 @@ man.CreateFromLocal(in_class="hltBTagBisector23Calo",mod_name="HLT2DJetTagCalo")
 man.InsertInMenu(in_class="hltBTagBisector23Calo",process_name = 'in_class')
 
 #This module is present in /dev/CMSSW_11_0_0/GRun/V7, does not work if not present in the menu
-man.CloneModule("process.hltDoubleCentralCaloJetpt60", in_class="hltDoubleCentralJet60")
+man.CloneModule("process.hltQuadCentralJet30", in_class="hltDoubleCentralJet60")
 man.ModifyPar("hltDoubleCentralJet60", "MaxEta", 2.5)
+man.ModifyPar("hltDoubleCentralJet60", "MinN", 2)
 man.ModifyPar("hltDoubleCentralJet60", "inputTag", "'hltAK4CaloJetsCorrectedIDPassed'")
 man.ModifyPar("hltDoubleCentralJet60", "triggerType", 86)
 man.InsertInMenu(in_class="hltDoubleCentralJet60",process_name = 'in_class')
-
-man.CloneModule("process.hltDoubleCentralJet60", in_class="hlt2PFCentralJetLooseID60")
-man.ModifyPar("hlt2PFCentralJetLooseID60", "inputTag", "'hltAK4PFJetsLooseIDCorrected'")
-man.InsertInMenu(in_class="hlt2PFCentralJetLooseID60",process_name = 'in_class')
 
 man.CreateFromLocal(in_class="hltDoubleLeadingBTagSumCentralJet30",mod_name="HLTBTagSumCalo")
 man.InsertInMenu(in_class="hltDoubleLeadingBTagSumCentralJet30",process_name = 'in_class')
