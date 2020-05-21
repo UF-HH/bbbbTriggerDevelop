@@ -52,7 +52,7 @@ else:
 line = FindLine(menu_path, "_customInfo['inputFile' ]")
 if line != None:
     to_add = "_customInfo['inputFile' ]= ['@']"
-    ReplaceLine(self.menu, line, to_add)
+    ReplaceLine(menu_path, line, to_add)
 
 AddPrimarySecondaryPoolSource(menu_path, raw_data, aod_data, line)
 
