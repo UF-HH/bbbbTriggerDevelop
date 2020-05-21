@@ -37,8 +37,10 @@ if args.keep:
     shutil.copy(args.menu, args.out)
     menu_path = args.out
 
+#querying for raw and aod from parsed inputs
 raw_data, aod_data = QueryForRAWandAOD(args.primaryDataset, args.secondaryDataset)
 
+#if no line passed, we search for the PoolSource, present by default when you dump a menu (empty if not --inputs)
 if not args.line:
     print("...Finding process.source line")
     line = FindModule(menu_path, "PoolSource")
@@ -49,11 +51,13 @@ else:
     line = args.line
 
 #obscuring inputs if present:
-line = FindLine(menu_path, "_customInfo['inputFile' ]")
-if line != None:
+line_inputs = FindLine(menu_path, "_customInfo['inputFile' ]")
+if line_inputs != None:
     to_add = "_customInfo['inputFile' ]= ['@']"
-    ReplaceLine(menu_path, line, to_add)
+    ReplaceLine(menu_path, line_inputs, to_add)
 
+
+#finally adding the source 
 AddPrimarySecondaryPoolSource(menu_path, raw_data, aod_data, line)
 
 
