@@ -41,11 +41,18 @@ raw_data, aod_data = QueryForRAWandAOD(args.primaryDataset, args.secondaryDatase
 
 if not args.line:
     print("...Finding process.source line")
-    line, modDef = FindLine(menu_path, "cms.Source")
-    RemoveModule(menu_path, "cms.Source")
+    line = FindModule(menu_path, "PoolSource")
     print("...Found in line {} ".format(line))
+    RemoveModule(menu_path, "cms.Source")
+    
 else:
     line = args.line
+
+#obscuring inputs if present:
+line = FindLine(menu_path, "_customInfo['inputFile' ]")
+if line != None:
+    to_add = "_customInfo['inputFile' ]= ['@']"
+    ModMenu.ReplaceLine(self.menu, line, to_add)
 
 AddPrimarySecondaryPoolSource(menu_path, raw_data, aod_data, line)
 
