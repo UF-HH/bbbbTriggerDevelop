@@ -43,7 +43,7 @@ raw_data, aod_data = QueryForRAWandAOD(args.primaryDataset, args.secondaryDatase
 #if no line passed, we search for the PoolSource, present by default when you dump a menu (empty if not --inputs)
 if not args.line:
     print("...Finding process.source line")
-    line = FindModule(menu_path, "PoolSource")
+    line, mod_def = FindModule(menu_path, "PoolSource")
     print("...Found in line {} ".format(line))
     RemoveModule(menu_path, "cms.Source")
     
