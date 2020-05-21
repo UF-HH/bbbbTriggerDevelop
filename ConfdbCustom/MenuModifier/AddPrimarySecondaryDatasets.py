@@ -53,7 +53,7 @@ else:
 #obscuring inputs if present:
 line_inputs = FindLine(menu_path, "_customInfo['inputFile' ]")
 if line_inputs != None:
-    to_add = "_customInfo['inputFile' ]= ['@']"
+    to_add = "_customInfo['inputFile' ]= ['@']\n" #this line has to be present otherwise HLTrigger.Configuration.customizeHLTforALL will crash
     ReplaceLine(menu_path, line_inputs, to_add)
 
 
