@@ -46,8 +46,13 @@ if not args.line:
     line, mod_def = FindModule(menu_path, "PoolSource")
     line = line -len(mod_def) #after removing module
     print("...Found in line {} ".format(line))
+
+    # we search for the PoolSource, present by default when you dump a menu (empty if not --inputs) annd delete it
+    RemoveModule(menu_path, "PoolSource")
     
 else:
+    RemoveModule(menu_path, "PoolSource")
+    
     if args.line == "first":
         line = 0
     elif args.line == "last":
@@ -55,8 +60,7 @@ else:
     elif isinstance(args.line, int):
         line = args.line
 
-# we search for the PoolSource, present by default when you dump a menu (empty if not --inputs) annd delete it
-RemoveModule(menu_path, "PoolSource")
+
 
 #obscuring inputs if present:
 line_inputs = FindLine(menu_path, "_customInfo['inputFile' ]")
