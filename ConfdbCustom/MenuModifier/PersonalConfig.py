@@ -4,7 +4,7 @@
 # HLT menu with modules and
 # triggers from the analysis
 #
-# example usage MC: python PersonalConfig.py --menu=/dev/CMSSW_11_0_0_pre9/GRun -out=myHLT.py -gt=110X_mcRun3_2021_realistic_v6 -pr=myHLT -out=myHLT.py \
+# example usage MC: python PersonalConfig.py --menu=/dev/CMSSW_11_0_0/GRun -out=myHLT.py -gt=110X_mcRun3_2021_realistic_v6 -pr=myHLT -out=myHLT.py \
 # -paths=HLT_PFHT330PT30_QuadPFJet_75_60_45_40_TriplePFBTagDeepCSV_4p5_v3
 #
 #--------------------------------------------------------------------------------------------------------------------------------
@@ -75,7 +75,7 @@ print("@[Info]: Adding Imports and setup... ")
 man.Insert("import FWCore.PythonUtilities.LumiList as LumiList\n", ind=3)
 man.Insert("import FWCore.ParameterSet.Types as CfgTypes\n", ind=3)
 man.SetCurrentLine(option_str="after:process = cms.Process(")
-man.Insert('process.load("{}")'.format(args.setup))
+man.Insert('process.load("{}")\n'.format(args.setup))
 
 print("@[Info]: Adding Analyzers... ")
 
