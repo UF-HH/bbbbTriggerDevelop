@@ -142,7 +142,6 @@ void Event::Generate(){
     tree->GetEntry(event_index);
 
     if(eventType == "MC"){
-
         treeGen->GetEntry(event_index);
 
         GenJets.pt = *gen_pt;
@@ -156,6 +155,14 @@ void Event::Generate(){
         GenNNJets.phi = *gen_nonu_phi;
         GenNNJets.e = *gen_nonu_e;
         GenNNJets.et = *gen_nonu_et;
+
+        RecoJets.pt = *reco_jet_pt;
+        RecoJets.mass = *reco_jet_mass;
+        RecoJets.eta = *reco_jet_eta;
+        RecoJets.phi = *reco_jet_phi;
+        RecoJets.e = *reco_jet_e;
+        RecoJets.et = *reco_jet_et;
+        RecoJets.btag = *reco_jet_btag;
     }
 
     L1Jets.pt = *l1_pt;
@@ -176,14 +183,6 @@ void Event::Generate(){
     PFJets.e = *pf_e;
     PFJets.et = *pf_et;
     PFJets.btag = *pf_btag;
-
-    RecoJets.pt = *reco_jet_pt;
-    RecoJets.mass = *reco_jet_mass;
-    RecoJets.eta = *reco_jet_eta;
-    RecoJets.phi = *reco_jet_phi;
-    RecoJets.e = *reco_jet_e;
-    RecoJets.et = *reco_jet_et;
-    RecoJets.btag = *reco_jet_btag;
     
     
     //building the bjets
