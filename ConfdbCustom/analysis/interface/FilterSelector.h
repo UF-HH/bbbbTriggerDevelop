@@ -648,6 +648,40 @@ double hltCaloQuadJet30HT320_ret_HT(std::vector<double> pt, std::vector<double> 
 
     };
 
+    bool CustomFixedSumBtagSelector(hltObj::Jets jets, hltObj::HLTCuts cuts){
+        
+        if(!(check_length<double, double>(jets.pt, jets.eta) || check_length<double, double>(jets.eta, jets.btag))){
+            throw std::runtime_error("--->Size does not Coincide<---");
+        }
+
+        bool pass = true;
+        std::vector<double> results;
+        //local copy for lambda, can we actually avoid this?
+        double PtMin = cuts.PtMin;
+        double PtMax = cuts.PtMax;
+
+        auto it = std::find_if(std::begin(jets.pt), std::end(jets.pt), [PtMin, PtMax](double i){return (i >= PtMin && i <= PtMax);});
+        while (it != std::end(jets.pt)) {
+            auto dis = std::distance(std::begin(jets.pt), it);
+            if(jets.eta.at(dis) <= cuts.EtaMax && jets.eta.at(dis) >= cuts.EtaMin && jets.btag.at(dis) >= cuts.BtagMin)
+                results.emplace_back(jets.btag.at(dis));
+            it = std::find_if(std::next(it), std::end(jets.pt), [PtMin, PtMax](double i){return (i >= PtMin && i <= PtMax);});
+        }   
+
+        std::sort(results.begin(), results.end(), std::greater<double>()); //sorting descending order
+        double sum = 0;
+        for(auto idx : cuts.indices){
+            sum += results.at(idx);
+        }
+        if(sum <= cuts.BtagSumMin){
+            return false;
+        }
+        else{
+            return pass;
+        }
+
+    };
+
     bool CustomFixedHTSelector(hltObj::Jets jets, hltObj::HLTCuts cuts){
 
         if(jets.HT >= cuts.HTMin){

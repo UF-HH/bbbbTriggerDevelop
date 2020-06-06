@@ -151,9 +151,11 @@ namespace hltObj{
             double HTMin;
             double MHTMin;
             double BtagMin;
+            double BtagSumMin;
             double EtMin;
             bool ordered;
             int MinN;
+            std::vector<int> indices;
             std::vector<int> MinNs;
             std::vector<double> PtMinEachJet;
             std::vector<double> PtMaxEachJet;
@@ -179,7 +181,9 @@ namespace hltObj{
                 MappedSetCuts.insert(std::make_pair("setMHTMin", &HLTCuts::setMHTMin));
                 MappedSetCuts.insert(std::make_pair("setMinN", &HLTCuts::setMinN));
                 MappedSetCuts.insert(std::make_pair("setBTagMin", &HLTCuts::setBTagMin));
+                MappedSetCuts.insert(std::make_pair("setBTagSumMin", &HLTCuts::setBTagSumMin));
                 MappedSetCuts.insert(std::make_pair("setEtMin", &HLTCuts::setEtMin));
+                MappedSetCuts.insert(std::make_pair("addIndex", &HLTCuts::addIndex));
             }
             void setPtMin(double p){PtMin = p; };
             void setPtMax(double p){PtMax = p;};
@@ -188,10 +192,11 @@ namespace hltObj{
             void setHTMin(double H){HTMin = H;};
             void setMHTMin(double H){MHTMin=H;};
             void setBTagMin(double B){BtagMin=B;};
+            void setBTagSumMin(double B){BtagSumMin=B;};
             void setEtMin(double e){EtMin=e;};
             void setOrdered(bool o){ordered=o;};
             void setMinN(double N){MinN=(int) round(N);};
-
+            void addIndex(double N){indices.push_back((int) round(N));};
 
     };
 
