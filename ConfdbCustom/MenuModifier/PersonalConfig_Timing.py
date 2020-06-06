@@ -6,8 +6,17 @@
 # Specific implementation for timing 
 # studies. Runs on vocms003
 #
-# example usage data: python PersonalConfig_Timing.py --menu=/dev/CMSSW_11_0_0/GRun/V7 -out=myHLT.py -gt=110X_mcRun3_2021_realistic_v6 -pr=myHLT -out=myHLT.py \
-# -input=/data/user/ecarrera/timing_data/skim_Ephemeral_319941/EphemeralHLTPhysics_PU48-49_319941*.root -prescale=2.0e34+HLTPhysics -nev=50000 -data
+#python PersonalConfig_Timing.py --menu=/dev/CMSSW_10_1_0/GRun -gt=101X_dataRun2_HLT_v7 -out=myHLT.py -pr=myHLT -out=myHLT.py \
+#-input=root://eoscms.cern.ch//eos/cms/store/group/dpg_trigger/comm_trigger/TriggerStudiesGroup/Timing/SKIMs/skim_Ephemeral_319941/EphemeralHLTPhysics_PU48-49_319941000.root, \
+#root://eoscms.cern.ch//eos/cms/store/group/dpg_trigger/comm_trigger/TriggerStudiesGroup/Timing/SKIMs/skim_Ephemeral_319941/EphemeralHLTPhysics_PU48-49_319941001.root, \
+#root://eoscms.cern.ch//eos/cms/store/group/dpg_trigger/comm_trigger/TriggerStudiesGroup/Timing/SKIMs/skim_Ephemeral_319941/EphemeralHLTPhysics_PU48-49_319941002.root, \
+#root://eoscms.cern.ch//eos/cms/store/group/dpg_trigger/comm_trigger/TriggerStudiesGroup/Timing/SKIMs/skim_Ephemeral_319941/EphemeralHLTPhysics_PU48-49_319941003.root, \
+#root://eoscms.cern.ch//eos/cms/store/group/dpg_trigger/comm_trigger/TriggerStudiesGroup/Timing/SKIMs/skim_Ephemeral_319941/EphemeralHLTPhysics_PU48-49_319941004.root, \
+#root://eoscms.cern.ch//eos/cms/store/group/dpg_trigger/comm_trigger/TriggerStudiesGroup/Timing/SKIMs/skim_Ephemeral_319941/EphemeralHLTPhysics_PU48-49_319941005.root, \
+#root://eoscms.cern.ch//eos/cms/store/group/dpg_trigger/comm_trigger/TriggerStudiesGroup/Timing/SKIMs/skim_Ephemeral_319941/EphemeralHLTPhysics_PU48-49_319941006.root, \
+#root://eoscms.cern.ch//eos/cms/store/group/dpg_trigger/comm_trigger/TriggerStudiesGroup/Timing/SKIMs/skim_Ephemeral_319941/EphemeralHLTPhysics_PU48-49_319941007.root, \
+#root://eoscms.cern.ch//eos/cms/store/group/dpg_trigger/comm_trigger/TriggerStudiesGroup/Timing/SKIMs/skim_Ephemeral_319941/EphemeralHLTPhysics_PU48-49_319941008.root, \
+#root://eoscms.cern.ch//eos/cms/store/group/dpg_trigger/comm_trigger/TriggerStudiesGroup/Timing/SKIMs/skim_Ephemeral_319941/EphemeralHLTPhysics_PU48-49_319941009.root -nev=50000 -data --l1 L1Menu_Collisions2018_v2_1_0-d1_xml --prescale "2.0e34+ZB+HLTPhysics"
 #
 #--------------------------------------------------------------------------------------------------------------------------------
 
@@ -34,6 +43,7 @@ parser.add_argument('-prescale', '--prescale', type=float, required=False, help=
 parser.add_argument('-output', '--output', type=str, required=False, help="Outputmodules inside the menu")
 parser.add_argument('-input', '--input', type=str, required=False, help="Input files")
 parser.add_argument('-setup', '--setup', default="setup_cff", required=False, help="setup name")
+parser.add_argument('-l1', '--l1', type=str, required=False, help="l1 xml config")
 
 args = parser.parse_args()
 
@@ -53,6 +63,7 @@ else: to_os += " --prescale none"
 if args.output: to_os += " --output {}".format(args.output)
 else: to_os += " --output none"
 if args.input: to_os += " --input {}".format(args.input)
+if args.l1: to_os += " --l1 {}".format(args.l1)
 
 to_os += " > {}".format(args.out)
 
