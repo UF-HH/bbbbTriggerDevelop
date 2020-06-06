@@ -39,7 +39,7 @@ parser.add_argument('-type', '--type', type=str, required=False, default="GRun",
 parser.add_argument('-paths', '--paths', type=str, required=False, help="Paths comma separated")
 parser.add_argument('-timing', '--timing', default=True, action='store_false', required=False, help="do you want timing modules?")
 parser.add_argument('-nev', '--nev', type=int, default=-1, required=False, help="Number of events to compute")
-parser.add_argument('-prescale', '--prescale', type=float, required=False, help="Prescale")
+parser.add_argument('-prescale', '--prescale', type=str, required=False, help="Prescale")
 parser.add_argument('-output', '--output', type=str, required=False, help="Outputmodules inside the menu")
 parser.add_argument('-input', '--input', type=str, required=False, help="Input files")
 parser.add_argument('-setup', '--setup', default="setup_cff", required=False, help="setup name")
