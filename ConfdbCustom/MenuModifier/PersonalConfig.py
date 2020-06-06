@@ -4,8 +4,8 @@
 # HLT menu with modules and
 # triggers from the analysis
 #
-# example usage MC: python PersonalConfig.py --menu=/dev/CMSSW_11_0_0/GRun -out=myHLT.py -gt=110X_mcRun3_2021_realistic_v6 -pr=myHLT -out=myHLT.py \
-# -paths=HLT_PFHT330PT30_QuadPFJet_75_60_45_40_TriplePFBTagDeepCSV_4p5_v3
+# example usage MC: python PersonalConfig.py --menu=/dev/CMSSW_11_0_0/GRun/V7 -out=myHLT.py -gt=110X_mcRun3_2021_realistic_v6 -pr=myHLT -out=myHLT.py \
+# -paths=HLTriggerFirstPath,HLT_PFHT330PT30_QuadPFJet_75_60_45_40_TriplePFBTagDeepCSV_4p5_v3,HLTriggerFinalPath,HLTAnalyzerEndpath
 #
 #--------------------------------------------------------------------------------------------------------------------------------
 
