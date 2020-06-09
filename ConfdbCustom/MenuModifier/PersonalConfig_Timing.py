@@ -54,8 +54,6 @@ if args.tr:
     print("@[BeginQuery]: Query for timing files from run {}".format(args.tr))
     run , pu, ps, files = QueryForTimingFiles(args.tr)
     args.prescale = ps
-    files = str(files).strip('[]')
-    args.input = files.strip(" ")
     print("@[EndQuery]: Queried for {} files".format(len(files)))
 
 print("@[BeginJob]: Initiating... ")
@@ -163,6 +161,11 @@ man.Insert("process.HLT_PFHT330PT30_QuadPFJet_75_60_45_40_TriplePFBTagDeepCSV_4p
 #Inserting truly new paths
 man.Insert("process.HLT_Quad30_Double60_Sum2LeadingBTag015 = cms.Path( process.HLTBeginSequence + process.hltL1sQuadJetC50to60IorHTT280to500IorHTT250to340QuadJet + process.hltPreBTagSum + process.HLTAK4CaloJetsSequence + process.hltQuadCentralJet30 + process.hltDoubleCentralJet60 + process.HLTBtagDeepCSVSequenceL3 + process.hltDoubleLeadingBTagSumCentralJet30 + process.HLTAK4PFJetsSequence + process.hltPFCentralJetLooseIDQuad30 + process.hlt2PFCentralJetLooseID60 + process.HLTBtagDeepCSVSequencePF + process.hltDoublePFLeadingBTagSumCentralJet30  + process.HLTEndSequence )\n")
 man.Insert("process.HLT_PFHT270_180_Double180_Double90_BisectorBTag07 = cms.Path( process.HLTBeginSequence + process.hltL1sQuadJetC50to60IorHTT280to500IorHTT250to340QuadJet +  process.hltPreBisectorBTag + process.HLTAK4CaloJetsSequence + process.hltDoubleCentralCaloHT180 + process.hltDoubleCentralCaloHT90 + process.HLTBtagDeepCSVSequenceL3 + process.hltBTagBisector23Calo + process.HLTAK4PFJetsSequence + process.hltDoubleCentralPFHT180 + process.hltDoubleCentralPFHT90  + process.HLTBtagDeepCSVSequencePF + process.hltBTagBisector23PF + process.HLTEndSequence )\n")
+
+if args.tr:
+    print("@[Info]: Adding timing files as inputs... ")
+    man.AddDASQuery(files)
+
 
 print("@[EndJob]: Done")
 

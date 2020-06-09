@@ -163,6 +163,11 @@ class ModMan:
         to_add = at + " = " + str(query) + "\n"
         ModMenu.ReplaceLine(self.menu, line, to_add)
 
+    def AddDASQuery(self, file_list, at = "_customInfo['inputFile' ]"):
+        line = ModMenu.FindLine(self.menu, at)
+        to_add = at + " = " + str(file_list) + "\n"
+        ModMenu.ReplaceLine(self.menu, line, to_add)
+
     def AddGenParticleProd(self):
         genp = ModMenu.AddGenParticleProducer()
         self.Insert( genp, self.currentline)
