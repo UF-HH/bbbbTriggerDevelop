@@ -408,7 +408,6 @@ void SaveAllJetsRecoMC::analyze(const edm::Event& iEvent, const edm::EventSetup&
         gen_mass_->push_back(k->mass());
 
     }
-    std::cout << std::endl;
 
     typename std::vector<reco::GenJet>::const_iterator l(GenNNjets->begin());
 
@@ -421,7 +420,6 @@ void SaveAllJetsRecoMC::analyze(const edm::Event& iEvent, const edm::EventSetup&
         gen_nonu_mass_->push_back(l->mass());
 
     }
-    std::cout << std::endl;
 
     std::vector<double> pfb_pt;
     std::vector<double> pfb_btag;
