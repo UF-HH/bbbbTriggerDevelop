@@ -171,4 +171,12 @@ class ModMan:
     def AddGenParticleProd(self):
         genp = ModMenu.AddGenParticleProducer()
         self.Insert( genp, self.currentline)
-        
+
+    def InsertPrescaleModule(self, process_name, offset=0, name='strip'):
+
+        if name == 'strip':
+            name = name.replace("_", "")
+            name = name[:3] + "Pre" + name[3:]
+
+        to_add = 'process.{} = cms.EDFilter( "HLTPrescaler", \nL1GtReadoutRecordTag = cms.InputTag( "hltGtStage2Digis" ),\noffset = cms.uint32( {} )\n)'.format(name, offset)
+        self.Insert( to_add, self.currentline )
