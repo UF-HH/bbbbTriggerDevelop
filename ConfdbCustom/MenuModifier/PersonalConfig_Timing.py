@@ -54,7 +54,8 @@ if args.tr:
     print("@[BeginQuery]: Query for timing files from run {}".format(args.tr))
     run , pu, ps, files = QueryForTimingFiles(args.tr)
     args.prescale = ps
-    args.input = str(files).strip('[]')
+    files = str(files).strip('[]')
+    args.input = files.strip(" ")
     print("@[EndQuery]: Queried for {} files".format(len(files)))
 
 print("@[BeginJob]: Initiating... ")
