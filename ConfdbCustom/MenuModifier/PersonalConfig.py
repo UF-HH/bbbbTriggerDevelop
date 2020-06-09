@@ -16,6 +16,7 @@ import shutil
 from ModMenu import *
 from ModuleManager import ModMan
 import argparse
+import numpy as np
 
 parser = argparse.ArgumentParser()
 parser.add_argument('-gt', '--globaltag', type=str, required=True, help="globaltag")
@@ -84,7 +85,7 @@ man.SetCurrentLine(option_str="after:#-------------My Analyzers-------------")
 man.MakeSpace(n=20) #caveat, does not work without this, problem with indexing inside man...Need to work on this
 man.SetCurrentLine(option_str="after:#-------------My Analyzers-------------")
 
-trigger_list = "'HLT_Quad30_Double60_Sum2LeadingBTag015','HLT_PFHT330PT30_QuadPFJet_75_60_45_40_TriplePFBTagDeepCSV_4p5_v3','HLT_PFHT270_180_Double180_Double90_BisectorBTag07'"
+trigger_list = "'HLT_Quad30_Double60_Sum2LeadingBTag15','HLT_PFHT330PT30_QuadPFJet_75_60_45_40_TriplePFBTagDeepCSV_4p5_v3','HLT_PFHT270_180_Double180_Double90_BisectorBTag07'"
 
 man.CreateFromLocal(in_class="MyHLTAnalyzer",mod_name="MyHLTAnalyzer", triggerList = trigger_list)
 man.InsertInMenu(in_class="MyHLTAnalyzer",process_name = 'in_class')
@@ -142,14 +143,14 @@ man.InsertInMenu(in_class="hltDoublePFLeadingBTagSumCentralJet30",process_name =
 #creating range for the leading 2 btag sum, varying thresholds
 calo_names_th = []
 pf_names_th = []
-for th in range(0.9, 2.1 , 0.1):
+for th in np.arange(0.9, 2.1 , 0.1):
     #calos
-    inclass_name = "hltDoubleLeadingBTagSumCentralJet30th{}".format(th)
+    inclass_name = "hltDoubleLeadingBTagSumCentralJet30th{:.1f}".format(th)
     calo_names_th.append([inclass_name, th])
     man.CreateFromLocal(in_class=inclass_name,mod_name="HLTBTagSumCalo", MinBTagSum=th)
     man.InsertInMenu(in_class=inclass_name, process_name = 'in_class')
     #pfs
-    inclass_name = "hltDoublePFLeadingBTagSumCentralJet30th{}".format(th)
+    inclass_name = "hltDoublePFLeadingBTagSumCentralJet30th{:.1f}".format(th)
     pf_names_th.append([inclass_name, th])
     man.CreateFromLocal(in_class=inclass_name,mod_name="HLTBTagSumPF", MinBTagSum=th)
     man.InsertInMenu(in_class=inclass_name, process_name = 'in_class')
@@ -172,7 +173,7 @@ print("@[Info]: Adding Paths... ")
 
 man.Insert("#-----------------My Paths-----------------\n")
 #New filters based
-man.Insert("process.HLT_Quad30_Double60_Sum2LeadingBTag015 = cms.Path( process.HLTBeginSequence + process.hltL1sQuadJetC50to60IorHTT280to500IorHTT250to340QuadJet + process.hltPrePFHT330PT30QuadPFJet75604540TriplePFBTagDeepCSV4p5 + process.HLTAK4CaloJetsSequence + process.hltQuadCentralJet30 + process.hltDoubleCentralJet60 + process.HLTBtagDeepCSVSequenceL3 + process.hltDoubleLeadingBTagSumCentralJet30 + process.HLTAK4PFJetsSequence + process.hltPFCentralJetLooseIDQuad30 + process.hlt2PFCentralJetLooseID60 + process.HLTBtagDeepCSVSequencePF + process.hltDoublePFLeadingBTagSumCentralJet30  + process.HLTEndSequence )\n")
+man.Insert("process.HLT_Quad30_Double60_Sum2LeadingBTag_1p5 = cms.Path( process.HLTBeginSequence + process.hltL1sQuadJetC50to60IorHTT280to500IorHTT250to340QuadJet + process.hltPrePFHT330PT30QuadPFJet75604540TriplePFBTagDeepCSV4p5 + process.HLTAK4CaloJetsSequence + process.hltQuadCentralJet30 + process.hltDoubleCentralJet60 + process.HLTBtagDeepCSVSequenceL3 + process.hltDoubleLeadingBTagSumCentralJet30 + process.HLTAK4PFJetsSequence + process.hltPFCentralJetLooseIDQuad30 + process.hlt2PFCentralJetLooseID60 + process.HLTBtagDeepCSVSequencePF + process.hltDoublePFLeadingBTagSumCentralJet30  + process.HLTEndSequence )\n")
 man.Insert("process.HLT_PFHT270_180_Double180_Double90_BisectorBTag07 = cms.Path( process.HLTBeginSequence + process.hltL1sQuadJetC50to60IorHTT280to500IorHTT250to340QuadJet + process.hltPrePFHT330PT30QuadPFJet75604540TriplePFBTagDeepCSV4p5 + process.HLTAK4CaloJetsSequence + process.hltDoubleCentralCaloHT180 + process.hltDoubleCentralCaloHT90 + process.HLTBtagDeepCSVSequenceL3 + process.hltBTagBisector23Calo + process.HLTAK4PFJetsSequence + process.hltDoubleCentralPFHT180 + process.hltDoubleCentralPFHT90  + process.HLTBtagDeepCSVSequencePF + process.hltBTagBisector23PF + process.HLTEndSequence )\n")
 
 for calo, pf in zip(calo_names_th, pf_names_th):
