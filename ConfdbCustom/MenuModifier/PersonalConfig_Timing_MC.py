@@ -136,6 +136,9 @@ for th in np.arange(0.9, 2.1 , 0.1):
 
 print("@[Info]: Adding Paths... ")
 
+man.SetCurrentLine(FindLastPath(menu_path)) #Need to add after HLTBeginSequence
+man.Insert("\n")
+
 man.Insert("#-----------------My Paths-----------------\n")
 #New filters based
 man.Insert("process.HLT_Quad30_Double60_Sum2LeadingBTag_1p5 = cms.Path( process.HLTBeginSequence + process.hltL1sQuadJetC50to60IorHTT280to500IorHTT250to340QuadJet + process.hltPrePFHT330PT30QuadPFJet75604540TriplePFBTagDeepCSV4p5 + process.HLTAK4CaloJetsSequence + process.hltQuadCentralJet30 + process.hltDoubleCentralJet60 + process.HLTBtagDeepCSVSequenceL3 + process.hltDoubleLeadingBTagSumCentralJet30 + process.HLTAK4PFJetsSequence + process.hltPFCentralJetLooseIDQuad30 + process.hlt2PFCentralJetLooseID60 + process.HLTBtagDeepCSVSequencePF + process.hltDoublePFLeadingBTagSumCentralJet30  + process.HLTEndSequence )\n")
