@@ -79,7 +79,7 @@ man.Insert('process.load("{}")\n'.format(args.setup))
 
 man.Insert("#------------- My Filters -------------------\n", ind=FindFirstSequence(menu_path)-1)
 man.SetCurrentLine(option_str="after:#------------- My Filters -------------------")
-man.MakeSpace(n=20) #caveat, does not work without this, problem with indexing inside man...Need to work on this
+man.MakeSpace(n=70) #caveat, does not work without this, problem with indexing inside man...Need to work on this
 
 print("@[Info]: Adding Filters definintions... ")
 
