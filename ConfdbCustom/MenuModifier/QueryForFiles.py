@@ -336,7 +336,7 @@ def QueryForTimingFiles(run):
         pu = [48,49]
         ps = "2.0e34+HLTPhysics"
         file_names = ["EphemeralHLTPhysics_PU48-49_319941000.root","EphemeralHLTPhysics_PU48-49_319941001.root","EphemeralHLTPhysics_PU48-49_319941002.root","EphemeralHLTPhysics_PU48-49_319941003.root","EphemeralHLTPhysics_PU48-49_319941004.root","EphemeralHLTPhysics_PU48-49_319941005.root",]
-        files = ["	/data/user/ecarrera/timing_data/skim_Ephemeral_319941/{}".format(i) for i in file_names]
+        files = ["/data/user/ecarrera/timing_data/skim_Ephemeral_319941/{}".format(i) for i in file_names]
 
         return run , pu, ps, files
 
