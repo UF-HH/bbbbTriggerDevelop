@@ -145,12 +145,12 @@ calo_names_th = []
 pf_names_th = []
 for th in np.arange(0.9, 2.1 , 0.1):
     #calos
-    inclass_name = "hltDoubleLeadingBTagSumCentralJet30th{:.1f}".format(th)
+    inclass_name = "hltDoubleLeadingBTagSumCentralJet30th{}".format(str(th).replace(".", "p"))
     calo_names_th.append([inclass_name, th])
     man.CreateFromLocal(in_class=inclass_name,mod_name="HLTBTagSumCalo", MinBTagSum=th)
     man.InsertInMenu(in_class=inclass_name, process_name = 'in_class')
     #pfs
-    inclass_name = "hltDoublePFLeadingBTagSumCentralJet30th{:.1f}".format(th)
+    inclass_name = "hltDoublePFLeadingBTagSumCentralJet30th{}".format(str(th).replace(".", "p"))
     pf_names_th.append([inclass_name, th])
     man.CreateFromLocal(in_class=inclass_name,mod_name="HLTBTagSumPF", MinBTagSum=th)
     man.InsertInMenu(in_class=inclass_name, process_name = 'in_class')
