@@ -176,7 +176,7 @@ class ModMan:
 
         if name == 'strip':
             process_name = process_name.replace("_", "")
-            process_name = name[:3] + "Pre" + process_name[3:]
+            process_name = process_name[:3] + "Pre" + process_name[3:]
 
         to_add = 'process.{} = cms.EDFilter( "HLTPrescaler", \nL1GtReadoutRecordTag = cms.InputTag( "hltGtStage2Digis" ),\noffset = cms.uint32( {} )\n)\n'.format(process_name, offset)
         self.Insert( to_add, self.currentline )
