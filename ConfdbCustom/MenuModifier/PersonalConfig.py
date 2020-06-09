@@ -196,7 +196,7 @@ man.Insert("process.SaveGen = cms.Sequence( process.prunedGenParticles + process
 man.Insert("process.SaveJets = cms.Path( process.HLTBeginSequence + process.hltL1sQuadJetC50to60IorHTT280to500IorHTT250to340QuadJet + process.hltPrePFHT330PT30QuadPFJet75604540TriplePFBTagDeepCSV4p5 +process.HLTAK4CaloJetsSequence + process.HLTBtagDeepCSVSequenceL3 + process.HLTAK4PFJetsSequence + process.HLTBtagDeepCSVSequencePF + process.SaveGen + process.SaveAllJetsMC + process.HLTEndSequence)\n")
 
 print("@[Info]: Adding Query for MC samples... ")
-man.AddDASQuery()
+man.AddDASQueryMC()
 
 print("@[EndJob]: Done")
 
