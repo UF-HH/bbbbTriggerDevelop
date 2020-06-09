@@ -149,8 +149,8 @@ man.InsertInMenu(in_class="hltPreBTagSum",process_name = 'in_class')
 man.CloneModule("process.hltPrePFHT330PT30QuadPFJet75604540TriplePFBTagDeepCSV4p5", in_class="hltPreBisectorBTag")
 man.InsertInMenu(in_class="hltPreBisectorBTag",process_name = 'in_class')
 """
-man.InsertPrescaleModule(self, 'hltBTagSum', offset=0, name='strip')
-man.InsertPrescaleModule(self, 'hltBisectorBTag', offset=0, name='strip')
+man.InsertPrescaleModule('hltBTagSum', offset=0, name='strip')
+man.InsertPrescaleModule('hltBisectorBTag', offset=0, name='strip')
 #inserting my paths
 
 print("@[Info]: Adding Paths... ")
