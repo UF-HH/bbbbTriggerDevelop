@@ -316,12 +316,58 @@ def QueryForRAWandAOD(raw_data, aod_data, convert_to_cms = False):
 
     return tot_file_raw, tot_file_AOD
 
+def QueryForTimingFiles(run):
+    #Pay attention, this can only be used in vocms3/4
+    if run in [325022, 324878]:
+        run = [325022, 324878]
+        pu = [36,52]
+        ps = "2.0e34+ZB+HLTPhysics"
+        file_names = ["EphemeralHLTPhysics_PU36-38_325022and324878.root", "EphemeralHLTPhysics_PU36-38_325022and324878001.root", "EphemeralHLTPhysics_PU36-38_325022and324878002.root", "EphemeralHLTPhysics_PU36-38_325022and324878003.root", "EphemeralHLTPhysics_PU36-38_325022and324878004.root", "EphemeralHLTPhysics_PU36-38_325022and324878005.root",
+        "EphemeralHLTPhysics_PU38-40_325022000.root", "EphemeralHLTPhysics_PU38-40_325022001.root", "EphemeralHLTPhysics_PU38-40_325022002.root", "EphemeralHLTPhysics_PU38-40_325022003.root", "EphemeralHLTPhysics_PU38-40_325022004.root", "EphemeralHLTPhysics_PU40-42_325022and324878.root", "EphemeralHLTPhysics_PU40-42_325022and324878001.root",
+        "EphemeralHLTPhysics_PU40-42_325022and324878002.root", "EphemeralHLTPhysics_PU40-42_325022and324878003.root", "EphemeralHLTPhysics_PU40-42_325022and324878004.root", "EphemeralHLTPhysics_PU40-42_325022and324878005.root", "EphemeralHLTPhysics_PU40-42_325022and324878006.root", "EphemeralHLTPhysics_PU42-44_325022and324878.root", "EphemeralHLTPhysics_PU42-44_325022and324878001.root",
+        "EphemeralHLTPhysics_PU42-44_325022and324878002.root", "EphemeralHLTPhysics_PU42-44_325022and324878003.root", "EphemeralHLTPhysics_PU42-44_325022and324878004.root", "EphemeralHLTPhysics_PU42-44_325022and324878005.root", "EphemeralHLTPhysics_PU42-44_325022and324878006.root", "EphemeralHLTPhysics_PU44-46_325022and324878.root","EphemeralHLTPhysics_PU44-46_325022and324878001.root",
+        "EphemeralHLTPhysics_PU44-46_325022and324878002.root", "EphemeralHLTPhysics_PU44-46_325022and324878003.root", "EphemeralHLTPhysics_PU44-46_325022and324878004.root", "EphemeralHLTPhysics_PU44-46_325022and324878005.root", "EphemeralHLTPhysics_PU46-48_325022and324878.root", "EphemeralHLTPhysics_PU46-48_325022and324878001.root", "EphemeralHLTPhysics_PU46-48_325022and324878002.root", 
+        "EphemeralHLTPhysics_PU46-48_325022and324878003.root", "EphemeralHLTPhysics_PU46-48_325022and324878004.root", "EphemeralHLTPhysics_PU48-50_325022and324878.root", "EphemeralHLTPhysics_PU48-50_325022and324878001.root", "EphemeralHLTPhysics_PU48-50_325022and324878002.root", "EphemeralHLTPhysics_PU48-50_325022and324878003.root", "EphemeralHLTPhysics_PU48-50_325022and324878004.root", 
+        "EphemeralHLTPhysics_PU50-52_325022and324878.root", "EphemeralHLTPhysics_PU50-52_325022and324878001.root", "EphemeralHLTPhysics_PU50-52_325022and324878002.root", "EphemeralHLTPhysics_PU50-52_325022and324878003.root", "EphemeralHLTPhysics_PU50-52_325022and324878004.root",]
+        files = ["/data/user/ecarrera/timing_data/temp_Run2_TimingVsPU_study/skim2018_Ephemeral_325022and32487800_PUstudy/{}".format(i) for i in file_names]
 
-    
+    elif run in [319941]:
+        run = [319941]
+        pu = [48,49]
+        ps = "2.0e34+HLTPhysics"
+        file_names = ["EphemeralHLTPhysics_PU48-49_319941000.root", "EphemeralHLTPhysics_PU48-49_319941001.root","EphemeralHLTPhysics_PU48-49_319941002.root","EphemeralHLTPhysics_PU48-49_319941003.root","EphemeralHLTPhysics_PU48-49_319941004.root","EphemeralHLTPhysics_PU48-49_319941005.root",]
+        files = ["	/data/user/ecarrera/timing_data/skim_Ephemeral_319941/{}".format(i) for i in file_names]
 
+        return run , pu, ps, files
 
+    elif run in [316457]:
+        run = [316457]
+        pu = [49,51]
+        ps = "HLTPhysics"
+        file_names = ["EphemeralHLTPhysics_316457000.root", "EphemeralHLTPhysics_316457004.root","EphemeralHLTPhysics_316457001.root", "EphemeralHLTPhysics_316457005.root","EphemeralHLTPhysics_316457002.root","EphemeralHLTPhysics_316457006.root", "EphemeralHLTPhysics_316457003.root"]
+        files = ["/data/user/ecarrera/timing_data/skim_Ephemeral_316457/{}".format(i) for i in file_names]
+        return run , pu, ps, files
 
+    elif run in [316058]:
+        run = [316058]
+        pu = [49,52]
+        ps = "2.0e34+Physics"
+        file_names = ["Ephemeral_PU49-52_316058000.root","Ephemeral_PU49-52_316058005.root", "Ephemeral_PU49-52_316058001.root",  "Ephemeral_PU49-52_316058006.root", "Ephemeral_PU49-52_316058002.root",  "Ephemeral_PU49-52_316058007.root", "Ephemeral_PU49-52_316058003.root",  "Ephemeral_PU49-52_316058008.root", "Ephemeral_PU49-52_316058004.root"]
+        files = ["/data/user/ecarrera/timing_data/skim_Ephemeral_316058/".format(i) for i in file_names]
+        return run , pu, ps, files
 
+    elif run in [315188]:
+        run = [315188]
+        pu = [55,58]
+        ps = "600b + HLT Physics 3"
+        file_names = ["HLTPhysics_PU55-58_315188000.root", "HLTPhysics_PU55-58_315188003.root", "HLTPhysics_PU55-58_315188001.root", "HLTPhysics_PU55-58_315188004.root", "HLTPhysics_PU55-58_315188002.root", "HLTPhysics_PU55-58_315188005.root"]
+        files = ["/data/user/ecarrera/timing_data/skim_HLTPhysics_315188/{}".format(i) for i in file_names]
+        return run , pu, ps, files
 
-        
-
+    elif run in [315106]:
+        run = [315106]
+        pu = [51,52]
+        ps = "300b + HLT Physics"
+        file_names = ["HLTPhysics_PU51-52_315106000.root", "HLTPhysics_PU51-52_315106004.root", "HLTPhysics_PU51-52_315106001.root", "HLTPhysics_PU51-52_315106005.root", "HLTPhysics_PU51-52_315106002.root", "HLTPhysics_PU51-52_315106006.root", "HLTPhysics_PU51-52_315106003.root"]
+        files = ["/data/user/ecarrera/timing_data/skim_HLTPhysics_315106/{}".format(i) for i in file_names]
+        return run , pu, ps, files
