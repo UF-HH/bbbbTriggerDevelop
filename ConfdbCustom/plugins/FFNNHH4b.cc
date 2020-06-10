@@ -54,7 +54,7 @@ FFNNHH4b<T>::FFNNHH4b(const edm::ParameterSet& iConfig)
           auto config = lwt::parse_json(jsonfile);
 
           //create NN and store the output names for the future
-          neural_network_ = std::make_unique<const lwt::LightweightNeuralNetwork>(config.inputs, config.layers, config.outputs);
+          neural_network_ = new lwt::LightweightNeuralNetwork(config.inputs, config.layers, config.outputs); //This will be fixed (std::make_unique<const)
 }
 
 template <typename T>
@@ -81,12 +81,15 @@ void FFNNHH4b<T>::fillDescriptions(edm::ConfigurationDescriptions& descriptions)
 //
 // member functions
 //
+
+/*
 template <typename T>
 input_t FFNNHH4b<T>::DummyInputGeneration() const{
   
   return { {"inputs",{{"1LeadingPt", 1}, {"1LeadingEta", 1}, {"1LeadingPhi", 1}, {"1LeadingBTag", 1}, {"2LeadingPt", 1}, {"2LeadingEta", 1}, {"2LeadingPhi", 1}, {"2LeadingBTag", 1}, {"3LeadingPt", 1}, {"3LeadingEta", 1}, {"3LeadingPhi", 1}, {"3LeadingBTag", 1}, {"4LeadingPt", 1}, {"4LeadingEta", 1}, {"4LeadingPhi", 1}, {"4LeadingBTag", 1}, {"BTag1", 1}, {"BTag2", 1}, {"BTag3", 1}, {"BTag4", 1} }} };
 
 }
+*/
 
 // ------------ method called to produce the data  ------------
 template <typename T>
@@ -123,21 +126,26 @@ bool FFNNHH4b<T>::hltFilter(edm::Event& event,
 
   TRef jetRef;
 
+  lwt::ValueMap inputs_; //NN inputs
+
   //Dummy input to NN
-  auto inputs = DummyInputGeneration();
+  //auto inputs = DummyInputGeneration();
 
   // Look at all jets in decreasing order of Pt (corrected jets).
   int nJet = 0;
   std::vector<double> btags_val_;
+  
   for (auto const& jet : *h_JetTags) {
     jetRef = TRef(h_Jets, jet.first.key());
     LogTrace("") << "Jet " << nJet << " : Pt = " << jet.first->pt() << " , tag value = " << jet.second;
     ++nJet;
     if(nJet < 5){
-        inputs["inputs"][std::to_string(nJet)+"LeadingPt"] = jet.first->pt();
-        inputs["inputs"][std::to_string(nJet)+"LeadingEta"] = jet.first->eta();
-        inputs["inputs"][std::to_string(nJet)+"LeadingPhi"] = jet.first->phi();
-        inputs["inputs"][std::to_string(nJet)+"LeadingBTag"] = jet.second;
+        
+        inputs_[std::to_string(nJet)+"LeadingPt"] = (float)jet.first->pt();
+        inputs_[std::to_string(nJet)+"LeadingEta"] = jet.first->eta();
+        inputs_[std::to_string(nJet)+"LeadingPhi"] = jet.first->phi();
+        inputs_[std::to_string(nJet)+"LeadingBTag"] = jet.second;
+    
     }
 
     //Save all BTag Scores. Only for central jets eta < 2.5 and pt > 30, that's why the selection on pt and eta
@@ -153,7 +161,8 @@ bool FFNNHH4b<T>::hltFilter(edm::Event& event,
   if(btags_val_.size() >= 4){
       std::vector<double> FourleadingBTag(btags_val_.begin(), btags_val_.begin()+4);
       for(int i = 0; i < 4; i++){
-          inputs["inputs"][std::to_string(i+1)+"BTag"] = FourleadingBTag.at(i);
+          inputs_[std::to_string(i+1)+"BTag"] = FourleadingBTag.at(i);
+          std::cout << std::endl;
       }
   }
   else{
@@ -162,12 +171,21 @@ bool FFNNHH4b<T>::hltFilter(edm::Event& event,
           FourleadingBTag.push_back(-1);
       }
       for(int i = 0; i < 4; i++){
-          inputs["inputs"][std::to_string(i+1)+"BTag"] = FourleadingBTag.at(i);
+          inputs_[std::to_string(i+1)+"BTag"] = FourleadingBTag.at(i);
+          std::cout << std::endl;
       }
   }
   
+  auto nnoutput = neural_network_->compute(inputs_);
 
-  bool accept(neural_network_->compute(inputs) >= m_WP);
+  //horrible
+  double output_value;
+  for (const auto& out: nnoutput) {
+     output_value = out.second;
+    }
+
+  //decision
+  bool accept(output_value >= m_WP);
 
   //edm::LogInfo("") << " trigger accept ? = " << accept << " nTag/nJet = " << nTag << "/" << nJet << std::endl;
 

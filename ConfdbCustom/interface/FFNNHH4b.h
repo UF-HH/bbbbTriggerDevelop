@@ -10,7 +10,6 @@
 #include "DataFormats/BTauReco/interface/JetTag.h"
 
 //lwtnn
-#include "lwtnn/LightweightGraph.hh"
 #include "lwtnn/LightweightNeuralNetwork.hh"
 #include "lwtnn/parse_json.hh"
 
@@ -30,7 +29,7 @@ public:
   explicit FFNNHH4b(const edm::ParameterSet& config);
   ~FFNNHH4b() override;
   static void fillDescriptions(edm::ConfigurationDescriptions& descriptions);
-  input_t DummyInputGeneration() const; //creates map with predefined names var. Can be made smarter
+  //input_t DummyInputGeneration() const; //creates map with predefined names var. Can be made smarter
   bool hltFilter(edm::Event& event,
                  const edm::EventSetup& setup,
                  trigger::TriggerFilterObjectWithRefs& filterproduct) const override;
@@ -45,9 +44,7 @@ private:
   double m_MinPt, m_MaxPt;
   int m_TriggerType;
   double m_WP;
-  std::unique_ptr<const lwt::LightweightNeuralNetwork> neural_network_;
-  lwt::ValueMap inputs_;
-  lwt::ValueMap nnoutput;
+  lwt::LightweightNeuralNetwork* neural_network_;
 };
 
 #endif  // FFNNHH4b_h
