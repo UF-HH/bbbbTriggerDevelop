@@ -1,17 +1,6 @@
 #ifndef HLTBTagSum_h
 #define HLTBTagSum_h
 
-/** \class HLTJetTag
- *
- *  This class is an HLTFilter (a spcialized EDFilter) implementing
- *  tagged multi-jet trigger for b and tau.
- *  It should be run after the normal multi-jet trigger.
- *
- *
- *  \author Arnaud Gay, Ian Tomalin
- *  \maintainer Andrea Bocci
- *
- */
 
 #include <string>
 

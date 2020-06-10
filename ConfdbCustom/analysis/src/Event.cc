@@ -171,6 +171,7 @@ void Event::Generate(){
     L1Jets.e = *l1_e;
 
     CaloJets.pt = *calo_pt;
+    CaloJets.mass = *calo_mass;
     CaloJets.eta = *calo_eta;
     CaloJets.phi = *calo_phi;
     CaloJets.e = *calo_e;
@@ -178,6 +179,7 @@ void Event::Generate(){
     CaloJets.btag = *calo_btag;
 
     PFJets.pt = *pf_pt;
+    PFJets.mass = *pf_mass;
     PFJets.eta = *pf_eta;
     PFJets.phi = *pf_phi;
     PFJets.e = *pf_e;

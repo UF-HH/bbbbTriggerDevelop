@@ -21,6 +21,9 @@
 #include "../interface/HLTBTagSum.h"
 #include "HLTBTagSum.cc"
 
+#include "../interface/FFNNHH4b.h"
+#include "FFNNHH4b.cc"
+
 using namespace reco;
 using namespace trigger;
 
@@ -41,6 +44,9 @@ typedef HLT2DJetTag<PFJet> HLT2DJetTagPF;
 typedef HLTBTagSum<CaloJet> HLTBTagSumCalo;
 typedef HLTBTagSum<PFJet> HLTBTagSumPF;
 
+typedef FFNNHH4b<CaloJet> CaloNNHH4b;
+typedef FFNNHH4b<PFJet> PFNNHH4b;
+
 DEFINE_FWK_MODULE(CaloSaver);
 DEFINE_FWK_MODULE(PFSaver);
 DEFINE_FWK_MODULE(CaloBSaver);
@@ -56,3 +62,6 @@ DEFINE_FWK_MODULE(HLT2DJetTagPF);
 
 DEFINE_FWK_MODULE(HLTBTagSumCalo);
 DEFINE_FWK_MODULE(HLTBTagSumPF);
+
+DEFINE_FWK_MODULE(CaloNNHH4b);
+DEFINE_FWK_MODULE(PFNNHH4b);
