@@ -5,7 +5,7 @@
 # Specific implementation for timing 
 # studies. Runs on vocms003
 # Example usage for files under vocms003 with pile up 48-49 (run 319941)
-# python ConfigNN_Test.py --menu=/dev/CMSSW_11_0_0/GRun/V7 -out=myHLT.py -gt=110X_mcRun3_2021_realistic_v6  -pr=TIMING -out=myHLT.py -nev=50000 --l1 L1Menu_Collisions2018_v2_1_0-d1_xml --tr=319941
+# python ConfigNN_Test_MC.py --menu=/dev/CMSSW_11_0_0/GRun/V7 -out=myHLT.py -gt=110X_mcRun3_2021_realistic_v6  -pr=TIMING -out=myHLT.py -nev=50000 --l1 L1Menu_Collisions2018_v2_1_0-d1_xml
 #
 #--------------------------------------------------------------------------------------------------------------------------------
 
@@ -119,7 +119,7 @@ man.Insert("#-----------------My Paths-----------------\n")
 #Benchmark 2018
 man.Insert("process.HLT_PFHT330PT30_QuadPFJet_75_60_45_40_TriplePFBTagDeepCSV_4p5_v3 = cms.Path( process.HLTBeginSequence + process.hltL1sQuadJetC50to60IorHTT280to500IorHTT250to340QuadJet + process.hltPrePFHT330PT30QuadPFJet75604540TriplePFBTagDeepCSV4p5 + process.HLTAK4CaloJetsSequence + process.hltQuadCentralJet30 + process.hltCaloJetsQuad30ForHt + process.hltHtMhtCaloJetsQuadC30 + process.hltCaloQuadJet30HT320 + process.HLTBtagDeepCSVSequenceL3 + process.hltBTagCaloDeepCSVp17Double + process.HLTAK4PFJetsSequence + process.hltPFCentralJetLooseIDQuad30 + process.hlt1PFCentralJetLooseID75 + process.hlt2PFCentralJetLooseID60 + process.hlt3PFCentralJetLooseID45 + process.hlt4PFCentralJetLooseID40 + process.hltPFCentralJetLooseIDQuad30forHt + process.hltHtMhtPFCentralJetsLooseIDQuadC30 + process.hltPFCentralJetsLooseIDQuad30HT330 + process.HLTBtagDeepCSVSequencePF + process.hltBTagPFDeepCSV4p5Triple + process.HLTEndSequence )\n")
 #Inserting truly new paths
-man.Insert("process.HLT_Quad30Double60_FFNNHH4bwp0p87Calo_PFQuad30 = cms.Path( process.HLTBeginSequence + process.hltL1sQuadJetC50to60IorHTT280to500IorHTT250to340QuadJet + process.hltPreFFNNHH4bCalowp0p87 + process.HLTAK4CaloJetsSequence + process.hltQuadCentralJet30 + process.hltDoubleCentralJet60 + process.HLTBtagDeepCSVSequenceL3 + process.FFNNHH4bCalowp0p87 + process.HLTAK4PFJetsSequence + process.hltPFCentralJetLooseIDQuad30 + process.HLTEndSequence )\n")
+man.Insert("process.HLT_Quad30Double60_FFNNHH4bwp0p87Calo_PFQuad30 = cms.Path( process.HLTBeginSequence + process.hltL1sQuadJetC50to60IorHTT280to500IorHTT250to340QuadJet + process.HLTAK4CaloJetsSequence + process.hltQuadCentralJet30 + process.hltDoubleCentralJet60 + process.HLTBtagDeepCSVSequenceL3 + process.FFNNHH4bCalowp0p87 + process.HLTAK4PFJetsSequence + process.hltPFCentralJetLooseIDQuad30 + process.HLTEndSequence )\n")
 
 print("@[Info]: Adding Query for MC samples... ")
 man.AddDASQueryMC()
