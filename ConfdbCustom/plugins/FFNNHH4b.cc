@@ -74,7 +74,7 @@ void FFNNHH4b<T>::fillDescriptions(edm::ConfigurationDescriptions& descriptions)
   desc.add<double>("MinPt", -1);
   desc.add<double>("MaxPt", 999999.0);
   desc.add<int>("TriggerType", 0);
-  desc.add<edm::FileInPath>("NNConfig", edm::FileInPath("models_json/models_json/FFNNHH_4b_lwtnn.json"));
+  desc.add<edm::FileInPath>("NNConfig", edm::FileInPath("models_json/FFNNHH_4b_lwtnn.json"));
   desc.add<double>("WorkingPoint", 0.0);
   descriptions.add(defaultModuleLabel<FFNNHH4b<T>>(), desc);
 }
