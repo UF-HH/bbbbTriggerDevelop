@@ -181,7 +181,7 @@ bool FFNNHH4b<T>::hltFilter(edm::Event& event,
   auto nnoutput = neural_network_->compute(inputs_);
 
   //horrible
-  double output_value;
+  double output_value = 0; //initialize as empty as to avoid crashes
   for (const auto& out: nnoutput) {
      output_value = out.second;
     }
