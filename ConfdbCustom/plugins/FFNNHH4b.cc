@@ -141,7 +141,9 @@ bool FFNNHH4b<T>::hltFilter(edm::Event& event,
     ++nJet;
     if(nJet < 5){
         
-        inputs_[std::to_string(nJet)+"LeadingPt"] = (float)jet.first->pt();
+        inputs_[std::to_string(nJet)+"LeadingPt"] = jet.first->pt();
+        inputs_[std::to_string(nJet)+"LeadingMass"] = jet.first->mass();
+        inputs_[std::to_string(nJet)+"LeadingE"] = jet.first->energy();
         inputs_[std::to_string(nJet)+"LeadingEta"] = jet.first->eta();
         inputs_[std::to_string(nJet)+"LeadingPhi"] = jet.first->phi();
         inputs_[std::to_string(nJet)+"LeadingBTag"] = jet.second;

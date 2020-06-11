@@ -40,31 +40,35 @@ std::vector<double> highest4btag(hltObj::Jets jets, hltObj::HLTCuts cuts){
 
 int main(){
 
-    TFile* fr = new TFile("../../test/datasets/323725_37_57_PU50.root");
+    TFile* fr = new TFile("../../test/datasets/324997.root");
     TFile* fgen = new TFile("../../../../../../CMSSW_11_0_0_patch1/src/ggHHRaw/ggHH/test/roots/ggHLT_RAWAOD_GenRECO.root");
     std::string branch = "SaveAllJets/Jets";
     std::string genbranch = "SaveGenHH/Gen";
 
-    TFile fout("NNdata_noPU_323725_37_57_PU50.root", "RECREATE");
+    TFile fout("NNdata_noPU_324997.root", "RECREATE");
     TTree* tout = new TTree("data", "data");
 
     double lead_pt;
     double lead_mass;
+    double lead_e;
     double lead_eta;
     double lead_phi;
     double lead_btag;
     double lead2_pt;
     double lead2_mass;
+    double lead2_e;
     double lead2_eta;
     double lead2_phi;
     double lead2_btag;
     double lead3_pt;
     double lead3_mass;
+    double lead3_e;
     double lead3_eta;
     double lead3_phi;
     double lead3_btag;
     double lead4_pt;
     double lead4_mass;
+    double lead4_e;
     double lead4_eta;
     double lead4_phi;
     double lead4_btag;
@@ -77,21 +81,25 @@ int main(){
 
     tout->Branch("leading_pt", &lead_pt);
     tout->Branch("leading_mass", &lead_mass);
+    tout->Branch("leading_e", &lead_e);
     tout->Branch("leading_eta", &lead_eta);
     tout->Branch("leading_phi", &lead_phi);
     tout->Branch("leading_btag", &lead_btag);
     tout->Branch("2leading_pt", &lead2_pt);
     tout->Branch("2leading_mass", &lead2_mass);
+    tout->Branch("2leading_e", &lead2_e);
     tout->Branch("2leading_eta", &lead2_eta);
     tout->Branch("2leading_phi", &lead2_phi);
     tout->Branch("2leading_btag", &lead2_btag);
     tout->Branch("3leading_pt", &lead3_pt);
     tout->Branch("3leading_mass", &lead3_mass);
+    tout->Branch("3leading_e", &lead3_e);
     tout->Branch("3leading_eta", &lead3_eta);
     tout->Branch("3leading_phi", &lead3_phi);
     tout->Branch("3leading_btag", &lead3_btag);
     tout->Branch("4leading_pt", &lead4_pt);
     tout->Branch("4leading_mass", &lead4_mass);
+    tout->Branch("4leading_e", &lead4_e);
     tout->Branch("4leading_eta", &lead4_eta);
     tout->Branch("4leading_phi", &lead4_phi);
     tout->Branch("4leading_btag", &lead4_btag);
@@ -116,7 +124,7 @@ int main(){
     type = 1;
     //building signal
     
-    genev.SetStart(0);
+    genev.SetStart(11439);
     std::cout << "[INFO] Building signal..." << std::endl;
     for(int i = 0; i < bal_ev; i++){
 
@@ -136,6 +144,7 @@ int main(){
         auto it = std::find(pfj.pt.begin(), pfj.pt.end(), lead_pt);
         int lead_idx = std::distance(pfj.pt.begin(), it);
         lead_mass = pfj.mass.at(lead_idx);
+        lead_e = pfj.e.at(lead_idx);
         lead_eta = pfj.eta.at(lead_idx);
         lead_phi = pfj.phi.at(lead_idx);
         lead_btag = pfj.btag.at(lead_idx);
@@ -154,6 +163,7 @@ int main(){
         it = std::find(pfj.pt.begin(), pfj.pt.end(), lead3_pt);
         int lead3_idx = std::distance(pfj.pt.begin(), it);
         lead3_mass = pfj.mass.at(lead3_idx);
+        lead3_e = pfj.e.at(lead3_idx);
         lead3_eta = pfj.eta.at(lead3_idx);
         lead3_phi = pfj.phi.at(lead3_idx);
         lead3_btag = pfj.btag.at(lead3_idx);
@@ -163,6 +173,7 @@ int main(){
         it = std::find(pfj.pt.begin(), pfj.pt.end(), lead4_pt);
         int lead4_idx = std::distance(pfj.pt.begin(), it);
         lead4_mass = pfj.mass.at(lead4_idx);
+        lead4_e = pfj.e.at(lead4_idx);
         lead4_eta = pfj.eta.at(lead4_idx);
         lead4_phi = pfj.phi.at(lead4_idx);
         lead4_btag = pfj.btag.at(lead4_idx);
@@ -190,6 +201,7 @@ int main(){
         auto it2 = std::find(caloj.pt.begin(), caloj.pt.end(), lead_pt);
         lead_idx = std::distance(caloj.pt.begin(), it2);
         lead_mass = caloj.mass.at(lead_idx);
+        lead_e = caloj.e.at(lead_idx);
         lead_eta = caloj.eta.at(lead_idx);
         lead_phi = caloj.phi.at(lead_idx);
         lead_btag = caloj.btag.at(lead_idx);
@@ -199,6 +211,7 @@ int main(){
         it2 = std::find(caloj.pt.begin(), caloj.pt.end(), lead2_pt);
         lead2_idx = std::distance(caloj.pt.begin(), it2);
         lead2_mass = caloj.mass.at(lead2_idx);
+        lead2_e = caloj.e.at(lead2_idx);
         lead2_eta = caloj.eta.at(lead2_idx);
         lead2_phi = caloj.phi.at(lead2_idx);
         lead2_btag = caloj.btag.at(lead2_idx);
@@ -208,6 +221,7 @@ int main(){
         it2 = std::find(caloj.pt.begin(), caloj.pt.end(), lead3_pt);
         lead3_idx = std::distance(caloj.pt.begin(), it2);
         lead3_mass = caloj.mass.at(lead3_idx);
+        lead3_e = caloj.e.at(lead3_idx);
         lead3_eta = caloj.eta.at(lead3_idx);
         lead3_phi = caloj.phi.at(lead3_idx);
         lead3_btag = caloj.btag.at(lead3_idx);
@@ -217,6 +231,7 @@ int main(){
         it2 = std::find(caloj.pt.begin(), caloj.pt.end(), lead4_pt);
         lead4_idx = std::distance(caloj.pt.begin(), it2);
         lead4_mass = caloj.mass.at(lead4_idx);
+        lead4_e = caloj.e.at(lead4_idx);
         lead4_eta = caloj.eta.at(lead4_idx);
         lead4_phi = caloj.phi.at(lead4_idx);
         lead4_btag = caloj.btag.at(lead4_idx);
@@ -251,6 +266,7 @@ int main(){
         auto it = std::find(pfj.pt.begin(), pfj.pt.end(), lead_pt);
         int lead_idx = std::distance(pfj.pt.begin(), it);
         lead_mass = pfj.mass.at(lead_idx);
+        lead_e = pfj.e.at(lead_idx);
         lead_eta = pfj.eta.at(lead_idx);
         lead_phi = pfj.phi.at(lead_idx);
         lead_btag = pfj.btag.at(lead_idx);
@@ -260,6 +276,7 @@ int main(){
         it = std::find(pfj.pt.begin(), pfj.pt.end(), lead2_pt);
         int lead2_idx = std::distance(pfj.pt.begin(), it);
         lead2_mass = pfj.mass.at(lead2_idx);
+        lead2_e = pfj.e.at(lead2_idx);
         lead2_eta = pfj.eta.at(lead2_idx);
         lead2_phi = pfj.phi.at(lead2_idx);
         lead2_btag = pfj.btag.at(lead2_idx);
@@ -269,6 +286,7 @@ int main(){
         it = std::find(pfj.pt.begin(), pfj.pt.end(), lead3_pt);
         int lead3_idx = std::distance(pfj.pt.begin(), it);
         lead3_mass = pfj.mass.at(lead3_idx);
+        lead3_e = pfj.e.at(lead3_idx);
         lead3_eta = pfj.eta.at(lead3_idx);
         lead3_phi = pfj.phi.at(lead3_idx);
         lead3_btag = pfj.btag.at(lead3_idx);
@@ -278,6 +296,7 @@ int main(){
         it = std::find(pfj.pt.begin(), pfj.pt.end(), lead4_pt);
         int lead4_idx = std::distance(pfj.pt.begin(), it);
         lead4_mass = pfj.mass.at(lead4_idx);
+        lead4_e = pfj.e.at(lead4_idx);
         lead4_eta = pfj.eta.at(lead4_idx);
         lead4_phi = pfj.phi.at(lead4_idx);
         lead4_btag = pfj.btag.at(lead4_idx);
@@ -303,6 +322,7 @@ int main(){
         auto it2 = std::find(caloj.pt.begin(), caloj.pt.end(), lead_pt);
         lead_idx = std::distance(caloj.pt.begin(), it2);
         lead_mass = caloj.mass.at(lead_idx);
+        lead_e = caloj.e.at(lead_idx);
         lead_eta = caloj.eta.at(lead_idx);
         lead_phi = caloj.phi.at(lead_idx);
         lead_btag = caloj.btag.at(lead_idx);
@@ -312,6 +332,7 @@ int main(){
         it2 = std::find(caloj.pt.begin(), caloj.pt.end(), lead2_pt);
         lead2_idx = std::distance(caloj.pt.begin(), it2);
         lead2_mass = caloj.mass.at(lead2_idx);
+        lead2_e = caloj.e.at(lead2_idx);
         lead2_eta = caloj.eta.at(lead2_idx);
         lead2_phi = caloj.phi.at(lead2_idx);
         lead2_btag = caloj.btag.at(lead2_idx);
@@ -321,6 +342,7 @@ int main(){
         it2 = std::find(caloj.pt.begin(), caloj.pt.end(), lead3_pt);
         lead3_idx = std::distance(caloj.pt.begin(), it2);
         lead3_mass = caloj.mass.at(lead3_idx);
+        lead3_e = caloj.e.at(lead3_idx);
         lead3_eta = caloj.eta.at(lead3_idx);
         lead3_phi = caloj.phi.at(lead3_idx);
         lead3_btag = caloj.btag.at(lead3_idx);
@@ -330,6 +352,7 @@ int main(){
         it2 = std::find(caloj.pt.begin(), caloj.pt.end(), lead4_pt);
         lead4_idx = std::distance(caloj.pt.begin(), it2);
         lead4_mass = caloj.mass.at(lead4_idx);
+        lead4_e = caloj.e.at(lead4_idx);
         lead4_eta = caloj.eta.at(lead4_idx);
         lead4_phi = caloj.phi.at(lead4_idx);
         lead4_btag = caloj.btag.at(lead4_idx);
