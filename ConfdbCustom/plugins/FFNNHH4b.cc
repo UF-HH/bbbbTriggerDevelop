@@ -135,6 +135,10 @@ bool FFNNHH4b<T>::hltFilter(edm::Event& event,
   // Look at all jets in decreasing order of Pt (corrected jets).
   int nJet = 0;
   std::vector<double> btags_val_;
+
+  if() h_JetTags.size() < 4){
+    return false;
+  }
   
   for (auto const& jet : *h_JetTags) {
     jetRef = TRef(h_Jets, jet.first.key());
