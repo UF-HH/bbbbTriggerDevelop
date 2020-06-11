@@ -1,22 +1,11 @@
 #--------------------------------------------------------------------------------------------------------------------------------
 # author: Giacomo Boldrini
 # This script reproduces the full
-# HLT menu 11_0_0 with modules and
-# triggers from the analysis bbbb
+# HLT menu 11_0_0 with NNmodules and
 # Specific implementation for timing 
 # studies. Runs on vocms003
-#
-#python PersonalConfig_Timing.py --menu=/dev/CMSSW_10_1_0/GRun/V7 -gt=101X_dataRun2_HLT_v7 -out=myHLT.py -pr=myHLT -out=myHLT.py \
-#-input=root://eoscms.cern.ch//eos/cms/store/group/dpg_trigger/comm_trigger/TriggerStudiesGroup/Timing/SKIMs/skim_Ephemeral_319941/EphemeralHLTPhysics_PU48-49_319941000.root, \
-#root://eoscms.cern.ch//eos/cms/store/group/dpg_trigger/comm_trigger/TriggerStudiesGroup/Timing/SKIMs/skim_Ephemeral_319941/EphemeralHLTPhysics_PU48-49_319941001.root, \
-#root://eoscms.cern.ch//eos/cms/store/group/dpg_trigger/comm_trigger/TriggerStudiesGroup/Timing/SKIMs/skim_Ephemeral_319941/EphemeralHLTPhysics_PU48-49_319941002.root, \
-#root://eoscms.cern.ch//eos/cms/store/group/dpg_trigger/comm_trigger/TriggerStudiesGroup/Timing/SKIMs/skim_Ephemeral_319941/EphemeralHLTPhysics_PU48-49_319941003.root, \
-#root://eoscms.cern.ch//eos/cms/store/group/dpg_trigger/comm_trigger/TriggerStudiesGroup/Timing/SKIMs/skim_Ephemeral_319941/EphemeralHLTPhysics_PU48-49_319941004.root, \
-#root://eoscms.cern.ch//eos/cms/store/group/dpg_trigger/comm_trigger/TriggerStudiesGroup/Timing/SKIMs/skim_Ephemeral_319941/EphemeralHLTPhysics_PU48-49_319941005.root, \
-#root://eoscms.cern.ch//eos/cms/store/group/dpg_trigger/comm_trigger/TriggerStudiesGroup/Timing/SKIMs/skim_Ephemeral_319941/EphemeralHLTPhysics_PU48-49_319941006.root, \
-#root://eoscms.cern.ch//eos/cms/store/group/dpg_trigger/comm_trigger/TriggerStudiesGroup/Timing/SKIMs/skim_Ephemeral_319941/EphemeralHLTPhysics_PU48-49_319941007.root, \
-#root://eoscms.cern.ch//eos/cms/store/group/dpg_trigger/comm_trigger/TriggerStudiesGroup/Timing/SKIMs/skim_Ephemeral_319941/EphemeralHLTPhysics_PU48-49_319941008.root, \
-#root://eoscms.cern.ch//eos/cms/store/group/dpg_trigger/comm_trigger/TriggerStudiesGroup/Timing/SKIMs/skim_Ephemeral_319941/EphemeralHLTPhysics_PU48-49_319941009.root -nev=50000 -data --l1 L1Menu_Collisions2018_v2_1_0-d1_xml --prescale "2.0e34+ZB+HLTPhysics"
+# Example usage for files under vocms003 with pile up 48-49 (run 319941)
+# python ConfigNN_Test.py --menu=/dev/CMSSW_10_1_0/GRun/V7 -gt=101X_dataRun2_HLT_v7 -out=myHLT.py -pr=myHLT -out=myHLT.py -nev=50000 -data --l1 L1Menu_Collisions2018_v2_1_0-d1_xml --tr=319941
 #
 #--------------------------------------------------------------------------------------------------------------------------------
 
@@ -107,23 +96,8 @@ print("@[Info]: Adding Filters definintions... ")
 
 man.SetCurrentLine("after:#------------- My Filters -------------------")
 
-man.CreateFromLocal(in_class="hltDoubleCentralCaloHT180",mod_name="HLTHTCaloDouble")
-man.InsertInMenu(in_class="hltDoubleCentralCaloHT180",process_name = 'in_class')
-
-man.CreateFromLocal(in_class="hltDoubleCentralCaloHT90",mod_name="HLTHTCaloQuad")
-man.InsertInMenu(in_class="hltDoubleCentralCaloHT90",process_name = 'in_class')
-
-man.CreateFromLocal(in_class="hltDoubleCentralPFHT180",mod_name="HLTHTPFDouble")
-man.InsertInMenu(in_class="hltDoubleCentralPFHT180",process_name = 'in_class')
-
-man.CreateFromLocal(in_class="hltDoubleCentralPFHT90",mod_name="HLTHTPFQuad")
-man.InsertInMenu(in_class="hltDoubleCentralPFHT90",process_name = 'in_class')
-
-man.CreateFromLocal(in_class="hltBTagBisector23PF",mod_name="HLT2DJetTagPF")
-man.InsertInMenu(in_class="hltBTagBisector23PF",process_name = 'in_class')
-
-man.CreateFromLocal(in_class="hltBTagBisector23Calo",mod_name="HLT2DJetTagCalo")
-man.InsertInMenu(in_class="hltBTagBisector23Calo",process_name = 'in_class')
+man.CreateFromLocal(in_class="FFNNHH4bCalowp0p87",mod_name="FFNNHH4bCalo")
+man.InsertInMenu(in_class="FFNNHH4bCalowp0p87",process_name = 'in_class')
 
 #This module is present in /dev/CMSSW_11_0_0/GRun/V7, does not work if not present in the menu
 man.CloneModule("process.hltQuadCentralJet30", in_class="hltDoubleCentralJet60")
@@ -134,19 +108,8 @@ man.ModifyPar("hltDoubleCentralJet60", "inputTag", "'hltAK4CaloJetsCorrectedIDPa
 man.ModifyPar("hltDoubleCentralJet60", "triggerType", 86)
 man.InsertInMenu(in_class="hltDoubleCentralJet60",process_name = 'in_class')
 
-man.CreateFromLocal(in_class="hltDoubleLeadingBTagSumCentralJet30",mod_name="HLTBTagSumCalo")
-man.InsertInMenu(in_class="hltDoubleLeadingBTagSumCentralJet30",process_name = 'in_class')
-
-man.CreateFromLocal(in_class="hltDoublePFLeadingBTagSumCentralJet30",mod_name="HLTBTagSumPF")
-man.InsertInMenu(in_class="hltDoublePFLeadingBTagSumCentralJet30",process_name = 'in_class')
-
-man.CreateFromLocal(in_class="hltDoublePFLeadingBTagSumCentralJet30",mod_name="HLTBTagSumPF")
-man.InsertInMenu(in_class="hltDoublePFLeadingBTagSumCentralJet30",process_name = 'in_class')
-
 #Prescale for my paths
-man.InsertPrescaleModule('hltBTagSum', offset=0, name='strip')
-man.InsertPrescaleModule('hltBisectorBTag', offset=0, name='strip')
-
+man.InsertPrescaleModule('FFNNHH4bCalowp0p87', offset=0, name='strip')
 
 #inserting my paths
 
@@ -159,8 +122,7 @@ man.Insert("#-----------------My Paths-----------------\n")
 #Benchmark 2018
 man.Insert("process.HLT_PFHT330PT30_QuadPFJet_75_60_45_40_TriplePFBTagDeepCSV_4p5_v3 = cms.Path( process.HLTBeginSequence + process.hltL1sQuadJetC50to60IorHTT280to500IorHTT250to340QuadJet + process.hltPrePFHT330PT30QuadPFJet75604540TriplePFBTagDeepCSV4p5 + process.HLTAK4CaloJetsSequence + process.hltQuadCentralJet30 + process.hltCaloJetsQuad30ForHt + process.hltHtMhtCaloJetsQuadC30 + process.hltCaloQuadJet30HT320 + process.HLTBtagDeepCSVSequenceL3 + process.hltBTagCaloDeepCSVp17Double + process.HLTAK4PFJetsSequence + process.hltPFCentralJetLooseIDQuad30 + process.hlt1PFCentralJetLooseID75 + process.hlt2PFCentralJetLooseID60 + process.hlt3PFCentralJetLooseID45 + process.hlt4PFCentralJetLooseID40 + process.hltPFCentralJetLooseIDQuad30forHt + process.hltHtMhtPFCentralJetsLooseIDQuadC30 + process.hltPFCentralJetsLooseIDQuad30HT330 + process.HLTBtagDeepCSVSequencePF + process.hltBTagPFDeepCSV4p5Triple + process.HLTEndSequence )\n")
 #Inserting truly new paths
-man.Insert("process.HLT_Quad30_Double60_Sum2LeadingBTag015 = cms.Path( process.HLTBeginSequence + process.hltL1sQuadJetC50to60IorHTT280to500IorHTT250to340QuadJet + process.hltPreBTagSum + process.HLTAK4CaloJetsSequence + process.hltQuadCentralJet30 + process.hltDoubleCentralJet60 + process.HLTBtagDeepCSVSequenceL3 + process.hltDoubleLeadingBTagSumCentralJet30 + process.HLTAK4PFJetsSequence + process.hltPFCentralJetLooseIDQuad30 + process.hlt2PFCentralJetLooseID60 + process.HLTBtagDeepCSVSequencePF + process.hltDoublePFLeadingBTagSumCentralJet30  + process.HLTEndSequence )\n")
-man.Insert("process.HLT_PFHT270_180_Double180_Double90_BisectorBTag07 = cms.Path( process.HLTBeginSequence + process.hltL1sQuadJetC50to60IorHTT280to500IorHTT250to340QuadJet +  process.hltPreBisectorBTag + process.HLTAK4CaloJetsSequence + process.hltDoubleCentralCaloHT180 + process.hltDoubleCentralCaloHT90 + process.HLTBtagDeepCSVSequenceL3 + process.hltBTagBisector23Calo + process.HLTAK4PFJetsSequence + process.hltDoubleCentralPFHT180 + process.hltDoubleCentralPFHT90  + process.HLTBtagDeepCSVSequencePF + process.hltBTagBisector23PF + process.HLTEndSequence )\n")
+man.Insert("process.HLT_Quad30Double60_FFNNHH4bwp0p87Calo_PFQuad30 = cms.Path( process.HLTBeginSequence + process.hltL1sQuadJetC50to60IorHTT280to500IorHTT250to340QuadJet + process.hltPreFFNNHH4bCalowp0p87 + process.HLTAK4CaloJetsSequence + process.hltQuadCentralJet30 + process.hltDoubleCentralJet60 + process.HLTBtagDeepCSVSequenceL3 + process.FFNNHH4bCalowp0p87 + process.HLTAK4PFJetsSequence + process.hltPFCentralJetLooseIDQuad30 + process.HLTEndSequence )\n")
 
 if args.tr:
     print("@[Info]: Adding timing files as inputs... ")
@@ -168,10 +130,3 @@ if args.tr:
 
 
 print("@[EndJob]: Done")
-
-
-
-
-
-
-

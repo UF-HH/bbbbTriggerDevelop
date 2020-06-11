@@ -33,6 +33,10 @@ def HLTBTagSumPF(saveTags = True, Jets = "'hltPFJetForBtag'", JetTags = "'hltDee
     module = 'cms.EDFilter("HLTBTagSumPF",\nsaveTags = cms.bool( {} ),\nJets = cms.InputTag( {} ),\nJetTags = cms.InputTag( {},{} ),\nMinTag = cms.double( {} ),\nMaxTag = cms.double( {} ),\nTriggerType = cms.int32( {} ),\nMinEta = cms.double( {} ),\nMaxEta = cms.double( {} ),\nMinPt = cms.double( {} ),\nMaxPt = cms.double( {} ),\nSumN = cms.uint32({}),\nMinBTagSum = cms.double({})\n\n)\n'.format(saveTags, Jets, JetTags, BTag, MinTag,  MaxTag, TriggerType, MinEta, MaxEta, MinPt, MaxPt, SumN, MinBTagSum)
     return module
 
+def FFNNHH4bCalo(saveTags = True, Jets = "'hltSelector8CentralJetsL1FastJet'", JetTags = "'hltDeepCombinedSecondaryVertexBJetTagsCalo'", BTag = "'probb'", MinTag = 0.0,  MaxTag = 999999.0, TriggerType = 86 , MinEta = -1.0 , MaxEta = 999999.0 , MinPt = 0.0, MaxPt = 999999.0 , WorkingPoint = 0.87, NNConfig="'models_json/FFNNHH_4b_lwtnn.json'"):
+    module = 'cms.EDFilter("CaloNNHH4b",\nsaveTags = cms.bool( {} ),\nJets = cms.InputTag( {} ),\nJetTags = cms.InputTag( {},{} ),\nMinTag = cms.double( {} ),\nMaxTag = cms.double( {} ),\nTriggerType = cms.int32( {} ),\nMinEta = cms.double( {} ),\nMaxEta = cms.double( {} ),\nMinPt = cms.double( {} ),\nMaxPt = cms.double( {} ),\nWorkingPoint = cms.double({}),\nNNConfig = cms.FileInPath({})\n\n)\n'.format(saveTags, Jets, JetTags, BTag, MinTag,  MaxTag, TriggerType, MinEta, MaxEta, MinPt, MaxPt, WorkingPoint, NNConfig)
+    return module
+
 def MyHLTAnalyzer(triggerResults = "'TriggerResults'", TRsecond = "''", process = "'@currentProcess'", triggerList = "", filterList = "", verbose = False):
     module = 'cms.EDAnalyzer("HLTAn",\ntriggerResults = cms.InputTag({}, {}, {}),\ntriggerList = cms.vstring({}),\nfilterList = cms.vstring({}),\nverbose = cms.bool({})\n)\n'.format(triggerResults, TRsecond, process, triggerList, filterList, verbose)
     return module
