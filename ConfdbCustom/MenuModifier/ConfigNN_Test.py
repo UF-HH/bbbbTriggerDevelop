@@ -109,7 +109,7 @@ man.ModifyPar("hltDoubleCentralJet60", "triggerType", 86)
 man.InsertInMenu(in_class="hltDoubleCentralJet60",process_name = 'in_class')
 
 #Prescale for my paths
-man.InsertPrescaleModule('FFNNHH4bCalowp0p87', offset=0, name='strip')
+man.InsertPrescaleModule('hltFFNNHH4bCalowp0p87', offset=0, name='strip')
 
 #inserting my paths
 
