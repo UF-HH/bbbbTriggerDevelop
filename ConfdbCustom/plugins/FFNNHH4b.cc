@@ -44,10 +44,9 @@ FFNNHH4b<T>::FFNNHH4b(const edm::ParameterSet& iConfig)
       m_MinEta(iConfig.getParameter<double>("MinEta")),
       m_MaxEta(iConfig.getParameter<double>("MaxEta")),
       m_MinPt(iConfig.getParameter<double>("MinPt")),
-      nnconfig(iConfig.getParameter<edm::FileInPath>("NNConfig")),
       m_MaxPt(iConfig.getParameter<double>("MaxPt")),
-
       m_TriggerType(iConfig.getParameter<int>("TriggerType")),
+      nnconfig(iConfig.getParameter<edm::FileInPath>("NNConfig")),
       m_WP(iConfig.getParameter<double>("WorkingPoint")){
           m_JetsToken = consumes<std::vector<T>>(m_Jets), m_JetTagsToken = consumes<reco::JetTagCollection>(m_JetTags);
           //parse json

@@ -39,11 +39,11 @@ private:
   edm::EDGetTokenT<std::vector<T> > m_JetsToken;
   edm::InputTag m_JetTags;  // module label of input JetTagCollection
   edm::EDGetTokenT<reco::JetTagCollection> m_JetTagsToken;
-  edm::FileInPath nnconfig;
   double m_MinTag, m_MaxTag;  // tag descriminator cuts applied to each jet
   double m_MinEta, m_MaxEta;
   double m_MinPt, m_MaxPt;
   int m_TriggerType;
+  edm::FileInPath nnconfig;
   double m_WP;
   lwt::LightweightNeuralNetwork* neural_network_;
 };
