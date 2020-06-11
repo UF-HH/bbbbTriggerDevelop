@@ -141,12 +141,13 @@ bool FFNNHH4b<T>::hltFilter(edm::Event& event,
     LogTrace("") << "Jet " << nJet << " : Pt = " << jet.first->pt() << " , tag value = " << jet.second;
     ++nJet;
     if(nJet < 5){
+
+        std::cout << std::to_string(nJet)+"LeadingPt" << " " << std::to_string(nJet)+"LeadingMass" << " " << std::to_string(nJet)+"LeadingE" << " " << std::to_string(nJet)+"LeadingEta" << " " << std::to_string(nJet)+"LeadingPhi" << " " << std::to_string(nJet)+"LeadingBTag" << std::endl;
         
         inputs_[std::to_string(nJet)+"LeadingPt"] = jet.first->pt();
         inputs_[std::to_string(nJet)+"LeadingMass"] = jet.first->mass();
         inputs_[std::to_string(nJet)+"LeadingE"] = jet.first->energy();
         inputs_[std::to_string(nJet)+"LeadingEta"] = jet.first->eta();
-        inputs_[std::to_string(nJet)+"LeadingPhi"] = jet.first->phi();
         inputs_[std::to_string(nJet)+"LeadingBTag"] = jet.second;
     
     }
