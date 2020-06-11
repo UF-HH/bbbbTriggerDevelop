@@ -136,7 +136,7 @@ bool FFNNHH4b<T>::hltFilter(edm::Event& event,
   int nJet = 0;
   std::vector<double> btags_val_;
 
-  if() h_JetTags.size() < 4){
+  if() h_Jets.size() < 4){
     return false;
   }
   
