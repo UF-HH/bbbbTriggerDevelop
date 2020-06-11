@@ -183,7 +183,7 @@ bool FFNNHH4b<T>::hltFilter(edm::Event& event,
   //horrible
   double output_value;
   for (const auto& out: nnoutput) {
-     (double)output_value = out.second;
+     output_value = out.second;
     }
 
   //decision
