@@ -67,10 +67,10 @@ void FFNNHH4b<T>::fillDescriptions(edm::ConfigurationDescriptions& descriptions)
   makeHLTFilterDescription(desc);
   desc.add<edm::InputTag>("Jets", edm::InputTag("hltJetCollection"));
   desc.add<edm::InputTag>("JetTags", edm::InputTag("hltJetTagCollection"));
-  desc.add<double>("MinTag", 2.0);
+  desc.add<double>("MinTag", 0.0);
   desc.add<double>("MaxTag", 999999.0);
   desc.add<double>("MinEta", -1);
-  desc.add<double>("MaxEta", 2.5);
+  desc.add<double>("MaxEta", 999999.0);
   desc.add<double>("MinPt", -1);
   desc.add<double>("MaxPt", 999999.0);
   desc.add<int>("TriggerType", 0);
@@ -183,7 +183,7 @@ bool FFNNHH4b<T>::hltFilter(edm::Event& event,
   //horrible
   double output_value;
   for (const auto& out: nnoutput) {
-     output_value = out.second;
+     (double)output_value = out.second;
     }
 
   //decision

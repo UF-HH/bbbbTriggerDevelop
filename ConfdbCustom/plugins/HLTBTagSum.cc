@@ -53,7 +53,7 @@ void HLTBTagSum<T>::fillDescriptions(edm::ConfigurationDescriptions& description
   makeHLTFilterDescription(desc);
   desc.add<edm::InputTag>("Jets", edm::InputTag("hltJetCollection"));
   desc.add<edm::InputTag>("JetTags", edm::InputTag("hltJetTagCollection"));
-  desc.add<double>("MinTag", 2.0);
+  desc.add<double>("MinTag", 0.0);
   desc.add<double>("MaxTag", 999999.0);
   desc.add<double>("MinEta", -1);
   desc.add<double>("MaxEta", 2.5);
