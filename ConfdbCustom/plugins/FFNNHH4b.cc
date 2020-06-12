@@ -140,6 +140,7 @@ bool FFNNHH4b<T>::hltFilter(edm::Event& event,
   for (auto const& jet : *h_JetTags) {
     nJet++;
   }
+  std::cout << nJet << std::endl;
   if(nJet < 4){
     return false;
   }
@@ -183,7 +184,7 @@ bool FFNNHH4b<T>::hltFilter(edm::Event& event,
   else{
       std::vector<double> FourleadingBTag(btags_val_.begin(), btags_val_.end());
       for(int j = 0; j < 4-(int)btags_val_.size(); j++){
-          FourleadingBTag.push_back(-1);
+          FourleadingBTag.push_back(0);
       }
       for(int i = 0; i < 4; i++){
           inputs_[std::to_string(i+1)+"BTag"] = FourleadingBTag.at(i);
