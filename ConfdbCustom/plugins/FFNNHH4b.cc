@@ -38,6 +38,7 @@ template <typename T>
 FFNNHH4b<T>::FFNNHH4b(const edm::ParameterSet& iConfig)
     : HLTFilter(iConfig),
       m_Jets(iConfig.getParameter<edm::InputTag>("Jets")),
+      m_JetsBase(iConfig.getParameter<edm::InputTag>("BaseJets")),
       m_JetTags(iConfig.getParameter<edm::InputTag>("JetTags")),
       m_MinTag(iConfig.getParameter<double>("MinTag")),
       m_MaxTag(iConfig.getParameter<double>("MaxTag")),
@@ -48,7 +49,8 @@ FFNNHH4b<T>::FFNNHH4b(const edm::ParameterSet& iConfig)
       m_TriggerType(iConfig.getParameter<int>("TriggerType")),
       nnconfig(iConfig.getParameter<edm::FileInPath>("NNConfig")),
       m_WP(iConfig.getParameter<double>("WorkingPoint")){
-          m_JetsToken = consumes<std::vector<T>>(m_Jets), m_JetTagsToken = consumes<reco::JetTagCollection>(m_JetTags);
+          m_JetsToken = consumes<std::vector<T>>(m_Jets), m_JetTagsToken = consumes<reco::JetTagCollection>(m_JetTags), m_JetsBaseToken = consumes<std::vector<T>>(m_JetsBase);
+  
           //parse json
           ifstream jsonfile(nnconfig.fullPath());
           auto config = lwt::parse_json(jsonfile);
@@ -66,6 +68,7 @@ void FFNNHH4b<T>::fillDescriptions(edm::ConfigurationDescriptions& descriptions)
   edm::ParameterSetDescription desc;
   makeHLTFilterDescription(desc);
   desc.add<edm::InputTag>("Jets", edm::InputTag("hltJetCollection"));
+  desc.add<edm::InputTag>("BaseJets", edm::InputTag("hltJetCollection"));
   desc.add<edm::InputTag>("JetTags", edm::InputTag("hltJetTagCollection"));
   desc.add<double>("MinTag", 0.0);
   desc.add<double>("MaxTag", 999999.0);
@@ -109,6 +112,9 @@ bool FFNNHH4b<T>::hltFilter(edm::Event& event,
   if (saveTags())
     filterproduct.addCollectionTag(m_Jets);
 
+  edm::Handle<TCollection> h_JetsBase;
+  event.getByToken(m_JetsBaseToken, h_JetsBase);
+
   edm::Handle<JetTagCollection> h_JetTags;
   event.getByToken(m_JetTagsToken, h_JetTags);
 
@@ -136,38 +142,34 @@ bool FFNNHH4b<T>::hltFilter(edm::Event& event,
   int nJet = 0;
   std::vector<double> btags_val_;
   
-  //HORRIBLEEEEEEEEEEEEEEE
-  for (auto const& jet : *h_JetTags) {
-    nJet++;
-  }
-  std::cout << nJet << std::endl;
-  if(nJet < 4){
-    return false;
-  }
-
-  nJet = 0;
-  //NEEDS SOLUTION HELPPPPPPPPP
-  
-  for (auto const& jet : *h_JetTags) {
-    jetRef = TRef(h_Jets, jet.first.key());
-    LogTrace("") << "Jet " << nJet << " : Pt = " << jet.first->pt() << " , tag value = " << jet.second;
+  for (auto const& jet : *h_JetsBase) {
+    double pt = jet.pt(), mass = jet.mass(), e = jet.energy(), eta = jet.eta();
+    double btag = 0;
+    //searching for the btagged jets
+    for(auto const& btag_jet : *h_JetTags){
+      if(btag_jet.first->pt() == pt && btag_jet.first->eta() == eta && btag_jet.first->energy() == e){
+        btag = btag_jet.second;
+      }
+    }
+    //jetRef = TRef(h_Jets, jet.first.key());
+    //LogTrace("") << "Jet " << nJet << " : Pt = " << jet.first->pt() << " , tag value = " << jet.second;
     ++nJet;
     if(nJet < 5){
 
         std::cout << std::to_string(nJet)+"LeadingPt" << " " << std::to_string(nJet)+"LeadingMass" << " " << std::to_string(nJet)+"LeadingE" << " " << std::to_string(nJet)+"LeadingEta" << " " << std::to_string(nJet)+"LeadingPhi" << " " << std::to_string(nJet)+"LeadingBTag" << std::endl;
         
-        inputs_[std::to_string(nJet)+"LeadingPt"] = jet.first->pt();
-        inputs_[std::to_string(nJet)+"LeadingMass"] = jet.first->mass();
-        inputs_[std::to_string(nJet)+"LeadingE"] = jet.first->energy();
-        inputs_[std::to_string(nJet)+"LeadingEta"] = jet.first->eta();
-        inputs_[std::to_string(nJet)+"LeadingBTag"] = jet.second;
+        inputs_[std::to_string(nJet)+"LeadingPt"] = pt;
+        inputs_[std::to_string(nJet)+"LeadingMass"] = mass;
+        inputs_[std::to_string(nJet)+"LeadingE"] = e;
+        inputs_[std::to_string(nJet)+"LeadingEta"] = eta;
+        inputs_[std::to_string(nJet)+"LeadingBTag"] = btag;
     
     }
 
     //Save all BTag Scores. Only for central jets eta < 2.5 and pt > 30, that's why the selection on pt and eta
-    if ((m_MinTag <= jet.second) && (jet.second <= m_MaxTag) && (abs(jet.first->eta()) <= m_MaxEta) && (abs(jet.first->eta()) >= m_MinEta) &&
-        (jet.first->pt() <= m_MaxPt) && (jet.first->pt() >= m_MinPt) )  {
-        btags_val_.push_back(jet.second);
+    if ((m_MinTag <= btag) && (btag <= m_MaxTag) && (abs(eta) <= m_MaxEta) && (abs(eta) >= m_MinEta) &&
+        (pt <= m_MaxPt) && (pt >= m_MinPt) )  {
+        btags_val_.push_back(btag);
         // Store a reference to the jets which passed tagging cuts
         filterproduct.addObject(m_TriggerType, jetRef);
     }

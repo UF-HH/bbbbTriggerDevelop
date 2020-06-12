@@ -37,6 +37,8 @@ public:
 private:
   edm::InputTag m_Jets;  // module label of input JetCollection
   edm::EDGetTokenT<std::vector<T> > m_JetsToken;
+  edm::InputTag m_JetsBase;  // module label of base input jets (not btagged)
+  edm::EDGetTokenT<std::vector<T> > m_JetsBaseToken;
   edm::InputTag m_JetTags;  // module label of input JetTagCollection
   edm::EDGetTokenT<reco::JetTagCollection> m_JetTagsToken;
   double m_MinTag, m_MaxTag;  // tag descriminator cuts applied to each jet
