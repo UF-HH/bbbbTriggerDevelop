@@ -353,7 +353,7 @@ def QueryForTimingFiles(run):
         pu = [49,52]
         ps = "2.0e34+ZB+HLTPhysics"
         file_names = ["Ephemeral_PU49-52_316058000.root","Ephemeral_PU49-52_316058005.root", "Ephemeral_PU49-52_316058001.root","Ephemeral_PU49-52_316058006.root","Ephemeral_PU49-52_316058002.root","Ephemeral_PU49-52_316058007.root","Ephemeral_PU49-52_316058003.root","Ephemeral_PU49-52_316058008.root","Ephemeral_PU49-52_316058004.root"]
-        files = ["file:/data/user/ecarrera/timing_data/skim_Ephemeral_316058/".format(i) for i in file_names]
+        files = ["file:/data/user/ecarrera/timing_data/skim_Ephemeral_316058/{}".format(i) for i in file_names]
         return run , pu, ps, files
 
     elif run in [315188]:
