@@ -24,6 +24,12 @@
 #include "../interface/FFNNHH4b.h"
 #include "FFNNHH4b.cc"
 
+#include "../interface/HLTKinModel.h"
+#include "HLTFFKinModel.cc"
+
+#include "../interface/HLTBTagModel.h"
+#include "HLTBTagModel.cc"
+
 using namespace reco;
 using namespace trigger;
 
@@ -47,6 +53,12 @@ typedef HLTBTagSum<PFJet> HLTBTagSumPF;
 typedef FFNNHH4b<CaloJet> CaloNNHH4b;
 typedef FFNNHH4b<PFJet> PFNNHH4b;
 
+typedef HLTBTagModel<CaloJet> HLTBTagFFCalo;
+typedef HLTBTagModel<PFJet> HLTBTagFFPF;
+
+typedef HLTKinModel<CaloJet> HLTKinFFCalo;
+typedef HLTKinModel<PFJet> HLTKinFFPF;
+
 DEFINE_FWK_MODULE(CaloSaver);
 DEFINE_FWK_MODULE(PFSaver);
 DEFINE_FWK_MODULE(CaloBSaver);
@@ -65,3 +77,9 @@ DEFINE_FWK_MODULE(HLTBTagSumPF);
 
 DEFINE_FWK_MODULE(CaloNNHH4b);
 DEFINE_FWK_MODULE(PFNNHH4b);
+
+DEFINE_FWK_MODULE(HLTBTagFFCalo);
+DEFINE_FWK_MODULE(HLTBTagFFPF);
+
+DEFINE_FWK_MODULE(HLTKinFFCalo);
+DEFINE_FWK_MODULE(HLTKinFFPF);
