@@ -343,7 +343,7 @@ def QueryForTimingFiles(run):
     elif run in [316457]:
         run = [316457]
         pu = [49,51]
-        ps = "HLTPhysics"
+        ps = "2.0e34+ZB+HLTPhysics"
         file_names = ["EphemeralHLTPhysics_316457000.root","EphemeralHLTPhysics_316457004.root","EphemeralHLTPhysics_316457001.root","EphemeralHLTPhysics_316457005.root","EphemeralHLTPhysics_316457002.root","EphemeralHLTPhysics_316457006.root","EphemeralHLTPhysics_316457003.root"]
         files = ["file:/data/user/ecarrera/timing_data/skim_Ephemeral_316457/{}".format(i) for i in file_names]
         return run , pu, ps, files
@@ -351,7 +351,7 @@ def QueryForTimingFiles(run):
     elif run in [316058]:
         run = [316058]
         pu = [49,52]
-        ps = "2.0e34+Physics"
+        ps = "2.0e34+ZB+HLTPhysics"
         file_names = ["Ephemeral_PU49-52_316058000.root","Ephemeral_PU49-52_316058005.root", "Ephemeral_PU49-52_316058001.root","Ephemeral_PU49-52_316058006.root","Ephemeral_PU49-52_316058002.root","Ephemeral_PU49-52_316058007.root","Ephemeral_PU49-52_316058003.root","Ephemeral_PU49-52_316058008.root","Ephemeral_PU49-52_316058004.root"]
         files = ["file:/data/user/ecarrera/timing_data/skim_Ephemeral_316058/".format(i) for i in file_names]
         return run , pu, ps, files
@@ -359,7 +359,7 @@ def QueryForTimingFiles(run):
     elif run in [315188]:
         run = [315188]
         pu = [55,58]
-        ps = "600b+HLTPhysics3"
+        ps = "2.0e34+ZB+HLTPhysics"
         file_names = ["HLTPhysics_PU55-58_315188000.root","HLTPhysics_PU55-58_315188003.root","HLTPhysics_PU55-58_315188001.root","HLTPhysics_PU55-58_315188004.root","HLTPhysics_PU55-58_315188002.root","HLTPhysics_PU55-58_315188005.root"]
         files = ["file:/data/user/ecarrera/timing_data/skim_HLTPhysics_315188/{}".format(i) for i in file_names]
         return run , pu, ps, files
@@ -367,7 +367,7 @@ def QueryForTimingFiles(run):
     elif run in [315106]:
         run = [315106]
         pu = [51,52]
-        ps = "300b + HLT Physics"
+        ps = "2.0e34+ZB+HLTPhysics"
         file_names = ["HLTPhysics_PU51-52_315106000.root","HLTPhysics_PU51-52_315106004.root","HLTPhysics_PU51-52_315106001.root","HLTPhysics_PU51-52_315106005.root","HLTPhysics_PU51-52_315106002.root","HLTPhysics_PU51-52_315106006.root","HLTPhysics_PU51-52_315106003.root"]
         files = ["file:/data/user/ecarrera/timing_data/skim_HLTPhysics_315106/{}".format(i) for i in file_names]
         return run , pu, ps, files
