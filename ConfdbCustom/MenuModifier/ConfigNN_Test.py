@@ -99,8 +99,8 @@ man.SetCurrentLine("after:#------------- My Filters -------------------")
 man.CreateFromLocal(in_class="FFNNHH4bCalowp0p87",mod_name="FFNNHH4bCalo")
 man.InsertInMenu(in_class="FFNNHH4bCalowp0p87",process_name = 'in_class')
 
-man.CreateFromLocal(in_class="hltKinFFCaloHH4bwp0p5",mod_name="KinFFCaloHH4b")
-man.InsertInMenu(in_class="hltKinFFCaloHH4bwp0p5",process_name = 'in_class')
+man.CreateFromLocal(in_class="KinFFCaloHH4bwp0p5",mod_name="KinFFCaloHH4b")
+man.InsertInMenu(in_class="KinFFCaloHH4bwp0p5",process_name = 'in_class')
 
 man.CreateFromLocal(in_class="BTagFFCaloHH4bwp0p85",mod_name="BTagFFCaloHH4b")
 man.InsertInMenu(in_class="BTagFFCaloHH4bwp0p85",process_name = 'in_class')
