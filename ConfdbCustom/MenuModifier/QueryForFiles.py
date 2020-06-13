@@ -359,7 +359,7 @@ def QueryForTimingFiles(run):
     elif run in [315188]:
         run = [315188]
         pu = [55,58]
-        ps = "2.0e34+ZB+HLTPhysics"
+        ps = "600b+HLTPhysics3"
         file_names = ["HLTPhysics_PU55-58_315188000.root","HLTPhysics_PU55-58_315188003.root","HLTPhysics_PU55-58_315188001.root","HLTPhysics_PU55-58_315188004.root","HLTPhysics_PU55-58_315188002.root","HLTPhysics_PU55-58_315188005.root"]
         files = ["file:/data/user/ecarrera/timing_data/skim_HLTPhysics_315188/{}".format(i) for i in file_names]
         return run , pu, ps, files
