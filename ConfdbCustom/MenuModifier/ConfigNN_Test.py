@@ -5,7 +5,7 @@
 # Specific implementation for timing 
 # studies. Runs on vocms003
 # Example usage for files under vocms003 with pile up 48-49 (run 319941)
-# python ConfigNN_Test.py --menu=/online/collisions/2018/2e34/v3.6/HLT -gt=101X_dataRun2_HLT_v7 -out=myHLT.py -pr=myHLT -out=myHLT.py -nev=50000 -data --l1 L1Menu_Collisions2018_v2_1_0-d1_xml --tr=319941
+# python ConfigNN_Test.py --menu=/online/collisions/2018/2e34/v3.6/HLT -gt=101X_dataRun2_HLT_v7 -out=myHLT.py -pr=TIMING -out=myHLT.py -nev=50000 -data --l1 L1Menu_Collisions2018_v2_1_0-d1_xml --tr=319941
 #
 #--------------------------------------------------------------------------------------------------------------------------------
 

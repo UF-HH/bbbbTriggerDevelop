@@ -85,12 +85,6 @@ man.SetCurrentLine(option_str="after:#-------------My Analyzers-------------")
 man.MakeSpace(n=20) #caveat, does not work without this, problem with indexing inside man...Need to work on this
 man.SetCurrentLine(option_str="after:#-------------My Analyzers-------------")
 
-trigger_list = "'HLT_Quad30_Double60_Sum2LeadingBTag15','HLT_PFHT330PT30_QuadPFJet_75_60_45_40_TriplePFBTagDeepCSV_4p5_v3','HLT_PFHT270_180_Double180_Double90_BisectorBTag07'"
-
-man.CreateFromLocal(in_class="MyHLTAnalyzer",mod_name="MyHLTAnalyzer", triggerList = trigger_list)
-man.InsertInMenu(in_class="MyHLTAnalyzer",process_name = 'in_class')
-man.AddLuminosityToModule("MyHLTAnalyzer", line=False) #MC no need to specify json but analyzer wants an input
-
 man.CreateFromLocal(in_class="SaveAllJetsMC",mod_name="SaveAllJetsMC")
 man.InsertInMenu(in_class="SaveAllJetsMC",process_name = 'in_class')
 man.AddLuminosityToModule("SaveAllJetsMC") #MC no need to specify json but analyzer wants an input
@@ -197,6 +191,15 @@ man.Insert("process.SaveJets = cms.Path( process.HLTBeginSequence + process.hltL
 
 print("@[Info]: Adding Query for MC samples... ")
 man.AddDASQueryMC()
+
+
+#adding last analyzer with trigger of interest:
+man.SetCurrentLine(option_str="after:#-------------My Analyzers-------------")
+trigger_list = "'HLT_Quad30_Double60_Sum2LeadingBTag_1p5','HLT_PFHT330PT30_QuadPFJet_75_60_45_40_TriplePFBTagDeepCSV_4p5_v3','HLT_PFHT270_180_Double180_Double90_BisectorBTag07','HLT_CaloHT330_DoubleBTag_QuadPFJet_30HT330_TriplePFBTagDeepCSV_4p5_v3', 'HLT_CaloHT330_DoubleBTag_QuadPFJet_30_DoublePFJet_60_HT330_TriplePFBTagDeepCSV_4p5_v3', 'HLT_CaloHT330_DoubleBTag_QuadPFJet_30_75_TriplePFBTagDeepCSV_4p5_v3', 'HLT_CaloHT330_DoubleBTag_QuadPFJet_30_75_TriplePFBTagDeepCSV_4p5_v3', 'HLT_CaloHT330_DoubleBTag_QuadPFJet_30_75_60_TriplePFBTagDeepCSV_4p5_v3', 'HLT_CaloQuad30HT330_DoubleBTag_TriplePFBTagDeepCSV_4p5_v3', 'HLT_CaloQuad30HT330_DoubleBTag_PF260_TriplePFBTagDeepCSV_4p5_v3', 'HLT_CaloQuad30HT330_DoubleBTag_PF175_TriplePFBTagDeepCSV_4p5_v3', 'HLT_CaloQuad30HT330_DoubleBTag_PF175_260__TriplePFBTagDeepCSV_4p5_v3', 'HLT_Quad30_Double60_Sum2LeadingBTag9', 'HLT_Quad30_Double60_Sum2LeadingBTag10', 'HLT_Quad30_Double60_Sum2LeadingBTag11', 'HLT_Quad30_Double60_Sum2LeadingBTag12', 'HLT_Quad30_Double60_Sum2LeadingBTag13', 'HLT_Quad30_Double60_Sum2LeadingBTag14', 'HLT_Quad30_Double60_Sum2LeadingBTag15', 'HLT_Quad30_Double60_Sum2LeadingBTag16', 'HLT_Quad30_Double60_Sum2LeadingBTag17', 'HLT_Quad30_Double60_Sum2LeadingBTag18', 'HLT_Quad30_Double60_Sum2LeadingBTag19', 'HLT_Quad30_Double60_Sum2LeadingBTag20'"
+
+man.CreateFromLocal(in_class="MyHLTAnalyzer",mod_name="MyHLTAnalyzer", triggerList = trigger_list)
+man.InsertInMenu(in_class="MyHLTAnalyzer",process_name = 'in_class')
+man.AddLuminosityToModule("MyHLTAnalyzer", line=False) #MC no need to specify json but analyzer wants an input
 
 print("@[EndJob]: Done")
 
