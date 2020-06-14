@@ -4,8 +4,8 @@
 # HLT menu with modules and
 # triggers from the analysis
 #
-# example usage MC: python PersonalConfig.py --menu=/dev/CMSSW_11_0_0/GRun/V7 -out=myHLT.py -gt=110X_mcRun3_2021_realistic_v6 -pr=myHLT -out=myHLT.py \
-# -paths=HLTriggerFirstPath,HLT_PFHT330PT30_QuadPFJet_75_60_45_40_TriplePFBTagDeepCSV_4p5_v3,HLTriggerFinalPath,HLTAnalyzerEndpath
+# example usage MC: python SequentialConfigGenerator.py --menu=/dev/CMSSW_11_0_0/GRun/V7 -out=myHLT.py -gt=110X_mcRun3_2021_realistic_v6 -pr=myHLT \
+# -paths=HLTriggerFirstPath,HLT_PFHT330PT30_QuadPFJet_75_60_45_40_TriplePFBTagDeepCSV_4p5_v3,HLTriggerFinalPath,HLTAnalyzerEndpath --timing
 #
 #--------------------------------------------------------------------------------------------------------------------------------
 
@@ -99,6 +99,7 @@ man.Insert("\n")
 
 print("@[Info]: Adding Filters definintions... ")
 
+man.Insert("#------------- My Filters -------------------\n")
 man.SetCurrentLine("after:#------------- My Filters -------------------")
 man.CreateFromLocal(in_class="hltDoubleCentralCaloHT180",mod_name="HLTHTCaloDouble")
 man.InsertInMenu(in_class="hltDoubleCentralCaloHT180",process_name = 'in_class')
