@@ -120,9 +120,19 @@ man.InsertInMenu(in_class="hltBTagBisector23PF",process_name = 'in_class')
 man.CreateFromLocal(in_class="hltBTagBisector23Calo",mod_name="HLT2DJetTagCalo")
 man.InsertInMenu(in_class="hltBTagBisector23Calo",process_name = 'in_class')
 
+man.CreateFromLocal(in_class="FFNNHH4bCalowp0p87",mod_name="FFNNHH4bCalo")
+man.InsertInMenu(in_class="FFNNHH4bCalowp0p87",process_name = 'in_class')
+
+man.CreateFromLocal(in_class="KinFFCaloHH4bwp0p5",mod_name="KinFFCaloHH4b")
+man.InsertInMenu(in_class="KinFFCaloHH4bwp0p5",process_name = 'in_class')
+
+man.CreateFromLocal(in_class="BTagFFCaloHH4bwp0p85",mod_name="BTagFFCaloHH4b")
+man.InsertInMenu(in_class="BTagFFCaloHH4bwp0p85",process_name = 'in_class')
+
 #This module is present in /dev/CMSSW_11_0_0/GRun/V7, does not work if not present in the menu
 man.CloneModule("process.hltQuadCentralJet30", in_class="hltDoubleCentralJet60")
 man.ModifyPar("hltDoubleCentralJet60", "MaxEta", 2.5)
+man.ModifyPar("hltDoubleCentralJet60", "MinPt", 60)
 man.ModifyPar("hltDoubleCentralJet60", "MinN", 2)
 man.ModifyPar("hltDoubleCentralJet60", "inputTag", "'hltAK4CaloJetsCorrectedIDPassed'")
 man.ModifyPar("hltDoubleCentralJet60", "triggerType", 86)
@@ -174,6 +184,10 @@ for calo, pf in zip(calo_names_th, pf_names_th):
     th = int(calo[1]*10)
     man.Insert("process.HLT_Quad30_Double60_Sum2LeadingBTag{} = cms.Path( process.HLTBeginSequence + process.hltL1sQuadJetC50to60IorHTT280to500IorHTT250to340QuadJet + process.hltPrePFHT330PT30QuadPFJet75604540TriplePFBTagDeepCSV4p5 + process.HLTAK4CaloJetsSequence + process.hltQuadCentralJet30 + process.hltDoubleCentralJet60 + process.HLTBtagDeepCSVSequenceL3 + process.{} + process.HLTAK4PFJetsSequence + process.hltPFCentralJetLooseIDQuad30 + process.hlt2PFCentralJetLooseID60 + process.HLTBtagDeepCSVSequencePF + process.{}  + process.HLTEndSequence )\n".format(th, calo[0], pf[0]))
 
+#NN based 
+man.Insert("process.HLT_Quad30Double60_FFNNHH4bwp0p87Calo_PFQuad30 = cms.Path( process.HLTBeginSequence + process.hltL1sQuadJetC50to60IorHTT280to500IorHTT250to340QuadJet + process.HLTAK4CaloJetsSequence + process.HLTBtagDeepCSVSequenceL3 + process.FFNNHH4bCalowp0p87 + process.HLTEndSequence )\n")
+man.Insert("process.HLT_KinFFCaloHH4bwp0p5_BTagFFCaloHH4bwp0p85 = cms.Path( process.HLTBeginSequence + process.hltL1sQuadJetC50to60IorHTT280to500IorHTT250to340QuadJet + process.HLTAK4CaloJetsSequence + process.HLTBtagDeepCSVSequenceL3 + process.KinFFCaloHH4bwp0p5 + process.BTagFFCaloHH4bwp0p85 + process.HLTEndSequence )\n")
+
 #Inserting LeaveOneOut from 2018
 man.Insert("process.HLT_CaloHT330_DoubleBTag_QuadPFJet_30HT330_TriplePFBTagDeepCSV_4p5_v3 = cms.Path( process.HLTBeginSequence + process.hltL1sQuadJetC50to60IorHTT280to500IorHTT250to340QuadJet + process.hltPrePFHT330PT30QuadPFJet75604540TriplePFBTagDeepCSV4p5 + process.HLTAK4CaloJetsSequence  + process.hltCaloJetsQuad30ForHt + process.hltHtMhtCaloJetsQuadC30 + process.hltCaloQuadJet30HT320 + process.HLTBtagDeepCSVSequenceL3 + process.hltBTagCaloDeepCSVp17Double + process.HLTAK4PFJetsSequence + process.hltPFCentralJetLooseIDQuad30 + process.HLTBtagDeepCSVSequencePF + process.hltBTagPFDeepCSV4p5Triple + process.HLTEndSequence )\n")
 man.Insert("process.HLT_CaloHT330_DoubleBTag_QuadPFJet_30_DoublePFJet_60_HT330_TriplePFBTagDeepCSV_4p5_v3 = cms.Path( process.HLTBeginSequence + process.hltL1sQuadJetC50to60IorHTT280to500IorHTT250to340QuadJet + process.hltPrePFHT330PT30QuadPFJet75604540TriplePFBTagDeepCSV4p5 + process.HLTAK4CaloJetsSequence  + process.hltCaloJetsQuad30ForHt + process.hltHtMhtCaloJetsQuadC30 + process.hltCaloQuadJet30HT320 + process.HLTBtagDeepCSVSequenceL3 + process.hltBTagCaloDeepCSVp17Double + process.HLTAK4PFJetsSequence + process.hltPFCentralJetLooseIDQuad30 + process.hlt2PFCentralJetLooseID60 + process.HLTBtagDeepCSVSequencePF + process.hltBTagPFDeepCSV4p5Triple + process.HLTEndSequence )\n")
@@ -195,7 +209,7 @@ man.AddDASQueryMC()
 
 #adding last analyzer with trigger of interest:
 man.SetCurrentLine(option_str="after:#-------------My Analyzers-------------")
-trigger_list = "'HLT_Quad30_Double60_Sum2LeadingBTag_1p5','HLT_PFHT330PT30_QuadPFJet_75_60_45_40_TriplePFBTagDeepCSV_4p5_v3','HLT_PFHT270_180_Double180_Double90_BisectorBTag07','HLT_CaloHT330_DoubleBTag_QuadPFJet_30HT330_TriplePFBTagDeepCSV_4p5_v3', 'HLT_CaloHT330_DoubleBTag_QuadPFJet_30_DoublePFJet_60_HT330_TriplePFBTagDeepCSV_4p5_v3', 'HLT_CaloHT330_DoubleBTag_QuadPFJet_30_75_TriplePFBTagDeepCSV_4p5_v3', 'HLT_CaloHT330_DoubleBTag_QuadPFJet_30_75_TriplePFBTagDeepCSV_4p5_v3', 'HLT_CaloHT330_DoubleBTag_QuadPFJet_30_75_60_TriplePFBTagDeepCSV_4p5_v3', 'HLT_CaloQuad30HT330_DoubleBTag_TriplePFBTagDeepCSV_4p5_v3', 'HLT_CaloQuad30HT330_DoubleBTag_PF260_TriplePFBTagDeepCSV_4p5_v3', 'HLT_CaloQuad30HT330_DoubleBTag_PF175_TriplePFBTagDeepCSV_4p5_v3', 'HLT_CaloQuad30HT330_DoubleBTag_PF175_260__TriplePFBTagDeepCSV_4p5_v3', 'HLT_Quad30_Double60_Sum2LeadingBTag9', 'HLT_Quad30_Double60_Sum2LeadingBTag10', 'HLT_Quad30_Double60_Sum2LeadingBTag11', 'HLT_Quad30_Double60_Sum2LeadingBTag12', 'HLT_Quad30_Double60_Sum2LeadingBTag13', 'HLT_Quad30_Double60_Sum2LeadingBTag14', 'HLT_Quad30_Double60_Sum2LeadingBTag15', 'HLT_Quad30_Double60_Sum2LeadingBTag16', 'HLT_Quad30_Double60_Sum2LeadingBTag17', 'HLT_Quad30_Double60_Sum2LeadingBTag18', 'HLT_Quad30_Double60_Sum2LeadingBTag19', 'HLT_Quad30_Double60_Sum2LeadingBTag20'"
+trigger_list = "'HLT_KinFFCaloHH4bwp0p5_BTagFFCaloHH4bwp0p85', 'HLT_Quad30Double60_FFNNHH4bwp0p87Calo_PFQuad30', 'HLT_Quad30_Double60_Sum2LeadingBTag_1p5','HLT_PFHT330PT30_QuadPFJet_75_60_45_40_TriplePFBTagDeepCSV_4p5_v3','HLT_PFHT270_180_Double180_Double90_BisectorBTag07','HLT_CaloHT330_DoubleBTag_QuadPFJet_30HT330_TriplePFBTagDeepCSV_4p5_v3', 'HLT_CaloHT330_DoubleBTag_QuadPFJet_30_DoublePFJet_60_HT330_TriplePFBTagDeepCSV_4p5_v3', 'HLT_CaloHT330_DoubleBTag_QuadPFJet_30_75_TriplePFBTagDeepCSV_4p5_v3', 'HLT_CaloHT330_DoubleBTag_QuadPFJet_30_75_TriplePFBTagDeepCSV_4p5_v3', 'HLT_CaloHT330_DoubleBTag_QuadPFJet_30_75_60_TriplePFBTagDeepCSV_4p5_v3', 'HLT_CaloQuad30HT330_DoubleBTag_TriplePFBTagDeepCSV_4p5_v3', 'HLT_CaloQuad30HT330_DoubleBTag_PF260_TriplePFBTagDeepCSV_4p5_v3', 'HLT_CaloQuad30HT330_DoubleBTag_PF175_TriplePFBTagDeepCSV_4p5_v3', 'HLT_CaloQuad30HT330_DoubleBTag_PF175_260__TriplePFBTagDeepCSV_4p5_v3', 'HLT_Quad30_Double60_Sum2LeadingBTag9', 'HLT_Quad30_Double60_Sum2LeadingBTag10', 'HLT_Quad30_Double60_Sum2LeadingBTag11', 'HLT_Quad30_Double60_Sum2LeadingBTag12', 'HLT_Quad30_Double60_Sum2LeadingBTag13', 'HLT_Quad30_Double60_Sum2LeadingBTag14', 'HLT_Quad30_Double60_Sum2LeadingBTag15', 'HLT_Quad30_Double60_Sum2LeadingBTag16', 'HLT_Quad30_Double60_Sum2LeadingBTag17', 'HLT_Quad30_Double60_Sum2LeadingBTag18', 'HLT_Quad30_Double60_Sum2LeadingBTag19', 'HLT_Quad30_Double60_Sum2LeadingBTag20'"
 
 man.CreateFromLocal(in_class="MyHLTAnalyzer",mod_name="MyHLTAnalyzer", triggerList = trigger_list)
 man.InsertInMenu(in_class="MyHLTAnalyzer",process_name = 'in_class')
@@ -203,10 +217,3 @@ man.SetCurrentLine(option_str="before:process.SaveAllJetsMC.inputs")
 man.AddLuminosityToModule("MyHLTAnalyzer", line=False) #MC no need to specify json but analyzer wants an input
 
 print("@[EndJob]: Done")
-
-
-
-
-
-
-
