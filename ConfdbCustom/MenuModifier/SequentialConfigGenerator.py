@@ -179,11 +179,11 @@ man.InsertPath("process.HLT_PFHT270_180_Double180_Double90_BisectorBTag07_v6 = c
 man.InsertPath("process.HLT_PFHT270_180_Double180_Double90_BisectorBTag07_v7 = cms.Path( process.HLTBeginSequence + process.hltL1sQuadJetC50to60IorHTT280to500IorHTT250to340QuadJet + process.hltPrePFHT330PT30QuadPFJet75604540TriplePFBTagDeepCSV4p5 + process.HLTAK4CaloJetsSequence + process.hltDoubleCentralCaloHT180 + process.hltDoubleCentralCaloHT90 + process.HLTBtagDeepCSVSequenceL3 + process.hltBTagBisector23Calo + process.HLTAK4PFJetsSequence + process.hltDoubleCentralPFHT180 + process.hltDoubleCentralPFHT90 + process.HLTBtagDeepCSVSequencePF + process.hltBTagBisector23PF + process.HLTEndSequence )\n")
 
 #NN based 
-man.InsertPath("process.HLT_Quad30Double60_FFNNHH4bwp0p87Calo_PFQuad30_v1 = cms.Path( process.HLTBeginSequence + process.hltL1sQuadJetC50to60IorHTT280to500IorHTT250to340QuadJet + process.HLTEndSequence )\n")
-man.InsertPath("process.HLT_Quad30Double60_FFNNHH4bwp0p87Calo_PFQuad30_v2 = cms.Path( process.HLTBeginSequence + process.hltL1sQuadJetC50to60IorHTT280to500IorHTT250to340QuadJet + process.HLTAK4CaloJetsSequence + process.HLTBtagDeepCSVSequenceL3 + process.FFNNHH4bCalowp0p87 + process.HLTEndSequence )\n")
+man.InsertPath("process.HLT_Quad30Double60_FFNNHH4bwp0p87Calo_PFQuad30_v1 = cms.Path( process.HLTBeginSequence + process.hltL1sQuadJetC50to60IorHTT280to500IorHTT250to340QuadJet + process.hltPrePFHT330PT30QuadPFJet75604540TriplePFBTagDeepCSV4p5 + process.HLTEndSequence )\n")
+man.InsertPath("process.HLT_Quad30Double60_FFNNHH4bwp0p87Calo_PFQuad30_v2 = cms.Path( process.HLTBeginSequence + process.hltL1sQuadJetC50to60IorHTT280to500IorHTT250to340QuadJet + process.hltPrePFHT330PT30QuadPFJet75604540TriplePFBTagDeepCSV4p5 + process.HLTAK4CaloJetsSequence + process.HLTBtagDeepCSVSequenceL3 + process.FFNNHH4bCalowp0p87 + process.HLTEndSequence )\n")
 
-man.InsertPath("process.HLT_KinFFCaloHH4bwp0p5_BTagFFCaloHH4bwp0p85_v1 = cms.Path( process.HLTBeginSequence + process.hltL1sQuadJetC50to60IorHTT280to500IorHTT250to340QuadJet + process.HLTAK4CaloJetsSequence + process.HLTBtagDeepCSVSequenceL3 + process.KinFFCaloHH4bwp0p5 + process.HLTEndSequence )\n")
-man.InsertPath("process.HLT_KinFFCaloHH4bwp0p5_BTagFFCaloHH4bwp0p85_v2 = cms.Path( process.HLTBeginSequence + process.hltL1sQuadJetC50to60IorHTT280to500IorHTT250to340QuadJet + process.HLTAK4CaloJetsSequence + process.HLTBtagDeepCSVSequenceL3 + process.KinFFCaloHH4bwp0p5 + process.BTagFFCaloHH4bwp0p85 + process.HLTEndSequence )\n")
+man.InsertPath("process.HLT_KinFFCaloHH4bwp0p5_BTagFFCaloHH4bwp0p85_v1 = cms.Path( process.HLTBeginSequence + process.hltL1sQuadJetC50to60IorHTT280to500IorHTT250to340QuadJet + process.hltPrePFHT330PT30QuadPFJet75604540TriplePFBTagDeepCSV4p5 + process.HLTAK4CaloJetsSequence + process.HLTBtagDeepCSVSequenceL3 + process.KinFFCaloHH4bwp0p5 + process.HLTEndSequence )\n")
+man.InsertPath("process.HLT_KinFFCaloHH4bwp0p5_BTagFFCaloHH4bwp0p85_v2 = cms.Path( process.HLTBeginSequence + process.hltL1sQuadJetC50to60IorHTT280to500IorHTT250to340QuadJet + process.hltPrePFHT330PT30QuadPFJet75604540TriplePFBTagDeepCSV4p5 + process.HLTAK4CaloJetsSequence + process.HLTBtagDeepCSVSequenceL3 + process.KinFFCaloHH4bwp0p5 + process.BTagFFCaloHH4bwp0p85 + process.HLTEndSequence )\n")
 
 #benchmark
 man.InsertPath("process.HLT_PFHT330PT30_QuadPFJet_75_60_45_40_TriplePFBTagDeepCSV_4p5_v3_v1 = cms.Path( process.HLTBeginSequence + process.hltL1sQuadJetC50to60IorHTT280to500IorHTT250to340QuadJet + process.hltPrePFHT330PT30QuadPFJet75604540TriplePFBTagDeepCSV4p5 + process.HLTEndSequence )\n")
@@ -223,7 +223,8 @@ man.SetCurrentLine(option_str="after:#-------------My Analyzers-------------")
 trigger_list = "" 
 trigger_names = man.GetAllPaths()
 for name in trigger_names:
-    trigger_list = trigger_list + "'{}'".format(name)
+    trigger_list = trigger_list + "'{}',".format(name)
+trigger_names = trigger_names[:-1]
 
 man.CreateFromLocal(in_class="MyHLTAnalyzer",mod_name="MyHLTAnalyzer", triggerList = trigger_list)
 man.InsertInMenu(in_class="MyHLTAnalyzer",process_name = 'in_class')
