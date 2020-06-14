@@ -181,65 +181,25 @@ class ModMan:
         to_add = 'process.{} = cms.EDFilter( "HLTPrescaler", \nL1GtReadoutRecordTag = cms.InputTag( "hltGtStage2Digis" ),\noffset = cms.uint32( {} )\n)\n'.format(process_name, offset)
         self.Insert( to_add, self.currentline )
 
-    def InsertPath(self, path, ind = False, in_class='default'):
+    def InsertPath(self, path, ind = False):
+
+        try:
+            getattr(self, "pathnames")
+        except:
+            self.pathnames = []
+
+        path_name = path.split("process.")[1].split("=")[0].split()
+        self.pathnames.append(path_name)
 
         self.Insert(path, self.currentline)
 
-        path_modules = []
-        path = path.split("process.")
+    def GetAllPaths(self):
+        try:
+            return self.pathnames
+        except:
+            sys.exit("No path modules found in this class. Please use InsertPath to insert a path")
 
-        for mod in path:
-            if "cms.Path" in mod:
-                mod = mod.split("=cms.Path(")[0]
-                path_modules.append(mod)
-            else:
-                if "HLTBeginSequence" in mod or "HLTEndSequence" in mod:
-                    continue
-                elif ", " in mod:
-                    mod = mod.split(", ")[0]
-                elif ")" in mod:
-                    mod = mod.split(")")[0]
-
-                path_modules.append(mod)
-        
-        if in_class == 'default':
-            in_class = path_modules[0]
-
-        setattr(self, in_class, path_modules)
-
-    def GenerateSequentialPrescales(self, process_name, how_many, offset=0, name='strip'):
-        for i in range(0, how_many):
-            proc_name = process_name + "_v{}".format(i)
-            self.InsertPrescaleModule(proc_name, offset=0, name='strip')
-
-
-    def GenerateSequentialPath(self, in_class, add_prescales = True, prescale_names = 'strip'):
-
-        #check if object has path:
-        if not hasattr(self, in_class): sys.exit("[Error] Check that you have generated the path {} ".format(in_class))
-
-        path_modules = getattr(self, in_class)
-        base_name = path_modules[0]
-        path_modules = path_modules[1:]
-
-        for i, name in enumerate(path_modules):
-
-            path_name = base_name + "_v{}".format(i)
-            path = "process.{}".format(path_name) + " = cms.Path( process.HLTBeginSequence"
-
-            for mod_name in path_modules[:i]:
-                path = path + " + process.{}".format(name)
-                if i==0 and add_prescales:
-                    if prescale_names == 'strip':
-                        presc_name = base_name + "_v{}".format(i)
-                        presc_name = presc_name[:3] + "Pre" + presc_name[3:]
-                    else:
-                        presc_name = prescale_names[i]
-                    path = path + " + process.{}".format(presc_name)
-
-            path = path + " + process.HLTEndSequence )\n "
-
-            self.Insert(path, self.currentline)
-
+    def AddModuleToPath(self, path, modname, pos='last'):
+        ModMenu.AddToPath(self.menu, path, modname, pos)
 
 
