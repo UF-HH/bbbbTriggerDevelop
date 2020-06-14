@@ -202,7 +202,7 @@ class ModMan:
 
                 path_modules.append(mod)
         
-        if in_class = 'default':
+        if in_class == 'default':
             in_class = path_modules[0]
 
         setattr(self, in_class, path_modules)
