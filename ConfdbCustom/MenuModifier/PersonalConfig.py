@@ -199,6 +199,7 @@ trigger_list = "'HLT_Quad30_Double60_Sum2LeadingBTag_1p5','HLT_PFHT330PT30_QuadP
 
 man.CreateFromLocal(in_class="MyHLTAnalyzer",mod_name="MyHLTAnalyzer", triggerList = trigger_list)
 man.InsertInMenu(in_class="MyHLTAnalyzer",process_name = 'in_class')
+man.SetCurrentLine(option_str="before:process.SaveAllJetsMC.inputs")
 man.AddLuminosityToModule("MyHLTAnalyzer", line=False) #MC no need to specify json but analyzer wants an input
 
 print("@[EndJob]: Done")
