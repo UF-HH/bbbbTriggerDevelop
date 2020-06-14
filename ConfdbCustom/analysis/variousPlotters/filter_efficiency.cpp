@@ -1,4 +1,4 @@
-// c++ -o filEff filter_efficiency.cpp trigger_manager/trigger_manager.cc `root-config --glibs --cflags`
+// c++ -o filEff filter_efficiency.cpp ../src/trigger_manager.cc `root-config --glibs --cflags`
 
 //---------------------
 // Reads the tree output from the plug-in trgFilter 
@@ -21,8 +21,8 @@
 #include <sstream>
 #include <vector>
 #include <TEfficiency.h>
-#include "bbbb_lambda/make_trigger_paths.h"
-#include "trigger_manager/trigger_manager.h"
+#include "../interface/make_trigger_paths.h"
+#include "../interface/trigger_manager.h"
 
 int main(int argc, char* argv[]){
 

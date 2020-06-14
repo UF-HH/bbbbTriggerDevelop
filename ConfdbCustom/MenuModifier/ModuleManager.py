@@ -188,7 +188,7 @@ class ModMan:
         except:
             self.pathnames = []
 
-        path_name = path.split("process.")[1].split("=")[0].split()
+        path_name = path.split("process.")[1].split("=")[0].split()[0]
         self.pathnames.append(path_name)
 
         self.Insert(path, self.currentline)
