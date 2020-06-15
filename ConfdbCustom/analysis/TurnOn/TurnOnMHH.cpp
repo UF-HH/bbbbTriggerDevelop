@@ -32,7 +32,9 @@ int main(){
     trigcount_.resize(path_names.size());
 
     TTree* tree = (TTree*)f->Get("MyHLTAnalyzer/trgObjTree");
+    std::cout << "[INFO]: Reading branches..." << std::endl;
     for(int i = 0; i < path_names.size(); i++){
+        std::cout << "[INFO]: New branch ... " << path_names.at(i) << std::endl;
         tree->SetBranchAddress(path_names.at(i).c_str(), &trigcount_.at(i));
     }
 
@@ -145,6 +147,8 @@ int main(){
         std::string canv_save_title = "plots/" + fil_name + ".pdf";
         c[i]->SaveAs((canv_save_title).c_str());
     }
+
+    std::cout << std::endl;
 
 
     return 0;
