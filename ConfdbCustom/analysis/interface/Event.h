@@ -149,6 +149,7 @@ class Event{
         hltObj::Jets GetGenNNJetsCollection(){ return GenNNJets; };
         hltObj::Jets GetCaloBJetsCollection(){return CaloBJets; };
         hltObj::Jets GetPFBJetsCollection(){ return PFBJets; };
+        hltObj::Jets GetRecoJetsCollection(){ return RecoJets; };
         std::vector<hltObj::Jet*> GetL1Jets(){ return L1J; };
         std::vector<hltObj::Jet*> GetCaloJets(){ return CaloJ; };
         std::vector<hltObj::Jet*> GetPFJets(){ return PFJ; };
