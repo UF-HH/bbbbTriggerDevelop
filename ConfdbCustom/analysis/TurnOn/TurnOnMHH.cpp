@@ -113,7 +113,7 @@ int main(){
             }
 
             if(count < evb.size()-1){
-                h_tot[count]->Fill(vars[count])
+                h_tot[count]->Fill(vars[count]);
             }
 
             for(int j = count; j < evb.size()-1; j++)
