@@ -128,8 +128,7 @@ int main(){
 
     for(int i = 0; i < filters_names.size(); i++){  
         
-        std::string fil_name = filters_names.at(i);
-        TCanvas* c = new TCanvas(("canv_"+fil_name).c_str(), ("canv_"+fil_name).c_str(), 1000, 1000, 1000, 700));
+        c[i]->cd();
         double max = h_tot[i]->GetMaximum();
         h_tot[i]->Scale(1./max);
         std::string var = variables[i];
@@ -150,9 +149,9 @@ int main(){
         leg[i]->Draw();
         eff[i]->Draw("P same");
         //c[i]->SetLogy();
-        c->Draw();
+        c[i]->Draw();
         std::string canv_save_title = "plots/" + fil_name + ".pdf";
-        c->SaveAs((canv_save_title).c_str());
+        c[i]->SaveAs((canv_save_title).c_str());
     }
 
     return 0;
