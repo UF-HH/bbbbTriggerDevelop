@@ -112,6 +112,10 @@ int main(){
                 eff[i]->Fill(true, vars[i]);
             }
 
+            if(count < evb.size()-1){
+                h_tot[count]->Fill(vars[count])
+            }
+
             for(int j = count; j < evb.size()-1; j++)
                 eff[j]->Fill(false, vars[j]);
             
@@ -150,10 +154,6 @@ int main(){
         std::string canv_save_title = "plots/" + fil_name + ".pdf";
         c->SaveAs((canv_save_title).c_str());
     }
-
-    std::cout << std::endl;
-
-    
 
     return 0;
 
