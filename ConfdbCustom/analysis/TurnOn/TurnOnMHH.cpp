@@ -145,8 +145,8 @@ int main(){
         h_tot[i]->SetMaximum(1.6);
 
         TEfficiency* eff = new TEfficiency(h_tot[i], h_cut[i]);
-        eff[fil_id]->SetFillStyle(3004);
-        eff[fil_id]->SetLineColor(kRed);
+        eff->SetFillStyle(3004);
+        eff->SetLineColor(kRed);
         
         h_tot[i]->Draw("P");
         h_cut[i]->Draw("hist same");
