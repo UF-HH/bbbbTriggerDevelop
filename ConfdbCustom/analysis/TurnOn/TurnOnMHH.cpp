@@ -124,6 +124,7 @@ int main(){
 
     for(int i = 0; i < filters_names.size(); i++){  
         
+        std::string fil_name = filters_names.at(i);
         TCanvas* c = new TCanvas(("canv_"+fil_name).c_str(), ("canv_"+fil_name).c_str(), 1000, 1000, 1000, 700));
         double max = h_tot[i]->GetMaximum();
         h_tot[i]->Scale(1./max);
