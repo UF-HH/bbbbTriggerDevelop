@@ -19,7 +19,7 @@ int main(){
 
 
     TFile* f = new TFile("SequentialForTurnOn.root");
-    std::string branch = "SaveAllJets/Jets";
+    std::string branch = "SaveAllJetsMC/Jets";
     std::string genbranch = "SaveGenHH/Gen";
 
     Event ev(f, branch, genbranch);
