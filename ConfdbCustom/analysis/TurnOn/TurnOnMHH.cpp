@@ -84,6 +84,7 @@ int main(){
 
     }
 
+    
     for(int ev_idx = 0; ev_idx < event_bits_.size(); ev_idx++){
 
         std::vector<int> evb = event_bits_.at(ev_idx);
@@ -106,9 +107,9 @@ int main(){
             }
 
             for(int i =0; i < count; i++){
-                h_tot[count]->Fill(vars[count]);
-                h_cut[count]->Fill(vars[count]);
-                eff[count]->Fill(true, vars[count]);
+                h_tot[i]->Fill(vars[i]);
+                h_cut[i]->Fill(vars[i]);
+                eff[i]->Fill(true, vars[i]);
             }
 
             for(int j = count; j < evb.size()-1; j++)
@@ -150,6 +151,7 @@ int main(){
 
     std::cout << std::endl;
 
+    
 
     return 0;
 
