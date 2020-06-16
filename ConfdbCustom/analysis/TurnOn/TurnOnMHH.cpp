@@ -50,7 +50,7 @@ int main(){
     std::vector<TH1F*> h_tot;
     std::vector<TH1F*> h_cut;
     std::vector<TCanvas*> c;
-    std::vector<TEfficiency*> eff;
+    //std::vector<TEfficiency*> eff;
     std::vector<TLegend*> leg;
 
     for(int fil_id = 0; fil_id < filters_names.size(); fil_id++){
@@ -70,9 +70,9 @@ int main(){
         h_cut.at(fil_id)->SetFillStyle(3003);
         h_cut.at(fil_id)->SetFillColor(kAzure+2);
 
-        eff.push_back(new TEfficiency(eff_title.c_str(),eff_title.c_str(), bins, ranges.at(fil_id).at(0), ranges.at(fil_id).at(1)));
-        eff[fil_id]->SetFillStyle(3004);
-        eff[fil_id]->SetLineColor(kRed);
+        //eff.push_back(new TEfficiency(eff_title.c_str(),eff_title.c_str(), bins, ranges.at(fil_id).at(0), ranges.at(fil_id).at(1)));
+        //eff[fil_id]->SetFillStyle(3004);
+        //eff[fil_id]->SetLineColor(kRed);
 
         leg.push_back(new TLegend(.89, .89, .45, .7));
         leg[fil_id]->SetBorderSize(0);
@@ -143,11 +143,15 @@ int main(){
         
         h_cut[i]->Scale(1./max);
         h_tot[i]->SetMaximum(1.6);
+
+        TEfficiency* eff = new TEfficiency(h_tot[i], h_cut[i]);
+        eff[fil_id]->SetFillStyle(3004);
+        eff[fil_id]->SetLineColor(kRed);
         
         h_tot[i]->Draw("P");
         h_cut[i]->Draw("hist same");
         leg[i]->Draw();
-        eff[i]->Draw("P same");
+        eff->Draw("P same");
         //c[i]->SetLogy();
         c[i]->Draw();
         std::string canv_save_title = "plots/" + fil_name + ".pdf";
