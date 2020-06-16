@@ -109,15 +109,15 @@ int main(){
             for(int i =0; i < count; i++){
                 h_tot[i]->Fill(vars[i]);
                 h_cut[i]->Fill(vars[i]);
-                eff[i]->Fill(true, vars[i]);
+                //eff[i]->Fill(true, vars[i]);
             }
 
             if(count < evb.size()-1){
                 h_tot[count]->Fill(vars[count]);
             }
 
-            for(int j = count; j < evb.size()-1; j++)
-                eff[j]->Fill(false, vars[j]);
+            //for(int j = count; j < evb.size()-1; j++)
+            //    eff[j]->Fill(false, vars[j]);
             
         }
 
