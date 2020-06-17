@@ -38,6 +38,94 @@ class ModMan:
 
         setattr(self, in_class, named_dict)
 
+    def GetModuleInfos(self, module_name):
+        line, mod_def = ModMenu.FindModule(self.menu, module_name)
+        mod_name = (mod_def[0].split("."))[1].split(" ")[0].strip()
+        try:
+            mod_type = mod_def[0][mod_def[0].index("(")+1:mod_def[0].index(",")].strip()
+            mod_cmssw = mod_def[0][mod_def[0].index("ED"):mod_def[0].index("(")]
+        except:
+            mod_type = mod_cmssw = mod_def[0][mod_def[0].index("cms."):mod_def[0].index("(")] #sequence or path
+            mod_cmssw = mod_cmssw = mod_def[0][mod_def[0].index("cms."):mod_def[0].index("(")] #sequence or path
+
+        return mod_name, mod_type, mod_cmssw
+
+    def GetPathFilters(self, path_name):
+        line, mod_def = ModMenu.FindModule(self.menu, path_name)
+        module_list = mod_def[0].split("cms.Path")[1].split("(")[1].split(")")[0].split("+")
+        modules_type = []
+        for modn in module_list:
+            _,_,modt = self.GetModuleInfos(modn.strip())
+            modules_type.append(modt)
+
+        return module_list, modules_type
+
+    def GeneratePathsForTurnOn(self, path_name, names='version', includeL1=True):
+        mod_l, mod_t = self.GetPathFilters(path_name)
+        mod_l = mod_l[1:-1] #HLTBeginSequence, HLTEndSequence
+        mod_t = mod_t[1:-1] #HLTBeginSequence, HLTEndSequence
+        filters = [i for i,j in zip(mod_l, mod_t) if j == "EDFilter"]
+        L1 = [i for i in filters if "L1" in i][0] #this is present for sure
+        try:
+            prescale = [i for i in filters if "Pre" in i][0]
+        except:
+            prescale=False
+
+        if L1:
+            mod_l.pop(filters.index(L1))
+            mod_t.pop(filters.index(L1))
+            filters.remove(L1)
+            
+        if prescale:
+            mod_l.pop(filters.index(prescale))
+            mod_t.pop(filters.index(prescale))
+            filters.remove(prescale)
+
+        n_fil = 0
+
+        paths = []
+
+        if includeL1:
+
+            path_def = path_name
+            if "process" not in path_def:
+                path_def = "process." + path_def + "_L1"  + " = cms.Path( process.HLTBeginSequence"
+            else:
+                path_def = path_def + "_L1"  + " = cms.Path( process.HLTBeginSequence"
+            if L1:
+                path_def = path_def + L1 + " + "
+            if prescale:
+                path_def = path_def + prescale + " + "
+            
+            path_def += "process.HLTEndSequence )\n"
+            paths.append(path_def)
+
+            self.InsertPath(path_def, self.currentline)
+
+
+        while n_fil != len(filters) :
+            path_def = path_name
+            if "process" not in path_def:
+                path_def = "process." + path_def + "_v"  + " = cms.Path( process.HLTBeginSequence"
+            else:
+                path_def = path_def + "_v{}".format(n_fil)  + " = cms.Path( process.HLTBeginSequence"
+            if L1:
+                path_def = path_def + L1 + " + "
+            if prescale:
+                path_def = path_def + prescale + " + "
+
+            fil_to_add = filters[n_fil]
+            mod_to_add_idx = mod_l.index(fil_to_add)
+            n_fil += 1
+            for mod in mod_l[0:mod_to_add_idx+1]:
+                path_def += mod + " + "
+
+            path_def += "process.HLTEndSequence )\n"
+
+            paths.append(path_def)
+            
+            self.InsertPath(path_def, self.currentline)
+
     def CloneModule(self, module_name, in_class="Module"):
 
         line, mod_def = ModMenu.FindModule(self.menu, module_name)

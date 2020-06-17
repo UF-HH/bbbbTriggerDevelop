@@ -224,7 +224,7 @@ trigger_list = ""
 trigger_names = man.GetAllPaths()
 for name in trigger_names:
     trigger_list = trigger_list + "'{}',".format(name)
-trigger_names = trigger_names[:-1]
+trigger_list = trigger_list[:-1]
 
 man.CreateFromLocal(in_class="MyHLTAnalyzer",mod_name="MyHLTAnalyzer", triggerList = trigger_list)
 man.InsertInMenu(in_class="MyHLTAnalyzer",process_name = 'in_class')
