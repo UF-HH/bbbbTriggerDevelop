@@ -290,4 +290,10 @@ class ModMan:
     def AddModuleToPath(self, path, modname, pos='last'):
         ModMenu.AddToPath(self.menu, path, modname, pos)
 
+    def SavePaths(self, outname):
+        f = open(menu_file, "wr")
+        f.write(self.pathnames)
+        f.close()
+
+
 
