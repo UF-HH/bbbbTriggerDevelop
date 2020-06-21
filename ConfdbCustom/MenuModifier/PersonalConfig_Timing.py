@@ -168,7 +168,7 @@ man.Insert("process.HLT_Quad30_Double60_Sum2LeadingBTag015 = cms.Path( process.H
 
 if args.tr:
     print("@[Info]: Adding timing files as inputs... ")
-    man.AddDASQuery(files)
+    man.AddDASQuery(file_list)
 
 
 print("@[EndJob]: Done")
