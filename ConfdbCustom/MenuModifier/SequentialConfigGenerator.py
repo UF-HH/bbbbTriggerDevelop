@@ -34,12 +34,13 @@ parser.add_argument('-prescale', '--prescale', type=float, required=False, help=
 parser.add_argument('-output', '--output', type=str, required=False, help="Outputmodules inside the menu")
 parser.add_argument('-input', '--input', type=str, required=False, help="Input files")
 parser.add_argument('-setup', '--setup', default="setup_cff", required=False, help="setup name")
-parser.add_argument('-TimingRun', '--tr', required=False, help="select a run to query files")
+parser.add_argument('-TimingRun', '--tr', type=str, required=False, help="select a run to query files")
 
 args = parser.parse_args()
 
 #if a timing run is required we query for files
 if args.tr and args.data:
+    args.tr = [int(item) for item in args.tr.split(',')]
     file_list = []
     for tr in args.tr:
         print("@[BeginQuery]: Query for timing files from run {}".format(tr))
