@@ -33,8 +33,19 @@ parser.add_argument('-prescale', '--prescale', type=float, required=False, help=
 parser.add_argument('-output', '--output', type=str, required=False, help="Outputmodules inside the menu")
 parser.add_argument('-input', '--input', type=str, required=False, help="Input files")
 parser.add_argument('-setup', '--setup', default="setup_cff", required=False, help="setup name")
+parser.add_argument('-TimingRun', '--tr', type=int, required=False, help="select a run to query files")
 
 args = parser.parse_args()
+
+#if a timing run is required we query for files
+if args.tr and args.data:
+    file_list = []
+    for tr in args.tr:
+        print("@[BeginQuery]: Query for timing files from run {}".format(tr))
+        run , pu, ps, files = QueryForTimingFiles(tr)
+        file_list += files
+        args.prescale = ps
+        print("@[EndQuery]: Queried for {} files".format(len(files)))
 
 print("@[BeginJob]: Initiating... ")
 
@@ -213,9 +224,10 @@ man.Insert("process.SaveGen = cms.Sequence( process.prunedGenParticles + process
 man.Insert("process.SaveJets = cms.Path( process.HLTBeginSequence + process.hltL1sQuadJetC50to60IorHTT280to500IorHTT250to340QuadJet + process.hltPrePFHT330PT30QuadPFJet75604540TriplePFBTagDeepCSV4p5 +process.HLTAK4CaloJetsSequence + process.HLTBtagDeepCSVSequenceL3 + process.HLTAK4PFJetsSequence + process.HLTBtagDeepCSVSequencePF + process.SaveGen + process.SaveAllJetsMC + process.HLTEndSequence)\n")
 
 
-
-print("@[Info]: Adding Query for MC samples... ")
-man.AddDASQueryMC()
+if args.tr and arg.data:
+    print("@[Info]: Adding timing files as inputs... ")
+    man.AddDASQuery(file_list)
+else: man.AddDASQueryMC()
 
 
 #adding last analyzer with trigger of interest:
