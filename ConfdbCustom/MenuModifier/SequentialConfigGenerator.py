@@ -7,6 +7,8 @@
 # example usage MC: python SequentialConfigGenerator.py --menu=/dev/CMSSW_11_0_0/GRun/V7 -out=myHLT.py -gt=110X_mcRun3_2021_realistic_v6 -pr=myHLT \
 # -paths=HLTriggerFirstPath,HLT_PFHT330PT30_QuadPFJet_75_60_45_40_TriplePFBTagDeepCSV_4p5_v3,HLTriggerFinalPath,HLTAnalyzerEndpath --timing
 #
+# example usage Data: python SequentialConfigGenerator.py --menu=/online/collisions/2018/2e34/v3.6/HLT -gt=101X_dataRun2_HLT_v7 -out=myHLT.py -pr=myHLT -paths=HLTriggerFirstPath,HLT_PFHT330PT30_QuadPFJet_75_60_45_40_TriplePFBTagDeepCSV_4p5_v3,HLTriggerFinalPath,HLTAnalyzerEndpath --timing --tr 319941,316457,316058,315188,315106 --data
+#
 #--------------------------------------------------------------------------------------------------------------------------------
 
 import os
@@ -98,17 +100,26 @@ man.SetCurrentLine(option_str="after:#-------------My Analyzers-------------")
 man.MakeSpace(n=20) #caveat, does not work without this, problem with indexing inside man...Need to work on this
 man.SetCurrentLine(option_str="after:#-------------My Analyzers-------------")
 
-man.CreateFromLocal(in_class="SaveAllJetsMC",mod_name="SaveAllJetsMC")
-man.InsertInMenu(in_class="SaveAllJetsMC",process_name = 'in_class')
-man.AddLuminosityToModule("SaveAllJetsMC") #MC no need to specify json but analyzer wants an input
+if not args.data:
+    man.CreateFromLocal(in_class="SaveAllJetsMC",mod_name="SaveAllJetsMC")
+    man.InsertInMenu(in_class="SaveAllJetsMC",process_name = 'in_class')
+    man.AddLuminosityToModule("SaveAllJetsMC") #MC no need to specify json but analyzer wants an input
 
-man.Insert('process.load("SimGeneral.HepPDTESSource.pythiapdt_cfi")')
-man.AddGenParticleProd()
+    man.Insert('process.load("SimGeneral.HepPDTESSource.pythiapdt_cfi")')
+    man.AddGenParticleProd()
 
-man.CreateFromLocal(in_class="SaveGenHH", mod_name="SaveGenHH")
-man.InsertInMenu(in_class="SaveGenHH",process_name = 'in_class')
+    man.CreateFromLocal(in_class="SaveGenHH", mod_name="SaveGenHH")
+    man.InsertInMenu(in_class="SaveGenHH",process_name = 'in_class')
 
-man.Insert("\n")
+    man.Insert("\n")
+
+else:
+    man.CreateFromLocal(in_class="SaveAllJets",mod_name="SaveAllJets")
+    man.InsertInMenu(in_class="SaveAllJets",process_name = 'in_class')
+    man.AddLuminosityToModule("SaveAllJets") #MC no need to specify json but analyzer wants an input
+
+    man.Insert("\n")
+
 
 print("@[Info]: Adding Filters definintions... ")
 
@@ -222,8 +233,11 @@ man.InsertPath("process.HLT_CaloQuad30HT330_DoubleBTag_PF175_TriplePFBTagDeepCSV
 man.InsertPath("process.HLT_CaloQuad30HT330_DoubleBTag_PF175_260__TriplePFBTagDeepCSV_4p5_v3 = cms.Path( process.HLTBeginSequence + process.hltL1sQuadJetC50to60IorHTT280to500IorHTT250to340QuadJet + process.hltPrePFHT330PT30QuadPFJet75604540TriplePFBTagDeepCSV4p5 + process.HLTAK4CaloJetsSequence  + process.hltQuadCentralJet30 + process.hltCaloJetsQuad30ForHt + process.hltHtMhtCaloJetsQuadC30 + process.hltCaloQuadJet30HT320 + process.HLTBtagDeepCSVSequenceL3 + process.hltBTagCaloDeepCSVp17Double + process.HLTAK4PFJetsSequence + process.hlt2PFCentralJetLooseID60 + process.hlt1PFCentralJetLooseID75 + process.HLTBtagDeepCSVSequencePF + process.hltBTagPFDeepCSV4p5Triple + process.HLTEndSequence )\n")
 
 #analyzers path
-man.Insert("process.SaveGen = cms.Sequence( process.prunedGenParticles + process.SaveGenHH)\n")
-man.Insert("process.SaveJets = cms.Path( process.HLTBeginSequence + process.hltL1sQuadJetC50to60IorHTT280to500IorHTT250to340QuadJet + process.hltPrePFHT330PT30QuadPFJet75604540TriplePFBTagDeepCSV4p5 +process.HLTAK4CaloJetsSequence + process.HLTBtagDeepCSVSequenceL3 + process.HLTAK4PFJetsSequence + process.HLTBtagDeepCSVSequencePF + process.SaveGen + process.SaveAllJetsMC + process.HLTEndSequence)\n")
+if not args.data:
+    man.Insert("process.SaveGen = cms.Sequence( process.prunedGenParticles + process.SaveGenHH)\n")
+    man.Insert("process.SaveJets = cms.Path( process.HLTBeginSequence + process.hltL1sQuadJetC50to60IorHTT280to500IorHTT250to340QuadJet + process.hltPrePFHT330PT30QuadPFJet75604540TriplePFBTagDeepCSV4p5 +process.HLTAK4CaloJetsSequence + process.HLTBtagDeepCSVSequenceL3 + process.HLTAK4PFJetsSequence + process.HLTBtagDeepCSVSequencePF + process.SaveGen + process.SaveAllJetsMC + process.HLTEndSequence)\n")
+else:
+    man.Insert("process.SaveJets = cms.Path( process.HLTBeginSequence + process.hltL1sQuadJetC50to60IorHTT280to500IorHTT250to340QuadJet + process.hltPrePFHT330PT30QuadPFJet75604540TriplePFBTagDeepCSV4p5 +process.HLTAK4CaloJetsSequence + process.HLTBtagDeepCSVSequenceL3 + process.HLTAK4PFJetsSequence + process.HLTBtagDeepCSVSequencePF + process.SaveAllJets + process.HLTEndSequence)\n") 
 
 
 if args.tr and args.data:
@@ -245,6 +259,6 @@ man.InsertInMenu(in_class="MyHLTAnalyzer",process_name = 'in_class')
 man.SetCurrentLine(option_str="before:process.SaveAllJetsMC.inputs")
 man.AddLuminosityToModule("MyHLTAnalyzer", line=False) #MC no need to specify json but analyzer wants an input
 
-man.AddModuleToPath("process.HLTAnalyzerEndpath", "process.MyHLTAnalyzer")
+#man.AddModuleToPath("process.HLTAnalyzerEndpath", "process.MyHLTAnalyzer")
 
 print("@[EndJob]: Done")
