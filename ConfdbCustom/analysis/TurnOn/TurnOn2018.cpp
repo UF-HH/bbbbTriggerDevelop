@@ -1,4 +1,4 @@
-//c++ -o tmp TurnOnSumBmHH.cpp ../src/TriggerMaker.cc ../src/Event.cc `root-config --cflags --glibs`
+//c++ -o tmp TurnOn2018.cpp ../src/TriggerMaker.cc ../src/Event.cc `root-config --cflags --glibs`
 #include <iostream>
 #include <vector>
 #include <string>
@@ -51,7 +51,7 @@ int main(){
     Event ev(f, branch, genbranch);
 
     //retrieving infos from HLTAnalyzer which stores the online HLT decision
-    std::vector<std::string> path_names = {"HLT_Quad30_Double60_Sum2LeadingBTag_1p5_v1", "HLT_Quad30_Double60_Sum2LeadingBTag_1p5_v2", "HLT_Quad30_Double60_Sum2LeadingBTag_1p5_v3", "HLT_Quad30_Double60_Sum2LeadingBTag_1p5_v4", "HLT_Quad30_Double60_Sum2LeadingBTag_1p5_v5","HLT_Quad30_Double60_Sum2LeadingBTag_1p5_v6", "HLT_Quad30_Double60_Sum2LeadingBTag_1p5_v7"};
+    std::vector<std::string> path_names = {"HLT_PFHT330PT30_QuadPFJet_75_60_45_40_TriplePFBTagDeepCSV_4p5_v3_v1", "HLT_PFHT330PT30_QuadPFJet_75_60_45_40_TriplePFBTagDeepCSV_4p5_v3_v2", "HLT_PFHT330PT30_QuadPFJet_75_60_45_40_TriplePFBTagDeepCSV_4p5_v3_v3", "HLT_PFHT330PT30_QuadPFJet_75_60_45_40_TriplePFBTagDeepCSV_4p5_v3_v4", "HLT_PFHT330PT30_QuadPFJet_75_60_45_40_TriplePFBTagDeepCSV_4p5_v3_v5", "HLT_PFHT330PT30_QuadPFJet_75_60_45_40_TriplePFBTagDeepCSV_4p5_v3_v6", "HLT_PFHT330PT30_QuadPFJet_75_60_45_40_TriplePFBTagDeepCSV_4p5_v3_v7", "HLT_PFHT330PT30_QuadPFJet_75_60_45_40_TriplePFBTagDeepCSV_4p5_v3_v8", "HLT_PFHT330PT30_QuadPFJet_75_60_45_40_TriplePFBTagDeepCSV_4p5_v3_v9", "HLT_PFHT330PT30_QuadPFJet_75_60_45_40_TriplePFBTagDeepCSV_4p5_v3_v10", "HLT_PFHT330PT30_QuadPFJet_75_60_45_40_TriplePFBTagDeepCSV_4p5_v3_v11"};
     std::vector<std::string> variables = {"p_{T}^{4} Calo Offline (Gev)", "p_{T}^{2} Calo Offline (Gev)", "#sum^{i=2} btag^{i} Calo", "p_{T}^{4} PF Offline (Gev)", "p_{T}^{2} PF Offline (Gev)", "#sum^{i=2} btag^{i} PF" };
     std::vector<int> trigcount_;
     std::vector<std::vector<int>> event_bits_;
@@ -69,7 +69,7 @@ int main(){
         event_bits_.push_back(trigcount_);
     }
 
-    std::string trig_name = "HLT_Quad30_Double60_Sum2LeadingBTag_1p3";
+    std::string trig_name = "HLT_PFHT330PT30_QuadPFJet_75_60_45_40_TriplePFBTagDeepCSV_4p5_v3";
     
     TH1F* h_tot = new TH1F("mHHTurnOn", "mHHTurnOn", 50, 0, 1200);
     TH1F* h_cut = new TH1F("mHHTurnOn_cut", "mHHTurnOn_cut", 50, 0, 1200);
@@ -83,7 +83,7 @@ int main(){
     TLegend* leg = new TLegend(.89, .89, .45, .7);
     leg->SetBorderSize(0);
     leg->AddEntry(h_tot, "Tot Evts After L1 2018 Seed");
-    leg->AddEntry(h_cut, "Passed HLT_Quad30_Double60_Sum2LeadingBTag_1p3");
+    leg->AddEntry(h_cut, "Passed HLT_PFHT330PT30_QuadPFJet_75_60_45_40_TriplePFBTagDeepCSV_4p5_v3");
     
     for(int ev_idx = 0; ev_idx < event_bits_.size(); ev_idx++){
 
@@ -112,9 +112,12 @@ int main(){
 
             int count = 0;
             for(int i = 1; i < evb.size(); i++){
+                std::cout << evb.at(i) << std::endl;
                 if(evb.at(i) == 0) break;
                 count++;
             }
+
+            std::cout << "-----------" << std::endl;
 
             if (count == evb.size()-1) {
                 h_cut->Fill(mHH);
@@ -124,7 +127,8 @@ int main(){
 
     }
 
-
+    std::cout << (double)h_tot->GetEntries() << std::endl;
+    std::cout << (double)h_cut->GetEntries() << std::endl;
     std::cout << (double)h_cut->GetEntries()/h_tot->GetEntries() << std::endl;
 
     gStyle->SetOptStat(0);
@@ -135,6 +139,7 @@ int main(){
 
     leg->AddEntry(eff, "Efficiency");
 
+    h_tot->SetTitle("");
     double max = h_tot->GetMaximum();
     h_tot->Scale(1./max);
     h_cut->Scale(1./max);
@@ -152,7 +157,7 @@ int main(){
     std::string canv_save_title = "plots/" + trig_name + "_mHH.pdf";
     c->SaveAs((canv_save_title).c_str());
 
-    TFile* f_o = new TFile("SumBTag1p3_weights.root", "RECREATE");
+    TFile* f_o = new TFile("2018Trig_mHHweights.root", "RECREATE");
     eff->Write("mHH_weight");
     f_o->Write();
     f_o->Close();
