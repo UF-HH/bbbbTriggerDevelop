@@ -65,6 +65,10 @@ def SaveAllJetsMC(L1JetTag = "'hltGtStage2Digis'", L1Jet = "'Jet'", PFJetTag = "
     module = 'cms.EDAnalyzer("SaveAllJetsRecoMC",\nL1JetTag = cms.InputTag( {},{} ),\nPFJetTag = cms.InputTag({}),\nGenJetTag = cms.InputTag({}),\nGenNoNuJetTag = cms.InputTag({}),\nCaloJetTag = cms.InputTag({}),\nPFBJetTag = cms.InputTag({},{}),\nCaloBJetTag = cms.InputTag({},{}),\nRecoTag = cms.InputTag({}),\nverbose = cms.bool({}),\ntree = cms.string({})\n)\n'.format(L1JetTag, L1Jet, PFJetTag, GenJetTag, GenNoNuJetTag, CaloJetTag, PFBJetTag, PFBTag, CaloBJetTag, CaloBTag, RecoTag, verbose, tree)
     return module
 
+def SaveRecoJ(RecoTag = "'slimmedJets'", verbose = True, tree = "'Jets'"):
+    module = 'cms.EDAnalyzer("SaveRecoJ",\nRecoTag = cms.InputTag({}),\nverbose = cms.bool({}),\ntree = cms.string({})\n)\n'.format(RecoTag, verbose, tree)
+    return module
+
 def SaveGenHH(genP = "'prunedGenParticles'", verbose = False, tree = "'Gen'"):
     module = 'cms.EDAnalyzer("SaveGenHH",\ngenP = cms.InputTag({}),\nverbose = cms.bool({}),\ntree = cms.string({})\n)\n'.format(genP, verbose, tree)
     return module

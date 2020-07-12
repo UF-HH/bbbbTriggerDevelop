@@ -37,6 +37,7 @@ parser.add_argument('-output', '--output', type=str, required=False, help="Outpu
 parser.add_argument('-input', '--input', type=str, required=False, help="Input files")
 parser.add_argument('-setup', '--setup', default="setup_cff", required=False, help="setup name")
 parser.add_argument('-TimingRun', '--tr', type=str, required=False, help="select a run to query files")
+parser.add_argument('-outfile', '--of', type=str, required=True, help="Name of output file")
 
 args = parser.parse_args()
 
@@ -101,9 +102,9 @@ man.MakeSpace(n=20) #caveat, does not work without this, problem with indexing i
 man.SetCurrentLine(option_str="after:#-------------My Analyzers-------------")
 
 if not args.data:
-    man.CreateFromLocal(in_class="SaveAllJetsMC",mod_name="SaveAllJetsMC")
-    man.InsertInMenu(in_class="SaveAllJetsMC",process_name = 'in_class')
-    man.AddLuminosityToModule("SaveAllJetsMC") #MC no need to specify json but analyzer wants an input
+    man.CreateFromLocal(in_class="SaveRecoJ",mod_name="SaveRecoJ")
+    man.InsertInMenu(in_class="SaveRecoJ",process_name = 'in_class')
+    man.AddLuminosityToModule("SaveRecoJ") #MC no need to specify json but analyzer wants an input
 
     man.Insert('process.load("SimGeneral.HepPDTESSource.pythiapdt_cfi")')
     man.AddGenParticleProd()
@@ -173,7 +174,7 @@ man.Insert("#------------- Services ------------ \n")
 
 print("@[Info]: Adding Services... ")
 
-man.AddTFileService(file_name="SequentialForTurnOn.root")
+man.AddTFileService(file_name="{}".format(args.outfile))
 
 man.SetCurrentLine(FindLastPath(menu_path))
 man.Insert("\n")
@@ -244,7 +245,7 @@ man.InsertPath("process.HLT_CaloQuad30HT330_DoubleBTag_PF175_260__TriplePFBTagDe
 #analyzers path
 if not args.data:
     man.Insert("process.SaveGen = cms.Sequence( process.prunedGenParticles + process.SaveGenHH)\n")
-    man.Insert("process.SaveJets = cms.Path( process.HLTBeginSequence + process.hltL1sQuadJetC50to60IorHTT280to500IorHTT250to340QuadJet + process.hltPrePFHT330PT30QuadPFJet75604540TriplePFBTagDeepCSV4p5 +process.HLTAK4CaloJetsSequence + process.HLTBtagDeepCSVSequenceL3 + process.HLTAK4PFJetsSequence + process.HLTBtagDeepCSVSequencePF + process.SaveGen + process.SaveAllJetsMC + process.HLTEndSequence)\n")
+    man.Insert("process.SaveJets = cms.Path( process.HLTBeginSequence + process.SaveGen + process.SaveRecoJ + process.HLTEndSequence)\n")
 else:
     man.Insert("process.SaveJets = cms.Path( process.HLTBeginSequence + process.hltL1sQuadJetC50to60IorHTT280to500IorHTT250to340QuadJet + process.hltPrePFHT330PT30QuadPFJet75604540TriplePFBTagDeepCSV4p5 +process.HLTAK4CaloJetsSequence + process.HLTBtagDeepCSVSequenceL3 + process.HLTAK4PFJetsSequence + process.HLTBtagDeepCSVSequencePF + process.SaveAllJets + process.HLTEndSequence)\n") 
 
@@ -265,9 +266,9 @@ trigger_list = trigger_list[:-1]
 
 man.CreateFromLocal(in_class="MyHLTAnalyzer",mod_name="MyHLTAnalyzer", triggerList = trigger_list)
 man.InsertInMenu(in_class="MyHLTAnalyzer",process_name = 'in_class')
-man.SetCurrentLine(option_str="before:process.SaveAllJetsMC.inputs")
+man.SetCurrentLine(option_str="before:process.SaveRecoJ.inputs")
 man.AddLuminosityToModule("MyHLTAnalyzer", line=False) #MC no need to specify json but analyzer wants an input
 
-#man.AddModuleToPath("process.HLTAnalyzerEndpath", "process.MyHLTAnalyzer")
+man.AddModuleToPath("process.HLTAnalyzerEndpath", "process.MyHLTAnalyzer")
 
 print("@[EndJob]: Done")

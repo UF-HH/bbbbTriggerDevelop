@@ -51,7 +51,7 @@ int main(){
     Event ev(f, branch, genbranch);
 
     //retrieving infos from HLTAnalyzer which stores the online HLT decision
-    std::vector<std::string> path_names = {"HLT_PFHT330PT30_QuadPFJet_75_60_45_40_TriplePFBTagDeepCSV_4p5_v3_v1", "HLT_PFHT330PT30_QuadPFJet_75_60_45_40_TriplePFBTagDeepCSV_4p5_v3_v2", "HLT_PFHT330PT30_QuadPFJet_75_60_45_40_TriplePFBTagDeepCSV_4p5_v3_v3", "HLT_PFHT330PT30_QuadPFJet_75_60_45_40_TriplePFBTagDeepCSV_4p5_v3_v4", "HLT_PFHT330PT30_QuadPFJet_75_60_45_40_TriplePFBTagDeepCSV_4p5_v3_v5", "HLT_PFHT330PT30_QuadPFJet_75_60_45_40_TriplePFBTagDeepCSV_4p5_v3_v6", "HLT_PFHT330PT30_QuadPFJet_75_60_45_40_TriplePFBTagDeepCSV_4p5_v3_v7", "HLT_PFHT330PT30_QuadPFJet_75_60_45_40_TriplePFBTagDeepCSV_4p5_v3_v8", "HLT_PFHT330PT30_QuadPFJet_75_60_45_40_TriplePFBTagDeepCSV_4p5_v3_v9", "HLT_PFHT330PT30_QuadPFJet_75_60_45_40_TriplePFBTagDeepCSV_4p5_v3_v10", "HLT_PFHT330PT30_QuadPFJet_75_60_45_40_TriplePFBTagDeepCSV_4p5_v3_v11"};
+    std::vector<std::string> path_names = {"HLT_Quad30_Double60_Sum2LeadingBTag_1p5_v1", "HLT_PFHT330PT30_QuadPFJet_75_60_45_40_TriplePFBTagDeepCSV_4p5_v3_v2", "HLT_PFHT330PT30_QuadPFJet_75_60_45_40_TriplePFBTagDeepCSV_4p5_v3_v3", "HLT_PFHT330PT30_QuadPFJet_75_60_45_40_TriplePFBTagDeepCSV_4p5_v3_v4", "HLT_PFHT330PT30_QuadPFJet_75_60_45_40_TriplePFBTagDeepCSV_4p5_v3_v5", "HLT_PFHT330PT30_QuadPFJet_75_60_45_40_TriplePFBTagDeepCSV_4p5_v3_v6", "HLT_PFHT330PT30_QuadPFJet_75_60_45_40_TriplePFBTagDeepCSV_4p5_v3_v7", "HLT_PFHT330PT30_QuadPFJet_75_60_45_40_TriplePFBTagDeepCSV_4p5_v3_v8", "HLT_PFHT330PT30_QuadPFJet_75_60_45_40_TriplePFBTagDeepCSV_4p5_v3_v9", "HLT_PFHT330PT30_QuadPFJet_75_60_45_40_TriplePFBTagDeepCSV_4p5_v3_v10", "HLT_PFHT330PT30_QuadPFJet_75_60_45_40_TriplePFBTagDeepCSV_4p5_v3_v11"};
     std::vector<std::string> variables = {"p_{T}^{4} Calo Offline (Gev)", "p_{T}^{2} Calo Offline (Gev)", "#sum^{i=2} btag^{i} Calo", "p_{T}^{4} PF Offline (Gev)", "p_{T}^{2} PF Offline (Gev)", "#sum^{i=2} btag^{i} PF" };
     std::vector<int> trigcount_;
     std::vector<std::vector<int>> event_bits_;
@@ -112,12 +112,9 @@ int main(){
 
             int count = 0;
             for(int i = 1; i < evb.size(); i++){
-                std::cout << evb.at(i) << std::endl;
                 if(evb.at(i) == 0) break;
                 count++;
             }
-
-            std::cout << "-----------" << std::endl;
 
             if (count == evb.size()-1) {
                 h_cut->Fill(mHH);
@@ -157,7 +154,7 @@ int main(){
     std::string canv_save_title = "plots/" + trig_name + "_mHH.pdf";
     c->SaveAs((canv_save_title).c_str());
 
-    TFile* f_o = new TFile("2018Trig_mHHweights.root", "RECREATE");
+    TFile* f_o = new TFile("weights/2018FullTrig_mHHweights.root", "RECREATE");
     eff->Write("mHH_weight");
     f_o->Write();
     f_o->Close();
