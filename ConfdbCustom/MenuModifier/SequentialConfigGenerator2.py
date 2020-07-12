@@ -37,7 +37,7 @@ parser.add_argument('-output', '--output', type=str, required=False, help="Outpu
 parser.add_argument('-input', '--input', type=str, required=False, help="Input files")
 parser.add_argument('-setup', '--setup', default="setup_cff", required=False, help="setup name")
 parser.add_argument('-TimingRun', '--tr', type=str, required=False, help="select a run to query files")
-parser.add_argument('-outfile', '--of', type=str, required=True, help="Name of output file")
+parser.add_argument('-outfile', '--outfile', type=str, required=True, help="Name of output file")
 
 args = parser.parse_args()
 
