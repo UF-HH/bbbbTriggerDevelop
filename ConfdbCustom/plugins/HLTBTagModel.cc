@@ -167,7 +167,6 @@ bool HLTBTagModel<T>::hltFilter(edm::Event& event,
       std::vector<double> FourleadingBTag(btags_val_.begin(), btags_val_.begin()+4);
       for(int i = 0; i < 4; i++){
           inputs_[std::to_string(i+1)+"BTag"] = FourleadingBTag.at(i);
-          std::cout << std::endl;
       }
   }
   else{
@@ -177,7 +176,6 @@ bool HLTBTagModel<T>::hltFilter(edm::Event& event,
       }
       for(int i = 0; i < 4; i++){
           inputs_[std::to_string(i+1)+"BTag"] = FourleadingBTag.at(i);
-          std::cout << std::endl;
       }
   }
   
