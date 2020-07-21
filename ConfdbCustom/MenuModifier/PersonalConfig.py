@@ -207,6 +207,7 @@ print("@[Info]: Adding Query for MC samples... ")
 man.AddDASQueryMC()
 
 
+"""
 #adding last analyzer with trigger of interest:
 man.SetCurrentLine(option_str="after:#-------------My Analyzers-------------")
 trigger_list = "" 
@@ -221,5 +222,6 @@ man.SetCurrentLine(option_str="before:process.SaveRecoJ.inputs")
 man.AddLuminosityToModule("MyHLTAnalyzer", line=False) #MC no need to specify json but analyzer wants an input
 
 man.AddModuleToPath("process.HLTAnalyzerEndpath", "process.MyHLTAnalyzer")
+"""
 
 print("@[EndJob]: Done")
