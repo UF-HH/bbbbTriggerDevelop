@@ -33,21 +33,29 @@ parser.add_argument('-prescale', '--prescale', type=float, required=False, help=
 parser.add_argument('-output', '--output', type=str, required=False, help="Outputmodules inside the menu")
 parser.add_argument('-input', '--input', type=str, required=False, help="Input files")
 parser.add_argument('-setup', '--setup', default="setup_cff", required=False, help="setup name")
-parser.add_argument('-TimingRun', '--tr', type=str, required=False, help="select a run to query files")
+parser.add_argument('-run', '--run', type=str, required=False, help="select a run to query files")
+parser.add_argument('-ls', '--ls', type=str, required=False, help="select a LS to query files")
 parser.add_argument('-outfile', '--outfile', type=str, required=True, help="Name of output file")
 
 args = parser.parse_args()
 
-#if a timing run is required we query for files
-if args.tr and args.data:
+#if a run is required we query for files
+if args.run and args.data:
     args.tr = [int(item) for item in args.tr.split(',')]
+    if args.ls:
+        args.ls = [int(item) for item in args.ls.split(',')]
+    else:
+        args.ls = [None]*len(args.tr)
+    
+    assert len(args.ls) == len(args.tr)
     file_list = []
-    for tr in args.tr:
-        print("@[BeginQuery]: Query for timing files from run {}".format(tr))
-        run , pu, ps, files = QueryForTimingFiles(tr)
+    for tr,ls_ in zip(args.tr, args.ls):
+        print("@[BeginQuery]: Query for DATA files from run {}, LS: {}".format(tr,ls_))
+        files = QueryFilesFromRuns(tr, ls_)
         file_list += files
-        args.prescale = ps
         print("@[EndQuery]: Queried for {} files".format(len(files)))
+
+    print("@[EndQuery]: Queried for a total of: {} DATA files".format(len(file_list)))
 
 print("@[BeginJob]: Initiating... ")
 
@@ -221,8 +229,8 @@ else:
     man.Insert("process.SaveJets = cms.Path( process.HLTBeginSequence + process.hltL1sQuadJetC50to60IorHTT280to500IorHTT250to340QuadJet + process.hltPrePFHT330PT30QuadPFJet75604540TriplePFBTagDeepCSV4p5 +process.HLTAK4CaloJetsSequence + process.HLTBtagDeepCSVSequenceL3 + process.HLTAK4PFJetsSequence + process.HLTBtagDeepCSVSequencePF + process.SaveAllJets + process.HLTEndSequence)\n") 
 
 
-if args.tr and args.data:
-    print("@[Info]: Adding timing files as inputs... ")
+if args.run and args.data:
+    print("@[Info]: Adding DATA files as inputs... ")
     man.AddDASQuery(file_list)
 else: man.AddDASQueryMC()
 
