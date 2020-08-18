@@ -62,7 +62,7 @@ if args.run and args.data:
     else:
         args.ls = [None]*len(args.tr)
     
-    assert len(args.ls) == len(args.tr)
+    assert len(args.ls) == len(args.run)
     file_list = []
     for tr,ls_ in zip(args.run, args.ls):
         print("@[BeginQuery]: Query for DATA files from run {}, LS: {}".format(tr,ls_))
