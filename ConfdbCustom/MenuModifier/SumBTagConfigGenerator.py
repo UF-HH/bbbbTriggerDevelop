@@ -263,15 +263,16 @@ man.InsertInMenu(in_class="MyHLTAnalyzer",process_name = 'in_class')
 #man.SetCurrentLine(option_str="before:process.SaveRecoJ.inputs")
 man.AddModuleToPath("process.HLTAnalyzerEndpath", "process.MyHLTAnalyzer")
 
-man.SetCurrentLine(option_str="before:#------------- My Filters -------------------")
+man.SetCurrentLine(option_str="after:#------------- My Filters -------------------")
 
 if args.data:
     man.AddLuminosityToModule("MyHLTAnalyzer", line=False) #MC no need to specify json but analyzer wants an input
     man.AddLuminosityToModule("SaveJets", line=False) #MC no need to specify json but analyzer wants an input
 
+"""
 if args.json:
     man.AddLuminosityJson(args.json, extend=True, process='MyHLTAnalyzer')
     man.AddLuminosityJson(args.json, extend=True, process='SaveJets')
-
+"""
 print("@[EndJob]: Done")
 
