@@ -245,20 +245,3 @@ man.AddModuleToPath("process.HLTAnalyzerEndpath", "process.MyHLTAnalyzer")
 
 print("@[EndJob]: Done")
 
-
-"""
-#adding last analyzer with trigger of interest:
-man.SetCurrentLine(option_str="after:#-------------My Analyzers-------------")
-trigger_list = "" 
-trigger_names = man.GetAllPaths()
-for name in trigger_names:
-    trigger_list = trigger_list + "'{}',".format(name)
-trigger_list = trigger_list[:-1]
-
-man.CreateFromLocal(in_class="MyHLTAnalyzer",mod_name="MyHLTAnalyzer", triggerList = trigger_list)
-man.InsertInMenu(in_class="MyHLTAnalyzer",process_name = 'in_class')
-man.SetCurrentLine(option_str="before:process.SaveRecoJ.inputs")
-man.AddLuminosityToModule("MyHLTAnalyzer", line=False) #MC no need to specify json but analyzer wants an input
-
-man.AddModuleToPath("process.HLTAnalyzerEndpath", "process.MyHLTAnalyzer")
-"""
