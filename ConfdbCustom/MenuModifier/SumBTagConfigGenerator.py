@@ -265,9 +265,11 @@ man.AddModuleToPath("process.HLTAnalyzerEndpath", "process.MyHLTAnalyzer")
 
 man.SetCurrentLine(option_str="after:#------------- My Filters -------------------")
 
-if args.data:
-    man.AddLuminosityToModule("MyHLTAnalyzer", line=False) #MC no need to specify json but analyzer wants an input
-    man.AddLuminosityToModule("SaveJets", line=False) #MC no need to specify json but analyzer wants an input
+if args.json:
+    man.AddLuminosityJson(args.json)
+
+man.AddLuminosityToModule("MyHLTAnalyzer", line=False) #MC no need to specify json but analyzer wants an input
+man.AddLuminosityToModule("SaveJets", line=False) #MC no need to specify json but analyzer wants an input
 
 """
 if args.json:
