@@ -66,7 +66,7 @@ if args.run and args.data:
     file_list = []
     for tr,ls_ in zip(args.run, args.ls):
         print("@[BeginQuery]: Query for DATA files from run {}, LS: {}".format(tr,ls_))
-        files = QueryFilesFromRuns(tr, ls_)
+        files = QueryFilesFromRuns([tr], ls_)
         file_list += files
         print("@[EndQuery]: Queried for {} files".format(len(files)))
 
