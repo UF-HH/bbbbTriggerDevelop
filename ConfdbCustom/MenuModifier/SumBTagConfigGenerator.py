@@ -169,6 +169,7 @@ man.InsertInMenu(in_class="hltDoublePFLeadingBTagSumCentralJet30",process_name =
 calo_names_th = []
 pf_names_th = []
 for th in np.arange(0.9, 2.1 , 0.1):
+    th = round(th, 2)
     #calos
     inclass_name = "hltDoubleLeadingBTagSumCentralJet30th{}".format(str(th).replace(".", "p"))
     calo_names_th.append([inclass_name, th])
