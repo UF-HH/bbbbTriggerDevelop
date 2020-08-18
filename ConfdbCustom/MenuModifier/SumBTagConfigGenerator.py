@@ -5,6 +5,7 @@
 # triggers from the analysis
 #
 # example usage MC: python SumBTagConfigGenerator.py --menu=/dev/CMSSW_11_0_0/GRun/V7 -out=myHLT.py -gt=110X_mcRun3_2021_realistic_v6 -pr=myHLT -paths=HLTriggerFirstPath,HLT_PFHT330PT30_QuadPFJet_75_60_45_40_TriplePFBTagDeepCSV_4p5_v3,HLTriggerFinalPath,HLTAnalyzerEndpath --timing
+# example usage Data: python SumBTagConfigGenerator.py --menu=/online/collisions/2018/2e34/v3.6/HLT -gt=101X_dataRun2_HLT_v7 -out=myHLT.py -pr=myHLT -paths=HLTriggerFirstPath,HLT_PFHT330PT30_QuadPFJet_75_60_45_40_TriplePFBTagDeepCSV_4p5_v3,HLTriggerFinalPath,HLTAnalyzerEndpath --timing  --data --run 323725,323725 --ls [18,22],[37,57]
 #
 #--------------------------------------------------------------------------------------------------------------------------------
 
@@ -41,7 +42,7 @@ args = parser.parse_args()
 
 #if a run is required we query for files
 if args.run and args.data:
-    args.tr = [int(item) for item in args.tr.split(',')]
+    args.run = [int(item) for item in args.run.split(',')]
     if args.ls:
         args.ls = [int(item) for item in args.ls.split(',')]
     else:
@@ -49,7 +50,7 @@ if args.run and args.data:
     
     assert len(args.ls) == len(args.tr)
     file_list = []
-    for tr,ls_ in zip(args.tr, args.ls):
+    for tr,ls_ in zip(args.run, args.ls):
         print("@[BeginQuery]: Query for DATA files from run {}, LS: {}".format(tr,ls_))
         files = QueryFilesFromRuns(tr, ls_)
         file_list += files
