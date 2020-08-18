@@ -261,17 +261,16 @@ trigger_list = trigger_list[:-1]
 man.CreateFromLocal(in_class="MyHLTAnalyzer",mod_name="MyHLTAnalyzer", triggerList = trigger_list)
 man.InsertInMenu(in_class="MyHLTAnalyzer",process_name = 'in_class')
 #man.SetCurrentLine(option_str="before:process.SaveRecoJ.inputs")
-man.AddLuminosityToModule("MyHLTAnalyzer", line=False) #MC no need to specify json but analyzer wants an input
-
 man.AddModuleToPath("process.HLTAnalyzerEndpath", "process.MyHLTAnalyzer")
 
 man.SetCurrentLine(option_str="before:#------------- My Filters -------------------")
 
+if args.data:
+    man.AddLuminosityToModule("MyHLTAnalyzer", line=False) #MC no need to specify json but analyzer wants an input
+    man.AddLuminosityToModule("SaveJets", line=False) #MC no need to specify json but analyzer wants an input
+
 if args.json:
     man.AddLuminosityJson(args.json, extend=True, process='MyHLTAnalyzer')
-
-if args.data:
-    man.AddLuminosityToModule("SaveJets", line=False) #MC no need to specify json but analyzer wants an input
     man.AddLuminosityJson(args.json, extend=True, process='SaveJets')
 
 print("@[EndJob]: Done")
