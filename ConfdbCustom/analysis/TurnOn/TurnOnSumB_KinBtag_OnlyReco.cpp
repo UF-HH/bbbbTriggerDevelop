@@ -41,6 +41,34 @@ double invMass(hltObj::Jet* j1, hltObj::Jet* j2, hltObj::Jet* j3, hltObj::Jet* j
 
 };
 
+bool PassedSkims(hltObj::Jets jets){
+
+    bool pass = true;
+    std::vector<double> results;
+    double PtMin = 40;
+    double PtMax = 1e99;
+    double EtaMax = 2.4;
+    double EtaMin = -2.4;
+    double BtagMin = 0.27;
+    int MinJets = 4;
+    int MinBtaggedJets = 3;
+
+    auto it = std::find_if(std::begin(jets.pt), std::end(jets.pt), [PtMin, PtMax](double i){return (i >= PtMin && i <= PtMax);});
+    while (it != std::end(jets.pt)) {
+        auto dis = std::distance(std::begin(jets.pt), it);
+        if(jets.eta.at(dis) <= EtaMax && jets.eta.at(dis) >= EtaMin)
+            results.emplace_back(jets.btag.at(dis));
+        it = std::find_if(std::next(it), std::end(jets.pt), [PtMin, PtMax](double i){return (i >= PtMin && i <= PtMax);});
+    }   
+    if(results.size() < MinJets || std::count_if(results.begin(), results.end(), [BtagMin](double i){return i > BtagMin;}) < MinBtaggedJets){
+        return false;
+    }
+    else{
+        return pass;
+    }
+
+};
+
 int main(){
 
 
@@ -67,37 +95,31 @@ int main(){
 
     //retrieving infos from HLTAnalyzer which stores the online HLT decision
     std::vector<std::string> path_names_Kin = {"HLT_Quad30_Double60_Sum2LeadingBTag_1p5_OnlyKin"};
-    std::vector<std::string> path_names_Btag = {"HLT_Quad30_Double60_Sum2LeadingBTag_1p5_OnlyBTag"};
+    std::vector<std::string> path_names_Btag = {"HLT_Quad30_Double60_Sum2LeadingBTag_1p5_v7"};
     std::vector<std::string> variables = {"p_{T}^{4} Calo Offline (Gev)", "p_{T}^{2} Calo Offline (Gev)", "#sum^{i=2} btag^{i} Calo", "p_{T}^{4} PF Offline (Gev)", "p_{T}^{2} PF Offline (Gev)", "#sum^{i=2} btag^{i} PF" };
-    std::vector<int> trigcount_Kin;
-    std::vector<int> trigcount_Btag;
-    std::vector<std::vector<int>> event_bits_Kin;
-    std::vector<std::vector<int>> event_bits_Btag;
-    trigcount_Kin.resize(path_names_Kin.size());
-    trigcount_Btag.resize(path_names_Btag.size());
+    int trigbit_Kin;
+    int trigbit_Btag;
+    std::vector<int> event_bits_Kin;
+    std::vector<int> event_bits_Btag;
 
     TTree* tree = (TTree*)f->Get("MyHLTAnalyzer/trgObjTree");
     std::cout << "[INFO]: Reading branches..." << std::endl;
-    for(int i = 0; i < path_names_Kin.size(); i++){
-        std::cout << "[INFO]: New branch ... " << path_names_Kin.at(i) << std::endl;
-        tree->SetBranchAddress(path_names_Kin.at(i).c_str(), &trigcount_Kin.at(i));
-    }
+    std::cout << "[INFO]: New branch ... " << path_names_Kin.at(0) << std::endl;
+    tree->SetBranchAddress(path_names_Kin.at(0).c_str(), &trigbit_Kin);
+    std::cout << "[INFO]: New branch ... " << path_names_Btag.at(0) << std::endl;
+    tree->SetBranchAddress(path_names_Btag.at(0).c_str(), &trigbit_Btag);
 
-    for(int i = 0; i < path_names_Btag.size(); i++){
-        std::cout << "[INFO]: New branch ... " << path_names_Btag.at(i) << std::endl;
-        tree->SetBranchAddress(path_names_Btag.at(i).c_str(), &trigcount_Btag.at(i));
-    }
 
     for (int ev=0; ev < tree->GetEntries(); ev++){
         tree->GetEntry(ev);
-        event_bits_Kin.push_back(trigcount_Kin);
-        event_bits_Btag.push_back(trigcount_Btag);
+        event_bits_Kin.push_back(trigbit_Kin);
+        event_bits_Btag.push_back(trigbit_Btag);
     }
 
     std::string trig_name = "HLT_Quad30_Double60_Sum2LeadingBTag_1p3";
     
-    TH1F* h_tot_kin = new TH1F("mHHTurnOn", "mHHTurnOn", 50, 0, 1200);
-    TH1F* h_cut_kin = new TH1F("mHHTurnOn_cut", "mHHTurnOn_cut", 50, 0, 1200);
+    TH1F* h_tot_kin = new TH1F("mHHTurnOn", "mHHTurnOn", 100, 0, 1500);
+    TH1F* h_cut_kin = new TH1F("mHHTurnOn_cut", "mHHTurnOn_cut", 100, 0, 1500);
 
     TH1F* h_tot_btag = new TH1F("BtagTurnOn", "BtagTurnOn", 30, 0, 2);
     TH1F* h_cut_btag = new TH1F("BtagTurnOn_cut", "BtagTurnOn_cut", 30, 0, 2);
@@ -123,11 +145,15 @@ int main(){
     leg1->SetBorderSize(0);
     leg1->AddEntry(h_tot_btag, "Tot Events");
     leg1->AddEntry(h_cut_btag, "Passed HLT_Quad30_Double60_Sum2LeadingBTag_1p3 Only Btag");
+
+    int count = 0;
     
     for(int ev_idx = 0; ev_idx < event_bits_Btag.size(); ev_idx++){
 
-        std::vector<int> evb_k = event_bits_Kin.at(ev_idx);
-        std::vector<int> evb_b = event_bits_Btag.at(ev_idx);
+        //retrieving the trigger bits (this will be unidimensional vectors)
+        int evb_k = event_bits_Kin.at(ev_idx);
+        int evb_b = event_bits_Btag.at(ev_idx);
+
 
         jets_tree->GetEntry(ev_idx);
 
@@ -148,6 +174,10 @@ int main(){
             RecoJ.at(RecoJ.size()-1)->e = RecoJets.e.at(i); //last jet added, add info about energy
         }
 
+        if (evb_b && PassedSkims(RecoJets)){
+            count++;
+        }
+
         std::vector<hltObj::Jet*> candidate_mhh;
 
         std::vector<double> btags = *reco_btag_;
@@ -160,35 +190,29 @@ int main(){
         }
 
         double mHH = invMass(candidate_mhh[0], candidate_mhh[1], candidate_mhh[2], candidate_mhh[3]);
-        h_tot_kin->Fill(mHH);
-
         std::sort(reco_btag_->begin(), reco_btag_->end(), std::greater<double>());
         double BtagSum = reco_btag_->at(0) + reco_btag_->at(1); //saving thrid btag score offline objectsdouble BtagSum = reco.btag.at(0) + reco.btag.at(1); //saving thrid btag score offline objects
-        h_tot_btag->Fill(BtagSum);
 
-        int count = 0;
-        for(int i = 0; i < evb_k.size(); i++){
-            //std::cout << evb_k.at(i) <<std::endl;
-            if(evb_k.at(i) == 0) break;
-            count++;
-        }
-        //std::cout << "------------" << std::endl;
+        //building histo 4 turn on curves
+        if(PassedSkims(RecoJets)){
 
-        if (count == evb_k.size()) {
-            h_cut_kin->Fill(mHH);
-        }
+            h_tot_kin->Fill(mHH);
 
-        count = 0;
-        for(int i = 0; i < evb_b.size(); i++){
-            if(evb_b.at(i) == 0) break;
-            count++;
-        }
+            if (evb_k) {
+                h_cut_kin->Fill(mHH);
+                h_tot_btag->Fill(BtagSum);
 
-        if (count == evb_b.size()) {
-            h_cut_btag->Fill(BtagSum);
+                if (evb_b) {
+                    h_cut_btag->Fill(BtagSum);
+                }
+
+            }
+
         }
 
     }
+
+    std::cout << "[INFO]: Trigger & preselections intersection: " << count << "/" << event_bits_Btag.size() << std::endl;
 
     std::cout << "[INFO] Kinematic statistics..." << std::endl;
     std::cout << (double)h_tot_kin->GetEntries() << std::endl;
@@ -201,6 +225,9 @@ int main(){
     std::cout << (double)h_cut_btag->GetEntries()/h_tot_btag->GetEntries() << std::endl;
 
     gStyle->SetOptStat(0);
+
+    TLatex T = TLatex();
+    TLatex T1 = TLatex();
 
     TCanvas* c = new TCanvas("c", "c", 1000, 1000, 1000, 700);
     TEfficiency* eff_kin = new TEfficiency(*h_cut_kin, *h_tot_kin);
@@ -223,6 +250,8 @@ int main(){
     h_cut_kin->Draw("hist same");
     leg->Draw();
     eff_kin->Draw("P same");
+    T.DrawLatexNDC(.45, .92, "#scale[0.6]{#font[52]{ggF#rightarrow HH #rightarrow bbbb, #sqrt{s} = 14 TeV, [k_{t},k_{#lambda}] = [1.0,1.0]}}");
+    T1.DrawLatexNDC(.1, .92, "#scale[1.]{ #font[62]{CMS} #font[52]{Preliminary} }");
     c->Draw();
     std::string canv_save_title = "plots/" + trig_name + "_mHH.pdf";
     c->SaveAs((canv_save_title).c_str());
@@ -255,6 +284,9 @@ int main(){
     h_cut_btag->Draw("hist same");
     leg1->Draw();
     eff_btag->Draw("P same");
+    T.DrawLatexNDC(.45, .92, "#scale[0.6]{#font[52]{ggF#rightarrow HH #rightarrow bbbb, #sqrt{s} = 14 TeV, [k_{t},k_{#lambda}] = [1.0,1.0]}}");
+    T1.DrawLatexNDC(.1, .92, "#scale[1.]{ #font[62]{CMS} #font[52]{Preliminary} }");
+
     c1->Draw();
     canv_save_title = "plots/" + trig_name + "_BtagSum.pdf";
     c1->SaveAs((canv_save_title).c_str());

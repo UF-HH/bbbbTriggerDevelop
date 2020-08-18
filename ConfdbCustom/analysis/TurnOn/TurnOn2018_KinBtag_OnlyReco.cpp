@@ -96,29 +96,23 @@ int main(){
     //retrieving infos from HLTAnalyzer which stores the online HLT decision
     std::vector<std::string> path_names_Kin = {"HLT_2018_OnlyKin"};
     std::vector<std::string> path_names_Btag = {"HLT_PFHT330PT30_QuadPFJet_75_60_45_40_TriplePFBTagDeepCSV_4p5_v3_v11"};
-    std::vector<int> trigcount_Kin;
-    std::vector<int> trigcount_Btag;
-    std::vector<std::vector<int>> event_bits_Kin;
-    std::vector<std::vector<int>> event_bits_Btag;
-    trigcount_Kin.resize(path_names_Kin.size());
-    trigcount_Btag.resize(path_names_Btag.size());
+    int trigbit_Kin;
+    int trigbit_Btag;
+    std::vector<int> event_bits_Kin;
+    std::vector<int> event_bits_Btag;
 
     TTree* tree = (TTree*)f->Get("MyHLTAnalyzer/trgObjTree");
     std::cout << "[INFO]: Reading branches..." << std::endl;
-    for(int i = 0; i < path_names_Kin.size(); i++){
-        std::cout << "[INFO]: New branch ... " << path_names_Kin.at(i) << std::endl;
-        tree->SetBranchAddress(path_names_Kin.at(i).c_str(), &trigcount_Kin.at(i));
-    }
+    std::cout << "[INFO]: New branch ... " << path_names_Kin.at(0) << std::endl;
+    tree->SetBranchAddress(path_names_Kin.at(0).c_str(), &trigbit_Kin);
+    std::cout << "[INFO]: New branch ... " << path_names_Btag.at(0) << std::endl;
+    tree->SetBranchAddress(path_names_Btag.at(0).c_str(), &trigbit_Btag);
 
-    for(int i = 0; i < path_names_Btag.size(); i++){
-        std::cout << "[INFO]: New branch ... " << path_names_Btag.at(i) << std::endl;
-        tree->SetBranchAddress(path_names_Btag.at(i).c_str(), &trigcount_Btag.at(i));
-    }
 
     for (int ev=0; ev < tree->GetEntries(); ev++){
         tree->GetEntry(ev);
-        event_bits_Kin.push_back(trigcount_Kin);
-        event_bits_Btag.push_back(trigcount_Btag);
+        event_bits_Kin.push_back(trigbit_Kin);
+        event_bits_Btag.push_back(trigbit_Btag);
     }
 
     std::string trig_name = "HLT_PFHT330PT30_QuadPFJet_75_60_45_40_TriplePFBTagDeepCSV_4p5_v3";
@@ -151,12 +145,14 @@ int main(){
     leg1->AddEntry(h_tot_btag, "Tot Events");
     leg1->AddEntry(h_cut_btag, "Passed HLT_PFHT330PT30_QuadPFJet_75_60_45_40_TriplePFBTagDeepCSV_4p5_v3 Only Btag");
     
+    int count = 0;
+
     //cycling on the events
     for(int ev_idx = 0; ev_idx < event_bits_Btag.size(); ev_idx++){
         
         //retrieving the trigger bits (this will be unidimensional vectors)
-        std::vector<int> evb_k = event_bits_Kin.at(ev_idx);
-        std::vector<int> evb_b = event_bits_Btag.at(ev_idx);
+        int evb_k = event_bits_Kin.at(ev_idx);
+        int evb_b = event_bits_Btag.at(ev_idx);
 
         //loading the offline objects for this events
         jets_tree->GetEntry(ev_idx);
@@ -173,6 +169,11 @@ int main(){
         RecoJets.btag = *reco_btag_;
 
         std::vector<hltObj::Jet*> RecoJ;
+
+        if (evb_b && PassedSkims(RecoJets)){
+            count++;
+        }
+
 
         for(int i = 0; i < RecoJets.size(); i++){
             RecoJ.push_back(new hltObj::Jet(RecoJets.pt.at(i), RecoJets.eta.at(i), RecoJets.phi.at(i)));
@@ -201,25 +202,11 @@ int main(){
 
             h_tot_kin->Fill(mHH);
 
-            int count = 0;
-            for(int i = 0; i < evb_k.size(); i++){
-                //std::cout << evb_k.at(i) <<std::endl;
-                if(evb_k.at(i) == 0) break;
-                count++;
-            }
-            //std::cout << "------------" << std::endl;
-
-            if (count == evb_k.size()) {
+            if (evb_k) {
                 h_cut_kin->Fill(mHH);
                 h_tot_btag->Fill(btag3);
 
-                count = 0;
-                for(int i = 0; i < evb_b.size(); i++){
-                    if(evb_b.at(i) == 0) break;
-                    count++;
-                }
-
-                if (count == evb_b.size()) {
+                if (evb_b) {
                     h_cut_btag->Fill(btag3);
                 }
 
@@ -228,6 +215,8 @@ int main(){
         }
 
     }
+
+    std::cout << "[INFO]: Trigger & preselections intersection: " << count << "/" << event_bits_Btag.size() << std::endl;
 
     std::cout << "[INFO] Kinematic statistics..." << std::endl;
     std::cout << (double)h_tot_kin->GetEntries() << std::endl;
@@ -240,6 +229,9 @@ int main(){
     std::cout << (double)h_cut_btag->GetEntries()/h_tot_btag->GetEntries() << std::endl;
 
     gStyle->SetOptStat(0);
+
+    TLatex T = TLatex();
+    TLatex T1 = TLatex();
 
     TCanvas* c = new TCanvas("c", "c", 1000, 1000, 1000, 700);
     TEfficiency* eff_kin = new TEfficiency(*h_cut_kin, *h_tot_kin);
@@ -262,6 +254,8 @@ int main(){
     h_cut_kin->Draw("hist same");
     leg->Draw();
     eff_kin->Draw("P same");
+    T.DrawLatexNDC(.45, .92, "#scale[0.6]{#font[52]{ggF#rightarrow HH #rightarrow bbbb, #sqrt{s} = 14 TeV, [k_{t},k_{#lambda}] = [1.0,1.0]}}");
+    T1.DrawLatexNDC(.1, .92, "#scale[1.]{ #font[62]{CMS} #font[52]{Preliminary} }");
     c->Draw();
     std::string canv_save_title = "plots/" + trig_name + "_mHH.pdf";
     c->SaveAs((canv_save_title).c_str());
@@ -294,6 +288,8 @@ int main(){
     h_cut_btag->Draw("hist same");
     leg1->Draw();
     eff_btag->Draw("P same");
+    T.DrawLatexNDC(.45, .92, "#scale[0.6]{#font[52]{ggF#rightarrow HH #rightarrow bbbb, #sqrt{s} = 14 TeV, [k_{t},k_{#lambda}] = [1.0,1.0]}}");
+    T1.DrawLatexNDC(.1, .92, "#scale[1.]{ #font[62]{CMS} #font[52]{Preliminary} }");
     c1->Draw();
     canv_save_title = "plots/" + trig_name + "_batg3.pdf";
     c1->SaveAs((canv_save_title).c_str());
