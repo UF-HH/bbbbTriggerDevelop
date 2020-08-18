@@ -207,7 +207,7 @@ man.InsertPath("process.HLT_Quad30_Double60_Sum2LeadingBTag_OnlyKin = cms.Path( 
 
 for calo, pf in zip(calo_names_th, pf_names_th):
     th = int(calo[1]*10)
-    th = str(th[0]+"p"+th[1])
+    th = str(str(th)[0]+"p"+str(th)[1])
     man.InsertPath("process.HLT_Quad30_Double60_Sum2LeadingBTag{} = cms.Path( process.HLTBeginSequence + process.hltL1sQuadJetC50to60IorHTT280to500IorHTT250to340QuadJet + process.hltPrePFHT330PT30QuadPFJet75604540TriplePFBTagDeepCSV4p5 + process.HLTAK4CaloJetsSequence + process.hltQuadCentralJet30 + process.hltDoubleCentralJet60 + process.HLTBtagDeepCSVSequenceL3 + process.{} + process.HLTAK4PFJetsSequence + process.hltPFCentralJetLooseIDQuad30 + process.hlt2PFCentralJetLooseID60 + process.HLTBtagDeepCSVSequencePF + process.{}  + process.HLTEndSequence )\n".format(th, calo[0], pf[0]))
 
 #Benchmark +  analyzer
