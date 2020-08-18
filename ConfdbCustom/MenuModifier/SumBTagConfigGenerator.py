@@ -95,7 +95,7 @@ print("@[Info]: Adding Analyzers... ")
 
 man.Insert("#-------------My Analyzers-------------\n", ind=FindFirstSequence(menu_path)-1)
 man.SetCurrentLine(option_str="after:#-------------My Analyzers-------------")
-man.MakeSpace(n=20) #caveat, does not work without this, problem with indexing inside man...Need to work on this
+man.MakeSpace(n=100) #caveat, does not work without this, problem with indexing inside man...Need to work on this
 man.SetCurrentLine(option_str="after:#-------------My Analyzers-------------")
 
 if not args.data:
@@ -171,12 +171,12 @@ pf_names_th = []
 for th in np.arange(0.9, 2.1 , 0.1):
     #calos
     inclass_name = "hltDoubleLeadingBTagSumCentralJet30th{}".format(str(th).replace(".", "p"))
-    calo_names_th.append([inclass_name, th])
+    calo_names_th.append([inclass_name, str(th).replace(".", "p")])
     man.CreateFromLocal(in_class=inclass_name,mod_name="HLTBTagSumCalo", MinBTagSum=th)
     man.InsertInMenu(in_class=inclass_name, process_name = 'in_class')
     #pfs
     inclass_name = "hltDoublePFLeadingBTagSumCentralJet30th{}".format(str(th).replace(".", "p"))
-    pf_names_th.append([inclass_name, th])
+    pf_names_th.append([inclass_name, str(th).replace(".", "p")])
     man.CreateFromLocal(in_class=inclass_name,mod_name="HLTBTagSumPF", MinBTagSum=th)
     man.InsertInMenu(in_class=inclass_name, process_name = 'in_class')
 
@@ -214,7 +214,6 @@ for calo, pf in zip(calo_names_th, pf_names_th):
         f = th[0]
         s = th[1]
     th = str(f+"p"+s)
-    print(th)
     man.InsertPath("process.HLT_Quad30_Double60_Sum2LeadingBTag{} = cms.Path( process.HLTBeginSequence + process.hltL1sQuadJetC50to60IorHTT280to500IorHTT250to340QuadJet + process.hltPrePFHT330PT30QuadPFJet75604540TriplePFBTagDeepCSV4p5 + process.HLTAK4CaloJetsSequence + process.hltQuadCentralJet30 + process.hltDoubleCentralJet60 + process.HLTBtagDeepCSVSequenceL3 + process.{} + process.HLTAK4PFJetsSequence + process.hltPFCentralJetLooseIDQuad30 + process.hlt2PFCentralJetLooseID60 + process.HLTBtagDeepCSVSequencePF + process.{}  + process.HLTEndSequence )\n".format(th, calo[0], pf[0]))
 
 #Benchmark +  analyzer
