@@ -4,8 +4,8 @@
 # HLT menu with modules and
 # triggers from the analysis
 #
-# example usage MC: python SumBTagConfigGenerator.py --menu=/dev/CMSSW_11_0_0/GRun/V7 -out=myHLT.py -gt=110X_mcRun3_2021_realistic_v6 -pr=myHLT -paths=HLTriggerFirstPath,HLT_PFHT330PT30_QuadPFJet_75_60_45_40_TriplePFBTagDeepCSV_4p5_v3,HLTriggerFinalPath,HLTAnalyzerEndpath --timing
-# example usage Data: python SumBTagConfigGenerator.py --menu=/online/collisions/2018/2e34/v3.6/HLT -gt=101X_dataRun2_HLT_v7 -out=myHLT.py -pr=myHLT -paths=HLTriggerFirstPath,HLT_PFHT330PT30_QuadPFJet_75_60_45_40_TriplePFBTagDeepCSV_4p5_v3,HLTriggerFinalPath,HLTAnalyzerEndpath --timing  --data --run 323725,323725 --ls [18,22],[37,57]
+# example usage MC: python SumBTagConfigGenerator.py --menu=/dev/CMSSW_11_0_0/GRun/V7 -out=myHLT.py -gt=110X_mcRun3_2021_realistic_v6 -pr=myHLT -paths=HLTriggerFirstPath,HLT_PFHT330PT30_QuadPFJet_75_60_45_40_TriplePFBTagDeepCSV_4p5_v3,HLTriggerFinalPath,HLTAnalyzerEndpath --timing --outfile 
+# example usage Data: python SumBTagConfigGenerator.py --menu=/dev/CMSSW_10_1_0/GRun -gt=101X_dataRun2_HLT_v7 -out=myHLT.py -pr=myHLT -paths=HLTriggerFirstPath,HLT_PFHT330PT30_QuadPFJet_75_60_45_40_TriplePFBTagDeepCSV_4p5_v3,HLTriggerFinalPath,HLTAnalyzerEndpath --timing  --data --run 323725,323725 --ls [18,22],[37,57] --outfile SumBTagRateEstimate.root --json ../test/Json/json_2018D_Ephemeral_20181022_PU50.txt
 #
 #--------------------------------------------------------------------------------------------------------------------------------
 
@@ -51,6 +51,7 @@ parser.add_argument('-setup', '--setup', default="setup_cff", required=False, he
 parser.add_argument('-run', '--run', type=str, required=False, help="select a run to query files")
 parser.add_argument('-ls', '--ls', type=str, required=False, help="select a LS to query files")
 parser.add_argument('-outfile', '--outfile', type=str, required=True, help="Name of output file")
+parser.add_argument('-json', '--json', type=str, required=False, help="Name of golden json if data")
 
 args = parser.parse_args()
 
@@ -246,7 +247,6 @@ else:
 
 if args.run and args.data:
     print("@[Info]: Adding DATA files as inputs... ")
-    print(file_list)
     man.AddDASQuery(file_list)
 else: man.AddDASQueryMC()
 
@@ -264,6 +264,8 @@ man.SetCurrentLine(option_str="before:process.SaveRecoJ.inputs")
 man.AddLuminosityToModule("MyHLTAnalyzer", line=False) #MC no need to specify json but analyzer wants an input
 
 man.AddModuleToPath("process.HLTAnalyzerEndpath", "process.MyHLTAnalyzer")
+if args.json:
+    man.AddLuminosityJson(args.json)
 
 print("@[EndJob]: Done")
 
