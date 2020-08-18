@@ -19,6 +19,20 @@ from ModuleManager import ModMan
 import argparse
 import numpy as np
 
+def lumisectionGenerator(lumi_str):
+    lumi_str = lumi_str.split(',')
+    final_list = []
+    for entry in lumi_str:
+        if '[' in entry :
+            final_list.append(int(entry.replace('[', '')))
+        elif ']' in entry :
+            final_list.append(int(entry.replace(']', '')))
+        else:
+            continue
+    #grouping by two
+    final_list = [final_list[i:i+2] for i in range(0, len(final_list), 2)]
+    return final_list
+
 parser = argparse.ArgumentParser()
 parser.add_argument('-gt', '--globaltag', type=str, required=True, help="globaltag")
 parser.add_argument('-menu', '--menu', type=str, required=True, help="Menu config to be dumped")
@@ -44,7 +58,7 @@ args = parser.parse_args()
 if args.run and args.data:
     args.run = [int(item) for item in args.run.split(',')]
     if args.ls:
-        args.ls = [int(item) for item in args.ls.split(',')]
+        args.ls = lumisectionGenerator(args.ls)
     else:
         args.ls = [None]*len(args.tr)
     
