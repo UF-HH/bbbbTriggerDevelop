@@ -264,6 +264,9 @@ man.InsertInMenu(in_class="MyHLTAnalyzer",process_name = 'in_class')
 man.AddLuminosityToModule("MyHLTAnalyzer", line=False) #MC no need to specify json but analyzer wants an input
 
 man.AddModuleToPath("process.HLTAnalyzerEndpath", "process.MyHLTAnalyzer")
+
+man.SetCurrentLine(option_str="before:#------------- My Filters -------------------")
+
 if args.json:
     man.AddLuminosityJson(args.json, extend=True, process='MyHLTAnalyzer')
 
