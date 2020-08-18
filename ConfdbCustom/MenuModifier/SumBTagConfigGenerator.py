@@ -76,7 +76,7 @@ print("@[BeginJob]: Initiating... ")
 
 to_os = "hltGetConfiguration {} --globaltag {} --process {} --full".format(args.menu, args.globaltag, args.process)
 
-if args.data: to_os += " --data"
+if args.data: to_os += " --data --l1-emulator uGT --l1 L1Menu_Collisions2018_v1_0_0-d1_xml"
 else: to_os += " --mc"
 if args.offline: to_os += " --offline"
 if args.type: to_os += " --type {}".format(args.type)
