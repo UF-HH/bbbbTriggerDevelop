@@ -187,7 +187,7 @@ man.Insert("#------------- Services ------------ \n")
 
 print("@[Info]: Adding Services... ")
 
-man.AddTFileService(file_name="SumBtagTriggers.root")
+man.AddTFileService(file_name="{}".format(args.outfile))
 
 man.SetCurrentLine(FindLastPath(menu_path))
 man.Insert("\n")
