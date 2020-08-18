@@ -246,6 +246,7 @@ else:
 
 if args.run and args.data:
     print("@[Info]: Adding DATA files as inputs... ")
+    print(file_list)
     man.AddDASQuery(file_list)
 else: man.AddDASQueryMC()
 
