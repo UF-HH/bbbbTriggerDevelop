@@ -269,7 +269,7 @@ if args.json:
     man.AddLuminosityJson(args.json)
 
 man.AddLuminosityToModule("MyHLTAnalyzer", line=False) #MC no need to specify json but analyzer wants an input
-man.AddLuminosityToModule("SaveJets", line=False) #MC no need to specify json but analyzer wants an input
+man.AddLuminosityToModule("SaveAllJets", line=False) #MC no need to specify json but analyzer wants an input
 
 """
 if args.json:
