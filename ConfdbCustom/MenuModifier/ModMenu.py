@@ -378,6 +378,9 @@ def AddLumiToModule(module_name, empty=True):
         def_inputs += 'process.{}.inputs.lumisToProcess.extend(myList)\n'.format(module_name)
 
     return def_inputs
+def ExtendLumi(module_name):
+    def_inputs = 'process.{}.inputs.lumisToProcess.extend(myList)\n'.format(module_name)
+    return def_inputs
 
 def AddTFile(output_name):
     Service = 'process.TFileService = cms.Service("TFileService",\n\t\tfileName = cms.string("{}")\n)\n'.format(output_name)

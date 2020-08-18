@@ -222,11 +222,13 @@ class ModMan:
                     self.currentline = l-1
 
 
-    def AddLuminosityJson(self,json_file, line=False):
+    def AddLuminosityJson(self,json_file, line=False, extend=False, process=None):
         if line:
             self.currentline = line
         to_add = ModMenu.AddLumiAsInput(json_file)
         self.Insert( to_add, self.currentline)
+        if extend and process not None:
+            self.Insert( ModMenu.ExtendLumi(process), self.currentline)
         self.json = json_file
 
     def AddLuminosityToModule(self, process, empty=True, line=False):
@@ -235,6 +237,8 @@ class ModMan:
         to_add = ModMenu.AddLumiToModule(process, empty=empty)
         if not hasattr(self, "json"):
             to_add = to_add
+        else:
+            to_add = ModMenu.AddLumiToModule(process, empty=False)
         self.Insert( to_add, self.currentline)
         
 
