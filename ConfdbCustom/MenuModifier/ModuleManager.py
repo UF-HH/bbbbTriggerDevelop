@@ -227,7 +227,7 @@ class ModMan:
             self.currentline = line
         to_add = ModMenu.AddLumiAsInput(json_file)
         self.Insert( to_add, self.currentline)
-        if extend and process not None:
+        if extend and process != None:
             self.Insert( ModMenu.ExtendLumi(process), self.currentline)
         self.json = json_file
 
