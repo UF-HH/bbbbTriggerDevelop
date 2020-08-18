@@ -267,5 +267,9 @@ man.AddModuleToPath("process.HLTAnalyzerEndpath", "process.MyHLTAnalyzer")
 if args.json:
     man.AddLuminosityJson(args.json, extend=True, process='MyHLTAnalyzer')
 
+if args.data:
+    man.AddLuminosityToModule("SaveJets", line=False) #MC no need to specify json but analyzer wants an input
+    man.AddLuminosityJson(args.json, extend=True, process='SaveJets')
+
 print("@[EndJob]: Done")
 
