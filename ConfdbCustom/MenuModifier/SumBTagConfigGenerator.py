@@ -265,7 +265,7 @@ man.AddLuminosityToModule("MyHLTAnalyzer", line=False) #MC no need to specify js
 
 man.AddModuleToPath("process.HLTAnalyzerEndpath", "process.MyHLTAnalyzer")
 if args.json:
-    man.AddLuminosityJson(args.json)
+    man.AddLuminosityJson(args.json, extend=True, process='MyHLTAnalyzer')
 
 print("@[EndJob]: Done")
 
