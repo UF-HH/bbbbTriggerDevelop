@@ -422,3 +422,49 @@ def AddGenParticleProducer():
 )\n"""
     return gpp
 
+def AddHLTAnalyzerEndPathModules():
+
+    toadd = """process.hltFEDSelector = cms.EDProducer( "EvFFEDSelector",\n
+    inputTag = cms.InputTag( "rawDataCollector" ),\n
+    fedList = cms.vuint32( 1023, 1024 )\n
+)\n
+process.hltTriggerSummaryAOD = cms.EDProducer( "TriggerSummaryProducerAOD",\n
+    moduleLabelPatternsToSkip = cms.vstring(  ),\n
+    processName = cms.string( "@" ),\n
+    moduleLabelPatternsToMatch = cms.vstring( 'hlt*' ),\n
+    throw = cms.bool( False )\n
+)\n
+process.hltTriggerSummaryRAW = cms.EDProducer( "TriggerSummaryProducerRAW",\n
+    processName = cms.string( "@" )\n
+)\n
+
+process.hltPreHLTAnalyzerEndpath = cms.EDFilter( "HLTPrescaler",\n
+    L1GtReadoutRecordTag = cms.InputTag( "hltGtStage2Digis" ),\n
+    offset = cms.uint32( 0 )\n
+)\n
+process.hltL1TGlobalSummary = cms.EDAnalyzer( "L1TGlobalSummary",\n
+    ExtInputTag = cms.InputTag( "hltGtStage2Digis" ),\n
+    MaxBx = cms.int32( 0 ),\n
+    DumpRecord = cms.bool( False ),\n
+    psFileName = cms.string( "prescale_L1TGlobal.csv" ),\n
+    ReadPrescalesFromFile = cms.bool( False ),\n
+    AlgInputTag = cms.InputTag( "hltGtStage2Digis" ),\n
+    MinBx = cms.int32( 0 ),\n
+    psColumn = cms.int32( 0 ),\n
+    DumpTrigResults = cms.bool( False ),\n
+    DumpTrigSummary = cms.bool( True )\n
+)\n
+process.hltTrigReport = cms.EDAnalyzer( "HLTrigReport",\n
+    ReferencePath = cms.untracked.string( "HLTriggerFinalPath" ),\n
+    ReferenceRate = cms.untracked.double( 100.0 ),\n
+    serviceBy = cms.untracked.string( "never" ),\n
+    resetBy = cms.untracked.string( "never" ),\n
+    reportBy = cms.untracked.string( "job" ),\n
+    HLTriggerResults = cms.InputTag( 'TriggerResults','','@currentProcess' )\n
+)\n"""
+
+    return toadd
+
+def AddHLTAnalyzerEndPath():
+    toadd = "process.HLTAnalyzerEndpath = cms.EndPath( process.hltGtStage2Digis + process.hltPreHLTAnalyzerEndpath + process.hltL1TGlobalSummary + process.hltTrigReport )\n"
+

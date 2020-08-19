@@ -6,7 +6,7 @@
 #
 # example usage MC: python SumBTagConfigGenerator.py --menu=/dev/CMSSW_11_0_0/GRun/V7 -out=myHLT.py -gt=110X_mcRun3_2021_realistic_v6 -pr=myHLT -paths=HLTriggerFirstPath,HLT_PFHT330PT30_QuadPFJet_75_60_45_40_TriplePFBTagDeepCSV_4p5_v3,HLTriggerFinalPath,HLTAnalyzerEndpath --timing --outfile 
 # example usage Data: python SumBTagConfigGenerator.py --menu=/dev/CMSSW_10_1_0/GRun -gt=101X_dataRun2_HLT_v7 -out=myHLT.py -pr=myHLT -paths=HLTriggerFirstPath,HLT_PFHT330PT30_QuadPFJet_75_60_45_40_TriplePFBTagDeepCSV_4p5_v3,HLTriggerFinalPath,HLTAnalyzerEndpath --timing  --data --run 323725,323725 --ls [18,22],[37,57] --outfile SumBTagRateEstimate.root --json ../test/Json/json_2018D_Ephemeral_20181022_PU50.txt
-#
+# example usage Data online menu (no HLTAnalyzerEndPath) --menu=/online/collisions/2018/2e34/v3.6/HLT -gt=101X_dataRun2_HLT_v7 -out=myHLT.py -pr=myHLT -paths=HLTriggerFirstPath,HLT_PFHT330PT30_QuadPFJet_75_60_45_40_TriplePFBTagDeepCSV_4p5_v3,HLTriggerFinalPath,HLTAnalyzerEndpath --timing  --data --run 323725,323725 --ls [18,22],[37,57] --outfile SumBTagOnlineRateEstimate.root --json ../test/Json/json_2018D_Ephemeral_20181022_PU50.txt
 #--------------------------------------------------------------------------------------------------------------------------------
 
 import os
@@ -119,7 +119,7 @@ print("@[Info]: Adding Analyzers... ")
 
 man.Insert("#-------------My Analyzers-------------\n", ind=FindFirstSequence(menu_path)-1)
 man.SetCurrentLine(option_str="after:#-------------My Analyzers-------------")
-man.MakeSpace(n=100) #caveat, does not work without this, problem with indexing inside man...Need to work on this
+man.MakeSpace(n=120) #caveat, does not work without this, problem with indexing inside man...Need to work on this
 man.SetCurrentLine(option_str="after:#-------------My Analyzers-------------")
 
 if not args.data:
@@ -206,6 +206,8 @@ for th in np.arange(0.9, 2.1 , 0.1):
     man.InsertInMenu(in_class=inclass_name, process_name = 'in_class')
 
 
+if "HLTAnalyzerEndPath" in args.paths and "online" in args.menu:
+    man.AddHLTAnalyzerEndPathModules()
 
 man.Insert("\n")
 man.Insert("#------------- Services ------------ \n")
@@ -244,6 +246,8 @@ if not args.data:
 else:
     man.Insert("process.SaveJets = cms.Path( process.HLTBeginSequence + process.hltL1sQuadJetC50to60IorHTT280to500IorHTT250to340QuadJet + process.hltPrePFHT330PT30QuadPFJet75604540TriplePFBTagDeepCSV4p5 +process.HLTAK4CaloJetsSequence + process.HLTBtagDeepCSVSequenceL3 + process.HLTAK4PFJetsSequence + process.HLTBtagDeepCSVSequencePF + process.SaveAllJets + process.HLTEndSequence)\n") 
 
+if "HLTAnalyzerEndPath" in args.paths and "online" in args.menu:
+    man.AddHLTAnalyzerEndPath()
 
 if args.run and args.data:
     print("@[Info]: Adding DATA files as inputs... ")

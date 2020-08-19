@@ -262,6 +262,14 @@ class ModMan:
         genp = ModMenu.AddGenParticleProducer()
         self.Insert( genp, self.currentline)
 
+    def AddHLTAnalyzerEndPathModules(self):
+        hltaep = ModMenu.AddHLTAnalyzerEndPathModules()
+        self.Insert( hltaep, self.currentline )
+
+    def AddHLTAnalyzerEndPath(self):
+        hltaep = ModMenu.AddHLTAnalyzerEndPath()
+        self.Insert( hltaep, self.currentline )
+
     def InsertPrescaleModule(self, process_name, offset=0, name='strip'):
 
         if name == 'strip':
