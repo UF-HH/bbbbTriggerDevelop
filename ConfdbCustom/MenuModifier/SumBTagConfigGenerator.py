@@ -6,7 +6,7 @@
 #
 # example usage MC: python SumBTagConfigGenerator.py --menu=/dev/CMSSW_11_0_0/GRun/V7 -out=myHLT.py -gt=110X_mcRun3_2021_realistic_v6 -pr=myHLT -paths=HLTriggerFirstPath,HLT_PFHT330PT30_QuadPFJet_75_60_45_40_TriplePFBTagDeepCSV_4p5_v3,HLTriggerFinalPath,HLTAnalyzerEndpath --timing --outfile 
 # example usage Data: python SumBTagConfigGenerator.py --menu=/dev/CMSSW_10_1_0/GRun -gt=101X_dataRun2_HLT_v7 -out=myHLT.py -pr=myHLT -paths=HLTriggerFirstPath,HLT_PFHT330PT30_QuadPFJet_75_60_45_40_TriplePFBTagDeepCSV_4p5_v3,HLTriggerFinalPath,HLTAnalyzerEndpath --timing  --data --run 323725,323725 --ls [18,22],[37,57] --outfile SumBTagRateEstimate.root --json ../test/Json/json_2018D_Ephemeral_20181022_PU50.txt
-# example usage Data online menu (no HLTAnalyzerEndPath) --menu=/online/collisions/2018/2e34/v3.6/HLT -gt=101X_dataRun2_HLT_v7 -out=myHLT.py -pr=myHLT -paths=HLTriggerFirstPath,HLT_PFHT330PT30_QuadPFJet_75_60_45_40_TriplePFBTagDeepCSV_4p5_v3,HLTriggerFinalPath,HLTAnalyzerEndpath --timing  --data --run 323725,323725 --ls [18,22],[37,57] --outfile SumBTagOnlineRateEstimate.root --json ../test/Json/json_2018D_Ephemeral_20181022_PU50.txt
+# example usage Data online menu (no HLTAnalyzerEndPath): python SumBTagConfigGenerator.py --menu=/online/collisions/2018/2e34/v3.6/HLT -gt=101X_dataRun2_HLT_v7 -out=myHLT.py -pr=myHLT -paths=HLTriggerFirstPath,HLT_PFHT330PT30_QuadPFJet_75_60_45_40_TriplePFBTagDeepCSV_4p5_v3,HLTriggerFinalPath,HLTAnalyzerEndpath --timing  --data --run 323725,323725 --ls [18,22],[37,57] --outfile SumBTagOnlineRateEstimate.root --json ../test/Json/json_2018D_Ephemeral_20181022_PU50.txt
 #--------------------------------------------------------------------------------------------------------------------------------
 
 import os
@@ -207,6 +207,7 @@ for th in np.arange(0.9, 2.1 , 0.1):
 
 
 if "HLTAnalyzerEndPath" in args.paths and "online" in args.menu:
+    print("[Info]: online menu does not contain HLTAnalyzerEndPath as requested... Dumping from offline...")
     man.AddHLTAnalyzerEndPathModules()
 
 man.Insert("\n")
