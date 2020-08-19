@@ -80,10 +80,14 @@ if args.run and args.data:
 
 #if a timing run is required we query for files
 if args.tr and args.data:
-    print("@[BeginQuery]: Query for timing files from run {}".format(args.tr))
-    run , pu, ps, files = QueryForTimingFiles(args.tr)
-    args.prescale = ps
-    print("@[EndQuery]: Queried for {} files".format(len(files)))
+    args.tr = [int(item) for item in args.tr.split(',')]
+    file_list = []
+    for tr in args.tr:
+        print("@[BeginQuery]: Query for timing files from run {}".format(tr))
+        run , pu, ps, files = QueryForTimingFiles(tr)
+        file_list += files
+        args.prescale = ps
+        print("@[EndQuery]: Queried for {} files".format(len(files)))
 
 print("@[BeginJob]: Initiating... ")
 
