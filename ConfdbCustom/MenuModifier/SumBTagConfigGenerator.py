@@ -206,8 +206,8 @@ for th in np.arange(0.9, 2.1 , 0.1):
     man.InsertInMenu(in_class=inclass_name, process_name = 'in_class')
 
 
-if "HLTAnalyzerEndPath" in args.paths and "online" in args.menu:
-    print("[Info]: online menu does not contain HLTAnalyzerEndPath as requested... Dumping from offline...")
+if "HLTAnalyzerEndpath" in args.paths and "online" in args.menu:
+    print("[Info]: online menu does not contain HLTAnalyzerEndpath as requested... Dumping from offline...")
     man.AddHLTAnalyzerEndPathModules()
 
 man.Insert("\n")
@@ -247,7 +247,7 @@ if not args.data:
 else:
     man.Insert("process.SaveJets = cms.Path( process.HLTBeginSequence + process.hltL1sQuadJetC50to60IorHTT280to500IorHTT250to340QuadJet + process.hltPrePFHT330PT30QuadPFJet75604540TriplePFBTagDeepCSV4p5 +process.HLTAK4CaloJetsSequence + process.HLTBtagDeepCSVSequenceL3 + process.HLTAK4PFJetsSequence + process.HLTBtagDeepCSVSequencePF + process.SaveAllJets + process.HLTEndSequence)\n") 
 
-if "HLTAnalyzerEndPath" in args.paths and "online" in args.menu:
+if "HLTAnalyzerEndpath" in args.paths and "online" in args.menu:
     man.AddHLTAnalyzerEndPath()
 
 if args.run and args.data:
