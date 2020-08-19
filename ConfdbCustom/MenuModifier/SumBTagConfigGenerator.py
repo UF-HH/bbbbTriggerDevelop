@@ -31,7 +31,10 @@ def lumisectionGenerator(lumi_str):
             continue
     #grouping by two
     final_list = [final_list[i:i+2] for i in range(0, len(final_list), 2)]
-    return final_list
+    tot_list = []
+    for item in final_list:
+        tot_list.append([i for i in range(item[0], item[1]+1)])
+    return tot_list
 
 parser = argparse.ArgumentParser()
 parser.add_argument('-gt', '--globaltag', type=str, required=True, help="globaltag")
