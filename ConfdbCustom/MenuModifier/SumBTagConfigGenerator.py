@@ -267,6 +267,9 @@ if "HLTAnalyzerEndpath" in args.paths and "online" in args.menu:
 if args.run and args.data:
     print("@[Info]: Adding DATA files as inputs... ")
     man.AddDASQuery(file_list)
+elif args.tr and args.data:
+    print("@[Info]: Adding Timing DATA files as inputs... ")
+    man.AddDASQuery(file_list)
 else: man.AddDASQueryMC()
 
 #adding last analyzer with trigger of interest:
