@@ -467,4 +467,5 @@ process.hltTrigReport = cms.EDAnalyzer( "HLTrigReport",\n
 
 def AddHLTAnalyzerEndPath():
     toadd = "process.HLTAnalyzerEndpath = cms.EndPath( process.hltGtStage2Digis + process.hltPreHLTAnalyzerEndpath + process.hltL1TGlobalSummary + process.hltTrigReport )\n"
+    return toadd
 
