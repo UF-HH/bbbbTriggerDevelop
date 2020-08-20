@@ -171,7 +171,7 @@ bool CNN_prova<T>::hltFilter(edm::Event& event,
   }
 
   std::vector<tensorflow::Tensor> outputs;
-  tensorflow::run(session_, { { "input", input } }, { "output" }, &outputs);
+  tensorflow::run(session_, { { "input_4", input } }, { "dense_2/Sigmoid" }, &outputs);
   
   std::cout << outputs[0].matrix<float>()(0, 0) << std::endl;
 
