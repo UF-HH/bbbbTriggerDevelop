@@ -34,7 +34,7 @@ parser.add_argument('-output', '--output', type=str, required=False, help="Outpu
 parser.add_argument('-input', '--input', type=str, required=False, help="Input files")
 parser.add_argument('-setup', '--setup', default="setup_cff", required=False, help="setup name")
 parser.add_argument('-l1', '--l1', type=str, required=False, help="l1 xml config")
-parser.add_argument('-TimingRun', '--tr', type=int, required=False, help="select a run to query files")
+parser.add_argument('-tr', '--tr', required=False, help="select a run to query files")
 
 args = parser.parse_args()
 
