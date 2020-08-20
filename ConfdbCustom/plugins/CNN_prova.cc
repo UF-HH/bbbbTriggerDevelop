@@ -47,13 +47,13 @@ CNN_prova<T>::CNN_prova(const edm::ParameterSet& iConfig)
       m_MinPt(iConfig.getParameter<double>("MinPt")),
       m_MaxPt(iConfig.getParameter<double>("MaxPt")),
       m_TriggerType(iConfig.getParameter<int>("TriggerType")),
-      nnconfig(iConfig.getParameter<edm::FileInPath>("NNConfig")),
+      nnconfig(iConfig.getParameter<std::string>("NNConfig")),
       m_WP(iConfig.getParameter<double>("WorkingPoint")){
           m_JetsToken = consumes<std::vector<T>>(m_Jets), m_JetTagsToken = consumes<reco::JetTagCollection>(m_JetTags), m_JetsBaseToken = consumes<std::vector<T>>(m_JetsBase);
 
       tensorflow::setLogging("0");
       std::cout << "[Info] CNN_prova: Loading graph def from " << nnconfig << std::endl;
-      graphDef_ = tensorflow::loadGraphDef(nnconfig.fullPath());
+      graphDef_ = tensorflow::loadGraphDef(nnconfig);
       session_ = tensorflow::createSession(graphDef_);
 
 }
@@ -76,7 +76,7 @@ void CNN_prova<T>::fillDescriptions(edm::ConfigurationDescriptions& descriptions
   desc.add<double>("MinPt", -1);
   desc.add<double>("MaxPt", 999999.0);
   desc.add<int>("TriggerType", 0);
-  desc.add<edm::FileInPath>("NNConfig", edm::FileInPath("models_json/Calo_T4_HPU_CNN1D.pb"));
+  desc.add<std::string>("NNConfig", std::string("models_json/Calo_T4_HPU_CNN1D.pb"));
   desc.add<double>("WorkingPoint", 0.0);
   descriptions.add(defaultModuleLabel<CNN_prova<T>>(), desc);
 }

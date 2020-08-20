@@ -38,7 +38,7 @@ private:
   double m_MinEta, m_MaxEta;
   double m_MinPt, m_MaxPt;
   int m_TriggerType;
-  edm::FileInPath nnconfig;
+  std::string nnconfig;
   double m_WP;
   tensorflow::GraphDef* graphDef_;
   tensorflow::Session* session_;
