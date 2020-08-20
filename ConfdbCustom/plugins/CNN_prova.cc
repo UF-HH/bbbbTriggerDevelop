@@ -74,7 +74,7 @@ void CNN_prova<T>::fillDescriptions(edm::ConfigurationDescriptions& descriptions
   desc.add<double>("MinPt", -1);
   desc.add<double>("MaxPt", 999999.0);
   desc.add<int>("TriggerType", 0);
-  desc.add<edm::FileInPath>("NNConfig", edm::FileInPath("models_pb/FFNNHH_4b_lwtnn_2.json"));
+  desc.add<edm::FileInPath>("NNConfig", edm::FileInPath("models_json/Calo_T4_HPU_CNN1D.pb"));
   desc.add<double>("WorkingPoint", 0.0);
   descriptions.add(defaultModuleLabel<CNN_prova<T>>(), desc);
 }
