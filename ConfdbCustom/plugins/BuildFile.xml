@@ -16,5 +16,6 @@
 <use name="lwtnn"/>
 <use name="boost"/>
 <use name="CommonTools/MVAUtils"/>
+<use name="PhysicsTools/TensorFlow" />
 
 <flags EDM_PLUGIN="1"/>

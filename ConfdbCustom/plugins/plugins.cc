@@ -30,6 +30,9 @@
 #include "../interface/HLTBTagModel.h"
 #include "HLTBTagModel.cc"
 
+#include "../interface/CNN_prova.h"
+#include "CNN_prova.cc"
+
 using namespace reco;
 using namespace trigger;
 
@@ -59,6 +62,10 @@ typedef HLTBTagModel<PFJet> HLTBTagFFPF;
 typedef HLTKinModel<CaloJet> HLTKinFFCalo;
 typedef HLTKinModel<PFJet> HLTKinFFPF;
 
+//Prova
+typedef CNN_prova<CaloJet> CaloCNNProva;
+typedef CNN_prova<PFJet> PFCNNProva;
+
 DEFINE_FWK_MODULE(CaloSaver);
 DEFINE_FWK_MODULE(PFSaver);
 DEFINE_FWK_MODULE(CaloBSaver);
@@ -83,3 +90,7 @@ DEFINE_FWK_MODULE(HLTBTagFFPF);
 
 DEFINE_FWK_MODULE(HLTKinFFCalo);
 DEFINE_FWK_MODULE(HLTKinFFPF);
+
+//Prova
+DEFINE_FWK_MODULE(CaloCNNProva);
+DEFINE_FWK_MODULE(PFCNNProva);
