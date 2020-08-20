@@ -50,9 +50,11 @@ CNN_prova<T>::CNN_prova(const edm::ParameterSet& iConfig)
       nnconfig(iConfig.getParameter<edm::FileInPath>("NNConfig")),
       m_WP(iConfig.getParameter<double>("WorkingPoint")){
           m_JetsToken = consumes<std::vector<T>>(m_Jets), m_JetTagsToken = consumes<reco::JetTagCollection>(m_JetTags), m_JetsBaseToken = consumes<std::vector<T>>(m_JetsBase);
-  
-      metaGraph = tensorflow::loadMetaGraph(nnconfig.fullPath());
-      session = tensorflow::createSession(metaGraph, nnconfig.fullPath());
+
+      tensorflow::setLogging("0");
+      std::cout << "[Info] CNN_prova: Loading graph def from " << nnconfig << std::endl;
+      graphDef_ = tensorflow::loadGraphDef(nnconfig.fullPath());
+      session_ = tensorflow::createSession(graphDef_);
 
 }
 
@@ -130,7 +132,6 @@ bool CNN_prova<T>::hltFilter(edm::Event& event,
 
   TRef jetRef;
 
-  
   tensorflow::Tensor input(tensorflow::DT_FLOAT, { 1, 20 });
 
   // Look at all jets in decreasing order of Pt (corrected jets).
@@ -170,7 +171,7 @@ bool CNN_prova<T>::hltFilter(edm::Event& event,
   }
 
   std::vector<tensorflow::Tensor> outputs;
-  tensorflow::run(session, { { "input", input } }, { "output" }, &outputs);
+  tensorflow::run(session_, { { "input", input } }, { "output" }, &outputs);
   
   std::cout << outputs[0].matrix<float>()(0, 0) << std::endl;
 
@@ -180,4 +181,17 @@ bool CNN_prova<T>::hltFilter(edm::Event& event,
   //edm::LogInfo("") << " trigger accept ? = " << accept << " nTag/nJet = " << nTag << "/" << nJet << std::endl;
 
   return accept;
+}
+
+template <typename T>
+void CNN_prova<T>::endJob(){
+
+  // close the session
+    tensorflow::closeSession(session_);
+    session_ = nullptr;
+
+    // delete the graph
+    delete graphDef_;
+    graphDef_ = nullptr;
+
 }

@@ -25,6 +25,7 @@ public:
   bool hltFilter(edm::Event& event,
                  const edm::EventSetup& setup,
                  trigger::TriggerFilterObjectWithRefs& filterproduct) const override;
+  void endJob();
   
 private:
   edm::InputTag m_Jets;  // module label of input JetCollection
@@ -39,8 +40,8 @@ private:
   int m_TriggerType;
   edm::FileInPath nnconfig;
   double m_WP;
-  tensorflow::MetaGraphDef* metaGraph;
-  tensorflow::Session* session;
+  tensorflow::GraphDef* graphDef_;
+  tensorflow::Session* session_;
 };
 
 #endif  // CNN_prova_h
