@@ -209,7 +209,7 @@ bool CNN_prova<T>::hltFilter(edm::Event& event,
   float* int_array = static_cast<float*>(array);
 
   for(int in=0; in < 20; in++){
-    std::cout << "Input entry: " << in << " Value: " << int_array[in, 0, 0] << std::endl;
+    std::cout << "Input entry: " << in << " Value: " << int_array[in] << std::endl;
   }
 
 
