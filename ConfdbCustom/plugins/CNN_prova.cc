@@ -132,7 +132,7 @@ bool CNN_prova<T>::hltFilter(edm::Event& event,
 
   TRef jetRef;
 
-  tensorflow::Tensor input(tensorflow::DT_FLOAT, tensorflow::TensorShape({ 20,1,1 }));
+  tensorflow::Tensor input(tensorflow::DT_FLOAT, tensorflow::TensorShape({ 1,20,1 }));
   auto input_tensor_mapped = input.tensor<float, 3>();
   //float* d = input.flat<float>().data();
 
@@ -175,19 +175,19 @@ bool CNN_prova<T>::hltFilter(edm::Event& event,
         // std::cout << *d << std::endl;
         // d++;
 
-        input_tensor_mapped(nJet, 0, 0) = float(pt);
+        input_tensor_mapped(0, nJet, 0) = float(pt);
         //std::cout << input_tensor_mapped(nJet, 0, 0) << std::endl;
         nJet++;
-        input_tensor_mapped(nJet, 0, 0) = float(mass);
+        input_tensor_mapped(0, nJet, 0) = float(mass);
         //std::cout << input_tensor_mapped(nJet, 0, 0) << std::endl;
         nJet++;
-        input_tensor_mapped(nJet, 0, 0) = float(e);
+        input_tensor_mapped(0, nJet, 0) = float(e);
         //std::cout << input_tensor_mapped(nJet, 0, 0) << std::endl;
         nJet++;
-        input_tensor_mapped(nJet, 0, 0) = float(eta);
+        input_tensor_mapped(0, nJet, 0) = float(eta);
         //std::cout << input_tensor_mapped(nJet, 0, 0) << std::endl;
         nJet++;
-        input_tensor_mapped(nJet, 0, 0) = float(btag);
+        input_tensor_mapped(0, nJet, 0) = float(btag);
         //std::cout << input_tensor_mapped(nJet, 0, 0) << std::endl;
         nJet++;
 
