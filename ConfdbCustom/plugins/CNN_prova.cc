@@ -132,8 +132,8 @@ bool CNN_prova<T>::hltFilter(edm::Event& event,
 
   TRef jetRef;
 
-  tensorflow::Tensor input(tensorflow::DT_FLOAT, tensorflow::TensorShape({ 20,1,1 }));
-  auto input_tensor_mapped = input.tensor<float, 3>();
+  tensorflow::Tensor input(tensorflow::DT_FLOAT, tensorflow::TensorShape({ 20,1 }));
+  auto input_tensor_mapped = input.tensor<float, 2>();
   float* d = input.flat<float>().data();
 
   // Look at all jets in decreasing order of Pt (corrected jets).
@@ -175,19 +175,19 @@ bool CNN_prova<T>::hltFilter(edm::Event& event,
         // std::cout << *d << std::endl;
         // d++;
 
-        input_tensor_mapped(nJet, 0, 0) = float(pt);
+        input_tensor_mapped(nJet, 0) = float(pt);
         //std::cout << input_tensor_mapped(nJet, 0, 0) << std::endl;
         nJet++;
-        input_tensor_mapped(nJet, 0, 0) = float(mass);
+        input_tensor_mapped(nJet, 0) = float(mass);
         //std::cout << input_tensor_mapped(nJet, 0, 0) << std::endl;
         nJet++;
-        input_tensor_mapped(nJet, 0, 0) = float(e);
+        input_tensor_mapped(nJet, 0) = float(e);
         //std::cout << input_tensor_mapped(nJet, 0, 0) << std::endl;
         nJet++;
-        input_tensor_mapped(nJet, 0, 0) = float(eta);
+        input_tensor_mapped(nJet, 0) = float(eta);
         //std::cout << input_tensor_mapped(nJet, 0, 0) << std::endl;
         nJet++;
-        input_tensor_mapped(nJet, 0, 0) = float(btag);
+        input_tensor_mapped(nJet, 0) = float(btag);
         //std::cout << input_tensor_mapped(nJet, 0, 0) << std::endl;
         nJet++;
 
