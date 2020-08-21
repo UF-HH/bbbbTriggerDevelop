@@ -205,21 +205,22 @@ bool CNN_prova<T>::hltFilter(edm::Event& event,
     }
   }
 
-  auto array = input_tensor_mapped.data();
-  float* int_array = static_cast<float*>(array);
+  // auto array = input_tensor_mapped.data();
+  // float* int_array = static_cast<float*>(array);
 
-  for(int in=0; in < 20; in++){
-    std::cout << "Input entry: " << in << " Value: " << int_array[in] << std::endl;
-  }
+  // for(int in=0; in < 20; in++){
+  //   std::cout << "Input entry: " << in << " Value: " << int_array[in] << std::endl;
+  // }
 
 
   std::vector<tensorflow::Tensor> outputs;
   tensorflow::run(session_, { { "Input", input } }, { "Output/Sigmoid" }, &outputs);
   
-  std::cout << " -> " << outputs[0].matrix<float>()(0, 0) << std::endl << std::endl;
+  float result = outputs[0].matrix<float>()(0, 0);
+  std::cout << " -> " << result << std::endl << std::endl;
 
   //decision
-  bool accept(true);
+  bool accept(result >= m_WP);
 
   //edm::LogInfo("") << " trigger accept ? = " << accept << " nTag/nJet = " << nTag << "/" << nJet << std::endl;
 
