@@ -132,7 +132,8 @@ bool CNN_prova<T>::hltFilter(edm::Event& event,
 
   TRef jetRef;
 
-  tensorflow::Tensor input(tensorflow::DT_FLOAT, { 20,1,1 });
+  tensorflow::Tensor input(tensorflow::DT_FLOAT, tensorflow::TensorShape({ 20,1,1 }));
+  auto input_tensor_mapped = input.tensor<float, 3>();
   float* d = input.flat<float>().data();
 
   // Look at all jets in decreasing order of Pt (corrected jets).
@@ -150,7 +151,7 @@ bool CNN_prova<T>::hltFilter(edm::Event& event,
     }
     //jetRef = TRef(h_Jets, jet.first.key());
     //LogTrace("") << "Jet " << nJet << " : Pt = " << jet.first->pt() << " , tag value = " << jet.second;
-    if(nJet < 4){
+    if(nJet < 20){
 
         //input.matrix<float>()(0, nJet) = float(pt);
         //input.matrix<float>()(0, nJet+1) = float(mass);
@@ -158,25 +159,42 @@ bool CNN_prova<T>::hltFilter(edm::Event& event,
         //input.matrix<float>()(0, nJet+3) = float(eta);
         //input.matrix<float>()(0, nJet+4) = float(btag);
 
-        *d = float(pt);
-        std::cout << *d << std::endl;
-        d++;
-        *d = float(mass);
-        std::cout << *d << std::endl;
-        d++;
-        *d = float(e);
-        std::cout << *d << std::endl;
-        d++;
-        *d = float(eta);
-        std::cout << *d << std::endl;
-        d++;
-        *d = float(btag);
-        std::cout << *d << std::endl;
-        d++;
+        // *d = float(pt);
+        // std::cout << *d << std::endl;
+        // d++;
+        // *d = float(mass);
+        // std::cout << *d << std::endl;
+        // d++;
+        // *d = float(e);
+        // std::cout << *d << std::endl;
+        // d++;
+        // *d = float(eta);
+        // std::cout << *d << std::endl;
+        // d++;
+        // *d = float(btag);
+        // std::cout << *d << std::endl;
+        // d++;
+
+        input_tensor_mapped(nJet, 0, 0) = float(pt);
+        std::cout << input_tensor_mapped(nJet, 1, 1) << std::endl;
+        nJet++;
+        input_tensor_mapped(nJet, 1, 1) = float(mass);
+        std::cout << input_tensor_mapped(nJet, 1, 1) << std::endl;
+        nJet++;
+        input_tensor_mapped(nJet, 1, 1) = float(e);
+        std::cout << input_tensor_mapped(nJet, 1, 1) << std::endl;
+        nJet++;
+        input_tensor_mapped(nJet, 1, 1) = float(eta);
+        std::cout << input_tensor_mapped(nJet, 1, 1) << std::endl;
+        nJet++;
+        input_tensor_mapped(nJet, 1, 1) = float(btag);
+        std::cout << input_tensor_mapped(nJet, 1, 1) << std::endl;
+        nJet++;
+
     
     }
 
-    nJet++;
+    //nJet++;
 
     //Save all BTag Scores. Only for central jets eta < 2.5 and pt > 30, that's why the selection on pt and eta
     if ((m_MinTag <= btag) && (btag <= m_MaxTag) && (abs(eta) <= m_MaxEta) && (abs(eta) >= m_MinEta) &&
@@ -186,6 +204,9 @@ bool CNN_prova<T>::hltFilter(edm::Event& event,
         filterproduct.addObject(m_TriggerType, jetRef);
     }
   }
+
+  std::cout << input.matrix<float>()(0, 0) << std::endl;
+
 
   std::vector<tensorflow::Tensor> outputs;
   tensorflow::run(session_, { { "Input", input } }, { "Output/Sigmoid" }, &outputs);
