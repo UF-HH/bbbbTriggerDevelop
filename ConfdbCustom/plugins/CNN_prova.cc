@@ -205,7 +205,7 @@ bool CNN_prova<T>::hltFilter(edm::Event& event,
     }
   }
 
-  auto array = input.data();
+  auto array = input_tensor_mapped.data();
   int* int_array = static_cast<int*>(array);
 
   for(int in=0; in < 20; in++){
