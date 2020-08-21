@@ -133,7 +133,7 @@ bool CNN_prova<T>::hltFilter(edm::Event& event,
   TRef jetRef;
 
   tensorflow::Tensor input(tensorflow::DT_FLOAT, tensorflow::TensorShape({ 1,20,1 }));
-  auto input_tensor_mapped = input.tensor<float, 3>();
+  //auto input_tensor_mapped = input.tensor<float, 3>();
   float* d = input.flat<float>().data();
 
   // Look at all jets in decreasing order of Pt (corrected jets).
