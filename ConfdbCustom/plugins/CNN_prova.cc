@@ -206,7 +206,7 @@ bool CNN_prova<T>::hltFilter(edm::Event& event,
   }
 
   auto array = input_tensor_mapped.data();
-  int* int_array = static_cast<int*>(array);
+  float* int_array = static_cast<float*>(array);
 
   for(int in=0; in < 20; in++){
     std::cout << "Input entry: " << in << " Value: " << int_array[in, 0, 0] << std::endl;
