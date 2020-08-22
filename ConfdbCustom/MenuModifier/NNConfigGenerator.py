@@ -211,9 +211,6 @@ for th in np.arange(0.8, 0.98 , 0.01):
     #calos
     inclass_name = "hltFFNNHH4bCalowp{}".format(str(th).replace(".", "p"))
     calo_names_th.append([inclass_name, th])
-    man.CreateFromLocal(in_class=inclass_name,mod_name="HLTBTagSumCalo", MinBTagSum=th)
-    man.InsertInMenu(in_class=inclass_name, process_name = 'in_class')
-
     man.CreateFromLocal(in_class=inclass_name,mod_name="FFNNHH4bCalo", WorkingPoint=th)
     man.InsertInMenu(in_class=inclass_name,process_name = 'in_class')
 
