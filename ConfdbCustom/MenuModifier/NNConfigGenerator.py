@@ -163,10 +163,9 @@ man.Insert("#------------- My Filters -------------------\n")
 print("@[Info]: Adding Filters definintions... ")
 
 man.SetCurrentLine("after:#------------- My Filters -------------------")
-man.SetCurrentLine("after:#------------- My Filters -------------------")
 
-man.CreateFromLocal(in_class="FFNNHH4bCalowp0p87",mod_name="FFNNHH4bCalo")
-man.InsertInMenu(in_class="FFNNHH4bCalowp0p87",process_name = 'in_class')
+#man.CreateFromLocal(in_class="FFNNHH4bCalowp0p87",mod_name="FFNNHH4bCalo")
+#man.InsertInMenu(in_class="FFNNHH4bCalowp0p87",process_name = 'in_class')
 
 man.CreateFromLocal(in_class="CaloCNNT4HighPU0p9993",mod_name="CaloCNNT4HighPU")
 man.InsertInMenu(in_class="CaloCNNT4HighPU0p9993",process_name = 'in_class')
@@ -190,10 +189,10 @@ man.ModifyPar("hltDoubleCentralJet60", "triggerType", 86)
 man.InsertInMenu(in_class="hltDoubleCentralJet60",process_name = 'in_class')
 
 #Prescale for my paths
-man.InsertPrescaleModule('hltFFNNHH4bCalowp0p87', offset=0, name='strip')
-man.InsertPrescaleModule('hltCaloCNNT4HighPU0p9993', offset=0, name='strip')
-man.InsertPrescaleModule('hltCaloDNNprova', offset=0, name='strip')
-man.InsertPrescaleModule('hltKinFFCaloHH4bwp0p5BTagFFCaloHH4bwp0p85', offset=0, name='strip')
+#man.InsertPrescaleModule('hltFFNNHH4bCalowp0p87', offset=0, name='strip')
+#man.InsertPrescaleModule('hltCaloCNNT4HighPU0p9993', offset=0, name='strip')
+#man.InsertPrescaleModule('hltCaloDNNprova', offset=0, name='strip')
+#man.InsertPrescaleModule('hltKinFFCaloHH4bwp0p5BTagFFCaloHH4bwp0p85', offset=0, name='strip')
 
 #This module is present in /dev/CMSSW_11_0_0/GRun/V7, does not work if not present in the menu
 man.CloneModule("process.hltQuadCentralJet30", in_class="hltDoubleCentralJet60")
@@ -203,6 +202,7 @@ man.ModifyPar("hltDoubleCentralJet60", "MinN", 2)
 man.ModifyPar("hltDoubleCentralJet60", "inputTag", "'hltAK4CaloJetsCorrectedIDPassed'")
 man.ModifyPar("hltDoubleCentralJet60", "triggerType", 86)
 man.InsertInMenu(in_class="hltDoubleCentralJet60",process_name = 'in_class')
+
 
 #creating range for the NN, varying thresholds
 calo_names_th = []
@@ -220,6 +220,8 @@ if "HLTAnalyzerEndpath" in args.paths and "online" in args.menu:
     man.AddHLTAnalyzerEndPathModules()
 
 man.Insert("\n")
+
+
 man.Insert("#------------- Services ------------ \n")
 
 print("@[Info]: Adding Services... ")
@@ -235,6 +237,7 @@ print("@[Info]: Adding Paths... ")
 
 man.Insert("#-----------------My Paths-----------------\n")
 #New filters based
+
 
 for calo in calo_names_th:
     th = str(calo[1]).replace(".", "p")
