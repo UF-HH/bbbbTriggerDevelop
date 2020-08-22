@@ -164,8 +164,8 @@ print("@[Info]: Adding Filters definintions... ")
 
 man.SetCurrentLine("after:#------------- My Filters -------------------")
 
-#man.CreateFromLocal(in_class="FFNNHH4bCalowp0p87",mod_name="FFNNHH4bCalo")
-#man.InsertInMenu(in_class="FFNNHH4bCalowp0p87",process_name = 'in_class')
+man.CreateFromLocal(in_class="FFNNHH4bCalowp0p87",mod_name="FFNNHH4bCalo")
+man.InsertInMenu(in_class="FFNNHH4bCalowp0p87",process_name = 'in_class')
 
 man.CreateFromLocal(in_class="CaloCNNT4HighPU0p9993",mod_name="CaloCNNT4HighPU")
 man.InsertInMenu(in_class="CaloCNNT4HighPU0p9993",process_name = 'in_class')
@@ -204,6 +204,7 @@ man.ModifyPar("hltDoubleCentralJet60", "triggerType", 86)
 man.InsertInMenu(in_class="hltDoubleCentralJet60",process_name = 'in_class')
 
 
+"""
 #creating range for the NN, varying thresholds
 calo_names_th = []
 for th in np.arange(0.8, 0.98 , 0.01):
@@ -214,7 +215,7 @@ for th in np.arange(0.8, 0.98 , 0.01):
     man.CreateFromLocal(in_class=inclass_name,mod_name="FFNNHH4bCalo", WorkingPoint=th)
     man.InsertInMenu(in_class=inclass_name,process_name = 'in_class')
 
-
+"""
 if "HLTAnalyzerEndpath" in args.paths and "online" in args.menu:
     print("[Info]: online menu does not contain HLTAnalyzerEndpath as requested... Dumping from offline...")
     man.AddHLTAnalyzerEndPathModules()
@@ -238,13 +239,15 @@ print("@[Info]: Adding Paths... ")
 man.Insert("#-----------------My Paths-----------------\n")
 #New filters based
 
-
+"""
 for calo in calo_names_th:
     th = str(calo[1]).replace(".", "p")
     man.InsertPath("process.HLT_FFNNHHwp{} = cms.Path( process.HLTBeginSequence + process.hltL1sQuadJetC50to60IorHTT280to500IorHTT250to340QuadJet + process.HLTAK4CaloJetsSequence + process.HLTBtagDeepCSVSequenceL3 + process.{} + process.HLTEndSequence )\n".format(th, calo[0]))
+"""
 
 #Benchmark +  analyzer
 man.InsertPath("process.HLT_PFHT330PT30_QuadPFJet_75_60_45_40_TriplePFBTagDeepCSV_4p5_v3 = cms.Path( process.HLTBeginSequence + process.hltL1sQuadJetC50to60IorHTT280to500IorHTT250to340QuadJet + process.hltPrePFHT330PT30QuadPFJet75604540TriplePFBTagDeepCSV4p5 + process.HLTAK4CaloJetsSequence + process.hltQuadCentralJet30 + process.hltCaloJetsQuad30ForHt + process.hltHtMhtCaloJetsQuadC30 + process.hltCaloQuadJet30HT320 + process.HLTBtagDeepCSVSequenceL3 + process.hltBTagCaloDeepCSVp17Double + process.HLTAK4PFJetsSequence + process.hltPFCentralJetLooseIDQuad30 + process.hlt1PFCentralJetLooseID75 + process.hlt2PFCentralJetLooseID60 + process.hlt3PFCentralJetLooseID45 + process.hlt4PFCentralJetLooseID40 + process.hltPFCentralJetLooseIDQuad30forHt + process.hltHtMhtPFCentralJetsLooseIDQuadC30 + process.hltPFCentralJetsLooseIDQuad30HT330 + process.HLTBtagDeepCSVSequencePF + process.hltBTagPFDeepCSV4p5Triple + process.HLTEndSequence )\n")
+man.Insert("process.HLT_Quad30Double60_FFNNHH4bwp0p87Calo_PFQuad30 = cms.Path( process.HLTBeginSequence + process.hltL1sQuadJetC50to60IorHTT280to500IorHTT250to340QuadJet + process.hltPreFFNNHH4bCalowp0p87 + process.HLTAK4CaloJetsSequence + process.HLTBtagDeepCSVSequenceL3 + process.FFNNHH4bCalowp0p87 + process.HLTEndSequence )\n")
 
 #analyzers path
 if not args.data:
