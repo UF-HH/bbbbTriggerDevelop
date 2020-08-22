@@ -204,7 +204,7 @@ man.ModifyPar("hltDoubleCentralJet60", "triggerType", 86)
 man.InsertInMenu(in_class="hltDoubleCentralJet60",process_name = 'in_class')
 
 
-"
+
 #creating range for the NN, varying thresholds
 calo_names_th = []
 for th in np.arange(0.8, 0.98 , 0.01):
