@@ -197,7 +197,7 @@ bool DNN_prova<T>::hltFilter(edm::Event& event,
 
 
   std::vector<tensorflow::Tensor> outputs;
-  tensorflow::run(session_, { { "Input_6", input } }, { "Output_7/Sigmoid" }, &outputs);
+  tensorflow::run(session_, { { "Input", input } }, { "Output/Sigmoid" }, &outputs);
   
   //float result = outputs[0].matrix<float>()(0, 0);
   float result = *outputs[0].scalar<float>().data();
