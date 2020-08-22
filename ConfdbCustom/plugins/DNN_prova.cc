@@ -159,19 +159,19 @@ bool DNN_prova<T>::hltFilter(edm::Event& event,
         //input.matrix<float>()(0, nJet+4) = float(btag);
 
         *d = float(pt);
-        std::cout << "Input pt: " <<  *d << std::endl;
+        std::cout <<  *d << std::endl;
         d++;
         *d = float(mass);
-        std::cout << "Input mass: " <<  *d << std::endl;
+        std::cout  <<  *d << std::endl;
         d++;
         *d = float(e);
-        std::cout << "Input energy: " <<  *d << std::endl;        
+        std::cout  <<  *d << std::endl;        
         d++;
         *d = float(eta);
-        std::cout << "Input eta: " <<  *d << std::endl;       
+        std::cout  <<  *d << std::endl;       
         d++;
         *d = float(btag);
-        std::cout << "Input btag: " <<  *d << std::endl;
+        std::cout  <<  *d << std::endl;
         d++;
 
     
