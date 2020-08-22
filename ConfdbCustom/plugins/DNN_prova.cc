@@ -177,7 +177,7 @@ bool DNN_prova<T>::hltFilter(edm::Event& event,
     
     }
 
-    nJet++;
+    nJet+=5;
 
     //Save all BTag Scores. Only for central jets eta < 2.5 and pt > 30, that's why the selection on pt and eta
     if ((m_MinTag <= btag) && (btag <= m_MaxTag) && (abs(eta) <= m_MaxEta) && (abs(eta) >= m_MinEta) &&
