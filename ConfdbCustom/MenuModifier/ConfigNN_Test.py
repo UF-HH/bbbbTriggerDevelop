@@ -106,6 +106,9 @@ man.InsertInMenu(in_class="FFNNHH4bCalowp0p87",process_name = 'in_class')
 man.CreateFromLocal(in_class="CaloCNNT4HighPU0p9993",mod_name="CaloCNNT4HighPU")
 man.InsertInMenu(in_class="CaloCNNT4HighPU0p9993",process_name = 'in_class')
 
+man.CreateFromLocal(in_class="DNNProva0p87",mod_name="CaloDNNProva")
+man.InsertInMenu(in_class="DNNProva0p87",process_name = 'in_class')
+
 man.CreateFromLocal(in_class="KinFFCaloHH4bwp0p5",mod_name="KinFFCaloHH4b")
 man.InsertInMenu(in_class="KinFFCaloHH4bwp0p5",process_name = 'in_class')
 
@@ -124,6 +127,7 @@ man.InsertInMenu(in_class="hltDoubleCentralJet60",process_name = 'in_class')
 #Prescale for my paths
 man.InsertPrescaleModule('hltFFNNHH4bCalowp0p87', offset=0, name='strip')
 man.InsertPrescaleModule('hltCaloCNNT4HighPU0p9993', offset=0, name='strip')
+man.InsertPrescaleModule('hltCaloDNNprova', offset=0, name='strip')
 man.InsertPrescaleModule('hltKinFFCaloHH4bwp0p5BTagFFCaloHH4bwp0p85', offset=0, name='strip')
 
 #inserting my paths
@@ -138,6 +142,7 @@ man.Insert("#-----------------My Paths-----------------\n")
 man.Insert("process.HLT_PFHT330PT30_QuadPFJet_75_60_45_40_TriplePFBTagDeepCSV_4p5_v3 = cms.Path( process.HLTBeginSequence + process.hltL1sQuadJetC50to60IorHTT280to500IorHTT250to340QuadJet + process.hltPrePFHT330PT30QuadPFJet75604540TriplePFBTagDeepCSV4p5 + process.HLTAK4CaloJetsSequence + process.hltQuadCentralJet30 + process.hltCaloJetsQuad30ForHt + process.hltHtMhtCaloJetsQuadC30 + process.hltCaloQuadJet30HT320 + process.HLTBtagDeepCSVSequenceL3 + process.hltBTagCaloDeepCSVp17Double + process.HLTAK4PFJetsSequence + process.hltPFCentralJetLooseIDQuad30 + process.hlt1PFCentralJetLooseID75 + process.hlt2PFCentralJetLooseID60 + process.hlt3PFCentralJetLooseID45 + process.hlt4PFCentralJetLooseID40 + process.hltPFCentralJetLooseIDQuad30forHt + process.hltHtMhtPFCentralJetsLooseIDQuadC30 + process.hltPFCentralJetsLooseIDQuad30HT330 + process.HLTBtagDeepCSVSequencePF + process.hltBTagPFDeepCSV4p5Triple + process.HLTEndSequence )\n")
 #Inserting truly new paths
 man.Insert("process.HLT_Quad30Double60_FFNNHH4bwp0p87Calo_PFQuad30 = cms.Path( process.HLTBeginSequence + process.hltL1sQuadJetC50to60IorHTT280to500IorHTT250to340QuadJet + process.hltPreFFNNHH4bCalowp0p87 + process.HLTAK4CaloJetsSequence + process.HLTBtagDeepCSVSequenceL3 + process.FFNNHH4bCalowp0p87 + process.HLTEndSequence )\n")
+man.Insert("process.HLT_CaloDNNT4_HighPU0p87 = cms.Path( process.HLTBeginSequence + process.hltL1sQuadJetC50to60IorHTT280to500IorHTT250to340QuadJet + process.hltPreCaloDNNprova + process.HLTAK4CaloJetsSequence + process.HLTBtagDeepCSVSequenceL3 + process.DNNProva0p87 + process.HLTEndSequence )\n")
 man.Insert("process.HLT_CaloCNNT4_HighPU0p9993 = cms.Path( process.HLTBeginSequence + process.hltL1sQuadJetC50to60IorHTT280to500IorHTT250to340QuadJet + process.hltPreCaloCNNT4HighPU0p9993 + process.HLTAK4CaloJetsSequence + process.HLTBtagDeepCSVSequenceL3 + process.CaloCNNT4HighPU0p9993 + process.HLTEndSequence )\n")
 man.Insert("process.HLT_KinFFCaloHH4bwp0p5_BTagFFCaloHH4bwp0p85 = cms.Path( process.HLTBeginSequence + process.hltL1sQuadJetC50to60IorHTT280to500IorHTT250to340QuadJet + process.hltPreKinFFCaloHH4bwp0p5BTagFFCaloHH4bwp0p85 + process.HLTAK4CaloJetsSequence + process.HLTBtagDeepCSVSequenceL3 + process.KinFFCaloHH4bwp0p5 + process.BTagFFCaloHH4bwp0p85 + process.HLTEndSequence )\n")
 

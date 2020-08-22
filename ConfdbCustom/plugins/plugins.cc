@@ -33,6 +33,9 @@
 #include "../interface/CNN_prova.h"
 #include "CNN_prova.cc"
 
+#include "../interface/DNN_prova.h"
+#include "DNN_prova.cc"
+
 using namespace reco;
 using namespace trigger;
 
@@ -66,6 +69,8 @@ typedef HLTKinModel<PFJet> HLTKinFFPF;
 typedef CNN_prova<CaloJet> CaloCNNProva;
 typedef CNN_prova<PFJet> PFCNNProva;
 
+typedef DNN_prova<CaloJet> CaloDNNProva;
+
 DEFINE_FWK_MODULE(CaloSaver);
 DEFINE_FWK_MODULE(PFSaver);
 DEFINE_FWK_MODULE(CaloBSaver);
@@ -94,3 +99,5 @@ DEFINE_FWK_MODULE(HLTKinFFPF);
 //Prova
 DEFINE_FWK_MODULE(CaloCNNProva);
 DEFINE_FWK_MODULE(PFCNNProva);
+
+DEFINE_FWK_MODULE(CaloDNNProva);

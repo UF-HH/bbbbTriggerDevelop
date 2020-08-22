@@ -1,4 +1,4 @@
-#include "../interface/CNN_prova.h"
+#include "../interface/DNN_prova.h"
 
 #include <vector>
 #include <string>
@@ -35,7 +35,7 @@
 //
 
 template <typename T>
-CNN_prova<T>::CNN_prova(const edm::ParameterSet& iConfig)
+DNN_prova<T>::DNN_prova(const edm::ParameterSet& iConfig)
     : HLTFilter(iConfig),
       m_Jets(iConfig.getParameter<edm::InputTag>("Jets")),
       m_JetsBase(iConfig.getParameter<edm::InputTag>("BaseJets")),
@@ -52,18 +52,18 @@ CNN_prova<T>::CNN_prova(const edm::ParameterSet& iConfig)
           m_JetsToken = consumes<std::vector<T>>(m_Jets), m_JetTagsToken = consumes<reco::JetTagCollection>(m_JetTags), m_JetsBaseToken = consumes<std::vector<T>>(m_JetsBase);
 
       tensorflow::setLogging("0");
-      std::cout << "[Info] CNN_prova: Loading graph def from " << nnconfig << std::endl;
+      std::cout << "[Info] DNN_prova: Loading graph def from " << nnconfig << std::endl;
       graphDef_ = tensorflow::loadGraphDef(nnconfig);
       session_ = tensorflow::createSession(graphDef_);
 
 }
 
 template <typename T>
-CNN_prova<T>::~CNN_prova() = default;
+DNN_prova<T>::~DNN_prova() = default;
 
 
 template <typename T>
-void CNN_prova<T>::fillDescriptions(edm::ConfigurationDescriptions& descriptions) {
+void DNN_prova<T>::fillDescriptions(edm::ConfigurationDescriptions& descriptions) {
   edm::ParameterSetDescription desc;
   makeHLTFilterDescription(desc);
   desc.add<edm::InputTag>("Jets", edm::InputTag("hltJetCollection"));
@@ -76,9 +76,9 @@ void CNN_prova<T>::fillDescriptions(edm::ConfigurationDescriptions& descriptions
   desc.add<double>("MinPt", -1);
   desc.add<double>("MaxPt", 999999.0);
   desc.add<int>("TriggerType", 0);
-  desc.add<std::string>("NNConfig", std::string("models_json/Calo_T4_HPU_CNN1D.pb"));
-  desc.add<double>("WorkingPoint", 0.0);
-  descriptions.add(defaultModuleLabel<CNN_prova<T>>(), desc);
+  desc.add<std::string>("NNConfig", std::string("models_json/Calo_T4_HPU_FFNN_prova.pb"));
+  desc.add<double>("WorkingPoint", 0.87);
+  descriptions.add(defaultModuleLabel<DNN_prova<T>>(), desc);
 }
 
 //
@@ -87,7 +87,7 @@ void CNN_prova<T>::fillDescriptions(edm::ConfigurationDescriptions& descriptions
 
 /*
 template <typename T>
-input_t CNN_prova<T>::DummyInputGeneration() const{
+input_t DNN_prova<T>::DummyInputGeneration() const{
   
   return { {"inputs",{{"1LeadingPt", 1}, {"1LeadingEta", 1}, {"1LeadingPhi", 1}, {"1LeadingBTag", 1}, {"2LeadingPt", 1}, {"2LeadingEta", 1}, {"2LeadingPhi", 1}, {"2LeadingBTag", 1}, {"3LeadingPt", 1}, {"3LeadingEta", 1}, {"3LeadingPhi", 1}, {"3LeadingBTag", 1}, {"4LeadingPt", 1}, {"4LeadingEta", 1}, {"4LeadingPhi", 1}, {"4LeadingBTag", 1}, {"BTag1", 1}, {"BTag2", 1}, {"BTag3", 1}, {"BTag4", 1} }} };
 
@@ -96,7 +96,7 @@ input_t CNN_prova<T>::DummyInputGeneration() const{
 
 // ------------ method called to produce the data  ------------
 template <typename T>
-bool CNN_prova<T>::hltFilter(edm::Event& event,
+bool DNN_prova<T>::hltFilter(edm::Event& event,
                              const edm::EventSetup& setup,
                              trigger::TriggerFilterObjectWithRefs& filterproduct) const {
   using namespace std;
@@ -132,9 +132,8 @@ bool CNN_prova<T>::hltFilter(edm::Event& event,
 
   TRef jetRef;
 
-  tensorflow::Tensor input(tensorflow::DT_FLOAT, tensorflow::TensorShape({ 1,20,1 }));
-  auto input_tensor_mapped = input.tensor<float, 3>();
-  //float* d = input.flat<float>().data();
+  tensorflow::Tensor input(tensorflow::DT_FLOAT, tensorflow::TensorShape({ 1,20 }));
+  float* d = input.flat<float>().data();
 
   // Look at all jets in decreasing order of Pt (corrected jets).
   int nJet = 0;
@@ -159,37 +158,21 @@ bool CNN_prova<T>::hltFilter(edm::Event& event,
         //input.matrix<float>()(0, nJet+3) = float(eta);
         //input.matrix<float>()(0, nJet+4) = float(btag);
 
-        // *d = float(pt);
-        // std::cout << "Input pt: " <<  *d << std::endl;
-        // d++;
-        // *d = float(mass);
-        // std::cout << "Input mass: " <<  *d << std::endl;
-        // d++;
-        // *d = float(e);
-        // std::cout << "Input energy: " <<  *d << std::endl;        
-        // d++;
-        // *d = float(eta);
-        // std::cout << "Input eta: " <<  *d << std::endl;       
-        // d++;
-        // *d = float(btag);
-        // std::cout << "Input btag: " <<  *d << std::endl;
-        // d++;
-
-        input_tensor_mapped(0, nJet, 0) = float(pt);
-        //std::cout << input_tensor_mapped(nJet, 0, 0) << std::endl;
-        nJet++;
-        input_tensor_mapped(0, nJet, 0) = float(mass);
-        //std::cout << input_tensor_mapped(nJet, 0, 0) << std::endl;
-        nJet++;
-        input_tensor_mapped(0, nJet, 0) = float(e);
-        //std::cout << input_tensor_mapped(nJet, 0, 0) << std::endl;
-        nJet++;
-        input_tensor_mapped(0, nJet, 0) = float(eta);
-        //std::cout << input_tensor_mapped(nJet, 0, 0) << std::endl;
-        nJet++;
-        input_tensor_mapped(0, nJet, 0) = float(btag);
-        //std::cout << input_tensor_mapped(nJet, 0, 0) << std::endl;
-        nJet++;
+        *d = float(pt);
+        std::cout << "Input pt: " <<  *d << std::endl;
+        d++;
+        *d = float(mass);
+        std::cout << "Input mass: " <<  *d << std::endl;
+        d++;
+        *d = float(e);
+        std::cout << "Input energy: " <<  *d << std::endl;        
+        d++;
+        *d = float(eta);
+        std::cout << "Input eta: " <<  *d << std::endl;       
+        d++;
+        *d = float(btag);
+        std::cout << "Input btag: " <<  *d << std::endl;
+        d++;
 
     
     }
@@ -214,7 +197,7 @@ bool CNN_prova<T>::hltFilter(edm::Event& event,
 
 
   std::vector<tensorflow::Tensor> outputs;
-  tensorflow::run(session_, { { "Input", input } }, { "Output/Sigmoid" }, &outputs);
+  tensorflow::run(session_, { { "Input_6", input } }, { "Output_7/Sigmoid" }, &outputs);
   
   //float result = outputs[0].matrix<float>()(0, 0);
   float result = *outputs[0].scalar<float>().data();
@@ -229,7 +212,7 @@ bool CNN_prova<T>::hltFilter(edm::Event& event,
 }
 
 template <typename T>
-void CNN_prova<T>::endJob(){
+void DNN_prova<T>::endJob(){
 
   // close the session
     tensorflow::closeSession(session_);
