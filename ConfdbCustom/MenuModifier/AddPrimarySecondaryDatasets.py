@@ -3,9 +3,7 @@
 Add lines in menu to query for primary/secondary dataset RAW/AOD. Only works in current directory
 Due to sys.path.insert. Example:
 
-python AddPrimarySecondaryDatasets.py -d_P=/GluGluToHHTo4B_node_SM_TuneCP5_14TeV-madgraph-pythia8/Run3Winter20DRPremixMiniAOD-110X_mcRun3_2021_realistic_v6-v2/GEN-SIM-RAW \
--d_S=/GluGluToHHTo4B_node_SM_TuneCP5_14TeV-madgraph-pythia8/Run3Winter20DRPremixMiniAOD-110X_mcRun3_2021_realistic_v6-v2/MINIAODSIM -menu=../MC/hlt_gg_MyTrigger.py -keep \
- -out=hlt_gg_myTrigger_PS.py -line "last"
+python AddPrimarySecondaryDatasets.py -d_P=/GluGluToHHTo4B_node_SM_TuneCP5_14TeV-madgraph-pythia8/Run3Winter20DRPremixMiniAOD-110X_mcRun3_2021_realistic_v6-v2/GEN-SIM-RAW -d_S=/GluGluToHHTo4B_node_SM_TuneCP5_14TeV-madgraph-pythia8/Run3Winter20DRPremixMiniAOD-110X_mcRun3_2021_realistic_v6-v2/MINIAODSIM -menu=myHLT.py -line "last"
 
 """
 

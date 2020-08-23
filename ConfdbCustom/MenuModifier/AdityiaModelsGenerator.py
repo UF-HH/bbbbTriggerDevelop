@@ -4,10 +4,10 @@
 # HLT menu with modules and
 # triggers from the analysis
 #
-# example usage MC: python NNConfigGenerator.py --menu=/dev/CMSSW_11_0_0/GRun/V7 -out=myHLT.py -gt=110X_mcRun3_2021_realistic_v6 -pr=myHLT -paths=HLTriggerFirstPath,HLT_PFHT330PT30_QuadPFJet_75_60_45_40_TriplePFBTagDeepCSV_4p5_v3,HLTriggerFinalPath,HLTAnalyzerEndpath --timing --outfile 
-# example usage Data: python NNConfigGenerator.py --menu=/dev/CMSSW_10_1_0/GRun -gt=101X_dataRun2_HLT_v7 -out=myHLT.py -pr=myHLT -paths=HLTriggerFirstPath,HLT_PFHT330PT30_QuadPFJet_75_60_45_40_TriplePFBTagDeepCSV_4p5_v3,HLTriggerFinalPath,HLTAnalyzerEndpath --timing  --data --run 323725,323725 --ls [18,22],[37,57] --outfile NNRateEstimate.root --json ../test/Json/json_2018D_Ephemeral_20181022_PU50.txt
-# example usage Data online menu (no HLTAnalyzerEndPath): python NNConfigGenerator.py --menu=/online/collisions/2018/2e34/v3.6/HLT -gt=101X_dataRun2_HLT_v7 -out=myHLT.py -pr=myHLT -paths=HLTriggerFirstPath,HLT_PFHT330PT30_QuadPFJet_75_60_45_40_TriplePFBTagDeepCSV_4p5_v3,HLTriggerFinalPath,HLTAnalyzerEndpath --timing  --data --run 323725,323725 --ls [18,22],[37,57] --outfile NNOnlineRateEstimate.root --json ../test/Json/json_2018D_Ephemeral_20181022_PU50.txt
-# example usage Data for Timing: python NNConfigGenerator.py --menu=/online/collisions/2018/2e34/v3.6/HLT -gt=101X_dataRun2_HLT_v7 -out=myHLT_TimingData.py -pr=myHLT -paths=HLTriggerFirstPath,HLT_PFHT330PT30_QuadPFJet_75_60_45_40_TriplePFBTagDeepCSV_4p5_v3,HLTriggerFinalPath,HLTAnalyzerEndpath --data --tr 319941 --outfile NNTimingRateEstimate.root 
+# example usage MC: python AdityiaModelsGenerator.py --menu=/dev/CMSSW_11_0_0/GRun/V7 -out=myHLT.py -gt=110X_mcRun3_2021_realistic_v6 -pr=myHLT -paths=HLTriggerFirstPath,HLT_PFHT330PT30_QuadPFJet_75_60_45_40_TriplePFBTagDeepCSV_4p5_v3,HLTriggerFinalPath,HLTAnalyzerEndpath --timing --outfile 
+# example usage Data: python AdityiaModelsGenerator.py --menu=/dev/CMSSW_10_1_0/GRun -gt=101X_dataRun2_HLT_v7 -out=myHLT.py -pr=myHLT -paths=HLTriggerFirstPath,HLT_PFHT330PT30_QuadPFJet_75_60_45_40_TriplePFBTagDeepCSV_4p5_v3,HLTriggerFinalPath,HLTAnalyzerEndpath --timing  --data --run 323725,323725 --ls [18,22],[37,57] --outfile NNRateEstimate.root --json ../test/Json/json_2018D_Ephemeral_20181022_PU50.txt
+# example usage Data online menu (no HLTAnalyzerEndPath): python AdityiaModelsGenerator.py --menu=/online/collisions/2018/2e34/v3.6/HLT -gt=101X_dataRun2_HLT_v7 -out=myHLT.py -pr=myHLT -paths=HLTriggerFirstPath,HLT_PFHT330PT30_QuadPFJet_75_60_45_40_TriplePFBTagDeepCSV_4p5_v3,HLTriggerFinalPath,HLTAnalyzerEndpath --timing  --data --run 323725,323725 --ls [18,22],[37,57] --outfile NNOnlineRateEstimate.root --json ../test/Json/json_2018D_Ephemeral_20181022_PU50.txt
+# example usage Data for Timing: python AdityiaModelsGenerator.py --menu=/online/collisions/2018/2e34/v3.6/HLT -gt=101X_dataRun2_HLT_v7 -out=myHLT_TimingData.py -pr=myHLT -paths=HLTriggerFirstPath,HLT_PFHT330PT30_QuadPFJet_75_60_45_40_TriplePFBTagDeepCSV_4p5_v3,HLTriggerFinalPath,HLTAnalyzerEndpath --data --tr 319941 --outfile NNTimingRateEstimate.root 
 #--------------------------------------------------------------------------------------------------------------------------------
 
 import os
@@ -164,64 +164,16 @@ print("@[Info]: Adding Filters definintions... ")
 
 man.SetCurrentLine("after:#------------- My Filters -------------------")
 
-man.CreateFromLocal(in_class="FFNNHH4bCalowp0p87",mod_name="FFNNHH4bCalo")
-man.InsertInMenu(in_class="FFNNHH4bCalowp0p87",process_name = 'in_class')
-
 man.CreateFromLocal(in_class="CaloCNNT4HighPU0p9993",mod_name="CaloCNNT4HighPU")
 man.InsertInMenu(in_class="CaloCNNT4HighPU0p9993",process_name = 'in_class')
 
-man.CreateFromLocal(in_class="DNNProva0p87",mod_name="CaloDNNProva")
-man.InsertInMenu(in_class="DNNProva0p87",process_name = 'in_class')
-
-man.CreateFromLocal(in_class="KinFFCaloHH4bwp0p5",mod_name="KinFFCaloHH4b")
-man.InsertInMenu(in_class="KinFFCaloHH4bwp0p5",process_name = 'in_class')
-
-man.CreateFromLocal(in_class="BTagFFCaloHH4bwp0p85",mod_name="BTagFFCaloHH4b")
-man.InsertInMenu(in_class="BTagFFCaloHH4bwp0p85",process_name = 'in_class')
-
-#This module is present in /dev/CMSSW_11_0_0/GRun/V7, does not work if not present in the menu
-man.CloneModule("process.hltQuadCentralJet30", in_class="hltDoubleCentralJet60")
-man.ModifyPar("hltDoubleCentralJet60", "MaxEta", 2.5)
-man.ModifyPar("hltDoubleCentralJet60", "MinN", 2)
-man.ModifyPar("hltDoubleCentralJet60", "MinPt", 60)
-man.ModifyPar("hltDoubleCentralJet60", "inputTag", "'hltAK4CaloJetsCorrectedIDPassed'")
-man.ModifyPar("hltDoubleCentralJet60", "triggerType", 86)
-man.InsertInMenu(in_class="hltDoubleCentralJet60",process_name = 'in_class')
-
-#Prescale for my paths
-#man.InsertPrescaleModule('hltFFNNHH4bCalowp0p87', offset=0, name='strip')
-#man.InsertPrescaleModule('hltCaloCNNT4HighPU0p9993', offset=0, name='strip')
-#man.InsertPrescaleModule('hltCaloDNNprova', offset=0, name='strip')
-#man.InsertPrescaleModule('hltKinFFCaloHH4bwp0p5BTagFFCaloHH4bwp0p85', offset=0, name='strip')
-
-#This module is present in /dev/CMSSW_11_0_0/GRun/V7, does not work if not present in the menu
-man.CloneModule("process.hltQuadCentralJet30", in_class="hltDoubleCentralJet60")
-man.ModifyPar("hltDoubleCentralJet60", "MaxEta", 2.5)
-man.ModifyPar("hltDoubleCentralJet60", "MinPt", 60)
-man.ModifyPar("hltDoubleCentralJet60", "MinN", 2)
-man.ModifyPar("hltDoubleCentralJet60", "inputTag", "'hltAK4CaloJetsCorrectedIDPassed'")
-man.ModifyPar("hltDoubleCentralJet60", "triggerType", 86)
-man.InsertInMenu(in_class="hltDoubleCentralJet60",process_name = 'in_class')
-
-
-
 #creating range for the NN, varying thresholds
-ffnn_names_th = []
-for th in np.arange(0.8, 0.98 , 0.01):
-    th = round(th, 2)
-    #calos
-    inclass_name = "FFNNHH4bCalowp{}".format(str(th).replace(".", "p"))
-    ffnn_names_th.append([inclass_name, th])
-    man.CreateFromLocal(in_class=inclass_name,mod_name="FFNNHH4bCalo", WorkingPoint=th)
-    man.InsertInMenu(in_class=inclass_name,process_name = 'in_class')
-
-
-cnn_names_th = []
+calo_names_th = []
 for th in np.arange(0.9005, 0.9995 , 0.001):
     th = round(th, 4)
     #calos
     inclass_name = "CaloCNNT4HighPU0p{}".format(str(th).replace(".", "p"))
-    cnn_names_th.append([inclass_name, th])
+    calo_names_th.append([inclass_name, th])
     man.CreateFromLocal(in_class=inclass_name,mod_name="CaloCNNT4HighPU", WorkingPoint=th)
     man.InsertInMenu(in_class=inclass_name,process_name = 'in_class')
 
@@ -250,17 +202,13 @@ man.Insert("#-----------------My Paths-----------------\n")
 #New filters based
 
 
-for calo in ffnn_names_th:
-    th = str(calo[1]).replace(".", "p")
-    man.InsertPath("process.HLT_FFNNHHwp{} = cms.Path( process.HLTBeginSequence + process.hltL1sQuadJetC50to60IorHTT280to500IorHTT250to340QuadJet + process.HLTAK4CaloJetsSequence + process.HLTBtagDeepCSVSequenceL3 + process.{} + process.HLTEndSequence )\n".format(th, calo[0]))
-
-for calo in cnn_names_th:
+for calo in calo_names_th:
     th = str(calo[1]).replace(".", "p")
     man.InsertPath("process.HLT_CaloCNNT4wp{} = cms.Path( process.HLTBeginSequence + process.hltL1sQuadJetC50to60IorHTT280to500IorHTT250to340QuadJet + process.HLTAK4CaloJetsSequence + process.HLTBtagDeepCSVSequenceL3 + process.{} + process.HLTEndSequence )\n".format(th, calo[0]))
 
+
 #Benchmark +  analyzer
 man.InsertPath("process.HLT_PFHT330PT30_QuadPFJet_75_60_45_40_TriplePFBTagDeepCSV_4p5_v3 = cms.Path( process.HLTBeginSequence + process.hltL1sQuadJetC50to60IorHTT280to500IorHTT250to340QuadJet + process.hltPrePFHT330PT30QuadPFJet75604540TriplePFBTagDeepCSV4p5 + process.HLTAK4CaloJetsSequence + process.hltQuadCentralJet30 + process.hltCaloJetsQuad30ForHt + process.hltHtMhtCaloJetsQuadC30 + process.hltCaloQuadJet30HT320 + process.HLTBtagDeepCSVSequenceL3 + process.hltBTagCaloDeepCSVp17Double + process.HLTAK4PFJetsSequence + process.hltPFCentralJetLooseIDQuad30 + process.hlt1PFCentralJetLooseID75 + process.hlt2PFCentralJetLooseID60 + process.hlt3PFCentralJetLooseID45 + process.hlt4PFCentralJetLooseID40 + process.hltPFCentralJetLooseIDQuad30forHt + process.hltHtMhtPFCentralJetsLooseIDQuadC30 + process.hltPFCentralJetsLooseIDQuad30HT330 + process.HLTBtagDeepCSVSequencePF + process.hltBTagPFDeepCSV4p5Triple + process.HLTEndSequence )\n")
-#man.InsertPath("process.HLT_HLT_FFNNHHwp0p87 = cms.Path( process.HLTBeginSequence + process.hltL1sQuadJetC50to60IorHTT280to500IorHTT250to340QuadJet + process.HLTAK4CaloJetsSequence + process.HLTBtagDeepCSVSequenceL3 + process.FFNNHH4bCalowp0p87 + process.HLTEndSequence )\n")
 
 #analyzers path
 if not args.data:
@@ -299,13 +247,8 @@ if args.json:
     man.AddLuminosityJson(args.json)
 
 man.AddLuminosityToModule("MyHLTAnalyzer", line=False) #MC no need to specify json but analyzer wants an input
-if args.data:
-    man.AddLuminosityToModule("SaveAllJets", line=False) #MC no need to specify json but analyzer wants an input
+man.AddLuminosityToModule("SaveAllJets", line=False) #MC no need to specify json but analyzer wants an input
 
-"""
-if args.json:
-    man.AddLuminosityJson(args.json, extend=True, process='MyHLTAnalyzer')
-    man.AddLuminosityJson(args.json, extend=True, process='SaveJets')
-"""
+
 print("@[EndJob]: Done")
 
