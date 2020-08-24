@@ -152,8 +152,9 @@ if not args.data:
     man.Insert("\n")
 
 else:
-    man.CreateFromLocal(in_class="SaveAllJets",mod_name="SaveAllJetsSignal")
-    man.InsertInMenu(in_class="SaveAllJets",process_name = 'in_class')
+    continue
+    #man.CreateFromLocal(in_class="SaveAllJets",mod_name="SaveAllJetsSignal")
+    #man.InsertInMenu(in_class="SaveAllJets",process_name = 'in_class')
     #man.AddLuminosityToModule("SaveAllJets") #MC no need to specify json but analyzer wants an input
 
     man.Insert("\n")
@@ -267,7 +268,8 @@ if not args.data:
     man.Insert("process.SaveGen = cms.Sequence( process.prunedGenParticles + process.SaveGenHH)\n")
     man.Insert("process.SaveJets = cms.Path( process.HLTBeginSequence + process.SaveGen + process.SaveRecoJ + process.HLTEndSequence)\n")
 else:
-    man.Insert("process.SaveJets = cms.Path( process.HLTBeginSequence + process.hltL1sQuadJetC50to60IorHTT280to500IorHTT250to340QuadJet + process.hltPrePFHT330PT30QuadPFJet75604540TriplePFBTagDeepCSV4p5 +process.HLTAK4CaloJetsSequence + process.HLTBtagDeepCSVSequenceL3 + process.HLTAK4PFJetsSequence + process.HLTBtagDeepCSVSequencePF + process.SaveAllJets + process.HLTEndSequence)\n") 
+    continue
+    #man.Insert("process.SaveJets = cms.Path( process.HLTBeginSequence + process.hltL1sQuadJetC50to60IorHTT280to500IorHTT250to340QuadJet + process.hltPrePFHT330PT30QuadPFJet75604540TriplePFBTagDeepCSV4p5 +process.HLTAK4CaloJetsSequence + process.HLTBtagDeepCSVSequenceL3 + process.HLTAK4PFJetsSequence + process.HLTBtagDeepCSVSequencePF + process.SaveAllJets + process.HLTEndSequence)\n") 
 
 if "HLTAnalyzerEndpath" in args.paths and "online" in args.menu:
     man.AddHLTAnalyzerEndPath()
@@ -299,8 +301,8 @@ if args.json:
     man.AddLuminosityJson(args.json)
 
 man.AddLuminosityToModule("MyHLTAnalyzer", line=False) #MC no need to specify json but analyzer wants an input
-if args.data:
-    man.AddLuminosityToModule("SaveAllJets", line=False) #MC no need to specify json but analyzer wants an input
+#if args.data:
+    #man.AddLuminosityToModule("SaveAllJets", line=False) #MC no need to specify json but analyzer wants an input
 
 """
 if args.json:
