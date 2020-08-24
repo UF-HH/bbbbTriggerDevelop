@@ -151,8 +151,7 @@ if not args.data:
 
     man.Insert("\n")
 
-else:
-    continue
+#else:
     #man.CreateFromLocal(in_class="SaveAllJets",mod_name="SaveAllJetsSignal")
     #man.InsertInMenu(in_class="SaveAllJets",process_name = 'in_class')
     #man.AddLuminosityToModule("SaveAllJets") #MC no need to specify json but analyzer wants an input
