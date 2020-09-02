@@ -248,6 +248,22 @@ def QueryFilesMCgg():
     print('...Queried DAS for a total of {} MC files'.format(len(to_ret)))
     return to_ret
 
+def QueryFilesFromDataset(dataset):
+
+    tot_file_list = []
+
+    parse = 'dasgoclient --query="file dataset={}"'.format(dataset)
+    files = subprocess.Popen(shlex.split(parse), stdout=subprocess.PIPE)
+    file_list = files.communicate()[0].split("\n") #dividing single tuple by \n
+    file_list = file_list[:len(file_list)-1] #last element is ''
+
+    for file in file_list:
+        tot_file_list.append(file)
+
+    to_ret = remove_duplicates(tot_file_list)
+    print('...Queried DAS for a total of {} MC files'.format(len(to_ret)))
+    return to_ret
+
 
 def QueryFilesMCggRAWandAOD(convert_to_cms = False):
 

@@ -253,6 +253,13 @@ class ModMan:
         to_add = at + " = " + str(query) + "\n"
         ModMenu.ReplaceLine(self.menu, line, to_add)
 
+    def AddDASQueryMCDataset(self, dataset, at = "_customInfo['inputFile' ]"):
+        line = ModMenu.FindLine(self.menu, at)
+        querier = getattr(QueryForFiles, "QueryFilesFromDataset")
+        query = querier()
+        to_add = at + " = " + str(query) + "\n"
+        ModMenu.ReplaceLine(self.menu, line, to_add)
+
     def AddDASQuery(self, file_list, at = "_customInfo['inputFile' ]"):
         line = ModMenu.FindLine(self.menu, at)
         to_add = at + " = " + str(file_list) + "\n"
