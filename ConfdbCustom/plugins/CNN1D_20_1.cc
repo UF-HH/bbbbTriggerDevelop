@@ -151,7 +151,7 @@ bool CNN1D_20_1<T>::hltFilter(edm::Event& event,
     }
     //jetRef = TRef(h_Jets, jet.first.key());
     //LogTrace("") << "Jet " << nJet << " : Pt = " << jet.first->pt() << " , tag value = " << jet.second;
-    if(nJet < 20){
+    if(nJet < 4){
 
         //input.matrix<float>()(0, nJet) = float(pt);
         //input.matrix<float>()(0, nJet+1) = float(mass);
