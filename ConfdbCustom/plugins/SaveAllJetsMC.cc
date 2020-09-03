@@ -39,6 +39,7 @@
 #include "DataFormats/L1TGlobal/interface/GlobalObjectMap.h"
 #include "DataFormats/L1TGlobal/interface/GlobalObjectMapRecord.h"
 #include "DataFormats/L1TGlobal/interface/GlobalObject.h"
+#include "SimDataFormats/PileupSummaryInfo/interface/PileupSummaryInfo.h"
 
 
 class SaveAllJetsMC : public edm::EDAnalyzer {
@@ -63,6 +64,8 @@ class SaveAllJetsMC : public edm::EDAnalyzer {
         unsigned long long int event_;
         int       run_;
         int       lumi_;
+        std::vector<int>* nPU = new std::vector<int>;
+        std::vector<int>* nBX = new std::vector<int>;
 
         //Important objects:
 
@@ -80,6 +83,7 @@ class SaveAllJetsMC : public edm::EDAnalyzer {
         const edm::EDGetTokenT<reco::JetTagCollection> PFBToken_;
         const edm::InputTag CaloBTag_; 
         const edm::EDGetTokenT<reco::JetTagCollection> CaloBToken_;
+        const edm::InputTag puInfoLabel_;
 
 
         //booleans
@@ -147,6 +151,7 @@ SaveAllJetsMC::SaveAllJetsMC(const edm::ParameterSet& iConfig):
     PFBToken_(consumes<reco::JetTagCollection>(PFBTag_)),
     CaloBTag_(iConfig.getParameter<edm::InputTag>("CaloBJetTag")),
     CaloBToken_(consumes<reco::JetTagCollection>(CaloBTag_)),
+    puInfoLabel_(iConfig.getParameter<edm::InputTag>("puInfoLabel")),
     verbose_(iConfig.getParameter<bool>("verbose")),
     t(iConfig.getParameter<std::string>("tree"))
 {   
@@ -213,6 +218,9 @@ void SaveAllJetsMC::beginJob()
     tree_->Branch("event", &event_);
     tree_->Branch("run",   &run_);
     tree_->Branch("lumi",  &lumi_);
+    tree_->Branch("nPU",  &nPU);
+    tree_->Branch("nBX",  &nBX);
+
 
     return;
 }
@@ -256,6 +264,9 @@ void SaveAllJetsMC::clear(){
     gen_nonu_phi_->clear();
     gen_nonu_e_->clear();
     gen_nonu_mass_->clear();
+
+    nPU->clear();
+    nBX->clear();
 
     return;
 }
@@ -445,6 +456,17 @@ void SaveAllJetsMC::analyze(const edm::Event& iEvent, const edm::EventSetup& iSe
 
     }    
 
+    // PileupSummaryInfo
+    edm::Handle<std::vector<PileupSummaryInfo > >  PUInfo;
+    iEvent.getByLabel(puInfoLabel_, PUInfo);
+
+    std::vector<PileupSummaryInfo>::const_iterator PVI;
+    for(PVI = PUInfo->begin(); PVI != PUInfo->end(); ++PVI) {
+
+        nPU->push_back(PVI->getPU_NumInteractions());
+        nBX->push_back(PVI->getBunchCrossing());
+
+    }
     tree_->Fill();
 
 };

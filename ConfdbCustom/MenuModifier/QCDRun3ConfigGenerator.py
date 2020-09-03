@@ -115,9 +115,9 @@ if not args.data:
 
     man.Insert("\n")
 
-    man.CreateFromLocal(in_class="SaveAllJets",mod_name="SaveAllJetsSignal")
-    man.InsertInMenu(in_class="SaveAllJets",process_name = 'in_class')
-    man.AddLuminosityToModule("SaveAllJets") #MC no need to specify json but analyzer wants an input
+    man.CreateFromLocal(in_class="SaveAllJetsMC",mod_name="SaveAllJetsMC")
+    man.InsertInMenu(in_class="SaveAllJetsMC",process_name = 'in_class')
+    man.AddLuminosityToModule("SaveAllJetsMC") #MC no need to specify json but analyzer wants an input
 
     man.Insert("\n")
 
@@ -148,7 +148,7 @@ man.InsertPath("process.HLT_PFHT330PT30_QuadPFJet_75_60_45_40_TriplePFBTagDeepCS
 if not args.data:
     man.Insert("process.SaveGen = cms.Sequence( process.prunedGenParticles + process.SaveGenHH)\n")
     man.Insert("process.SaveRecoJets = cms.Path( process.HLTBeginSequence + process.SaveGen + process.SaveRecoJ + process.HLTEndSequence)\n")
-    man.Insert("process.SaveJets = cms.Path( process.HLTBeginSequence + process.hltL1sQuadJetC50to60IorHTT280to500IorHTT250to340QuadJet + process.hltPrePFHT330PT30QuadPFJet75604540TriplePFBTagDeepCSV4p5 +process.HLTAK4CaloJetsSequence + process.HLTBtagDeepCSVSequenceL3 + process.HLTAK4PFJetsSequence + process.HLTBtagDeepCSVSequencePF + process.SaveAllJets + process.HLTEndSequence)\n") 
+    man.Insert("process.SaveJets = cms.Path( process.HLTBeginSequence + process.hltL1sQuadJetC50to60IorHTT280to500IorHTT250to340QuadJet + process.hltPrePFHT330PT30QuadPFJet75604540TriplePFBTagDeepCSV4p5 +process.HLTAK4CaloJetsSequence + process.HLTBtagDeepCSVSequenceL3 + process.HLTAK4PFJetsSequence + process.HLTBtagDeepCSVSequencePF + process.SaveAllJetsMC + process.HLTEndSequence)\n") 
 else:
     man.Insert("process.SaveJets = cms.Path( process.HLTBeginSequence + process.hltL1sQuadJetC50to60IorHTT280to500IorHTT250to340QuadJet + process.hltPrePFHT330PT30QuadPFJet75604540TriplePFBTagDeepCSV4p5 +process.HLTAK4CaloJetsSequence + process.HLTBtagDeepCSVSequenceL3 + process.HLTAK4PFJetsSequence + process.HLTBtagDeepCSVSequencePF + process.SaveAllJets + process.HLTEndSequence)\n") 
 

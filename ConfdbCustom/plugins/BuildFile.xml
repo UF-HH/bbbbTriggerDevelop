@@ -17,5 +17,6 @@
 <use name="boost"/>
 <use name="CommonTools/MVAUtils"/>
 <use name="PhysicsTools/TensorFlow" />
+<use name="SimDataFormats/PileupSummaryInfo" />
 
 <flags EDM_PLUGIN="1"/>
