@@ -103,14 +103,14 @@ man.SetCurrentLine("after:#------------- My Filters -------------------")
 man.CreateFromLocal(in_class="FFNNHH4bCalowp0p87",mod_name="FFNNHH4bCalo")
 man.InsertInMenu(in_class="FFNNHH4bCalowp0p87",process_name = 'in_class')
 
-man.CreateFromLocal(in_class="CaloCNNT4HighPU0p9993_20_1",mod_name="CaloCNNT4HighPU_20_1")
-man.InsertInMenu(in_class="CaloCNNT4HighPU0p9993_20_1",process_name = 'in_class')
+man.CreateFromLocal(in_class="CaloCNNT4HighPU0p9993input201",mod_name="CaloCNNT4HighPU_20_1")
+man.InsertInMenu(in_class="CaloCNNT4HighPU0p9993input201",process_name = 'in_class')
 
-man.CreateFromLocal(in_class="CaloCNNT4HighPU0p9993_5_4",mod_name="CaloCNNT4HighPU_5_4")
-man.InsertInMenu(in_class="CaloCNNT4HighPU0p9993_5_4",process_name = 'in_class')
+man.CreateFromLocal(in_class="CaloCNNT4HighPU0p9993input54",mod_name="CaloCNNT4HighPU_5_4")
+man.InsertInMenu(in_class="CaloCNNT4HighPU0p9993input54",process_name = 'in_class')
 
-man.CreateFromLocal(in_class="CaloDNNHighPU_20_0p9998",mod_name="DNN_20_Adytia_Calo")
-man.InsertInMenu(in_class="CaloDNNHighPU_20_0p9998",process_name = 'in_class')
+man.CreateFromLocal(in_class="CaloDNNHighPU0p9998input20",mod_name="DNN_20_Adytia_Calo")
+man.InsertInMenu(in_class="CaloDNNHighPU0p9998input20",process_name = 'in_class')
 
 man.CreateFromLocal(in_class="DNNProva0p87",mod_name="CaloDNNProva")
 man.InsertInMenu(in_class="DNNProva0p87",process_name = 'in_class')
@@ -132,10 +132,10 @@ man.InsertInMenu(in_class="hltDoubleCentralJet60",process_name = 'in_class')
 
 #Prescale for my paths
 man.InsertPrescaleModule('hltFFNNHH4bCalowp0p87', offset=0, name='strip')
-man.InsertPrescaleModule('hltCaloCNNT4HighPU0p9993_20_1', offset=0, name='strip')
-man.InsertPrescaleModule('hltCaloCNNT4HighPU0p9993_5_4', offset=0, name='strip')
+man.InsertPrescaleModule('hltCaloCNNT4HighPU0p9993input201', offset=0, name='strip')
+man.InsertPrescaleModule('hltCaloCNNT4HighPU0p9993input54', offset=0, name='strip')
 man.InsertPrescaleModule('hltCaloDNNprova', offset=0, name='strip')
-man.InsertPrescaleModule('hltCaloDNNHighPU_20_0p9998', offset=0, name='strip')
+man.InsertPrescaleModule('hltCaloDNNHighPU0p9998input20', offset=0, name='strip')
 man.InsertPrescaleModule('hltKinFFCaloHH4bwp0p5BTagFFCaloHH4bwp0p85', offset=0, name='strip')
 
 #inserting my paths
@@ -152,9 +152,9 @@ man.InsertPath("process.HLT_PFHT330PT30_QuadPFJet_75_60_45_40_TriplePFBTagDeepCS
 #man.InsertPath("process.HLT_Quad30Double60_FFNNHH4bwp0p87Calo_PFQuad30 = cms.Path( process.HLTBeginSequence + process.hltL1sQuadJetC50to60IorHTT280to500IorHTT250to340QuadJet + process.hltPreFFNNHH4bCalowp0p87 + process.HLTAK4CaloJetsSequence + process.HLTBtagDeepCSVSequenceL3 + process.FFNNHH4bCalowp0p87 + process.HLTEndSequence )\n")
 #man.InsertPath("process.HLT_CaloDNNT4_HighPU0p87 = cms.Path( process.HLTBeginSequence + process.hltL1sQuadJetC50to60IorHTT280to500IorHTT250to340QuadJet + process.hltPreCaloDNNprova + process.HLTAK4CaloJetsSequence + process.HLTBtagDeepCSVSequenceL3 + process.DNNProva0p87 + process.HLTEndSequence )\n")
 #man.InsertPath("process.HLT_KinFFCaloHH4bwp0p5_BTagFFCaloHH4bwp0p85 = cms.Path( process.HLTBeginSequence + process.hltL1sQuadJetC50to60IorHTT280to500IorHTT250to340QuadJet + process.hltPreKinFFCaloHH4bwp0p5BTagFFCaloHH4bwp0p85 + process.HLTAK4CaloJetsSequence + process.HLTBtagDeepCSVSequenceL3 + process.KinFFCaloHH4bwp0p5 + process.BTagFFCaloHH4bwp0p85 + process.HLTEndSequence )\n")
-man.InsertPath("process.HLT_CaloCNNT4_HighPU0p9993_20_1 = cms.Path( process.HLTBeginSequence + process.hltL1sQuadJetC50to60IorHTT280to500IorHTT250to340QuadJet + process.hltPreCaloCNNT4HighPU0p9993201 + process.HLTAK4CaloJetsSequence + process.HLTBtagDeepCSVSequenceL3 + process.CaloCNNT4HighPU0p9993_20_1 + process.HLTEndSequence )\n")
-man.InsertPath("process.HLT_CaloCNNT4_HighPU0p9993_5_4 = cms.Path( process.HLTBeginSequence + process.hltL1sQuadJetC50to60IorHTT280to500IorHTT250to340QuadJet + process.hltPreCaloCNNT4HighPU0p999354 + process.HLTAK4CaloJetsSequence + process.HLTBtagDeepCSVSequenceL3 + process.CaloCNNT4HighPU0p9993_5_4 + process.HLTEndSequence )\n")
-man.InsertPath("process.HLT_CaloDNNT4_HighPU_20_0p9998 = cms.Path( process.HLTBeginSequence + process.hltL1sQuadJetC50to60IorHTT280to500IorHTT250to340QuadJet + process.hltPreCaloDNNHighPU200p9998 + process.HLTAK4CaloJetsSequence + process.HLTBtagDeepCSVSequenceL3 + process.CaloDNNHighPU_20_0p9998 + process.HLTEndSequence )\n")
+man.InsertPath("process.HLT_CaloCNNT4_HighPU0p9993_20_1 = cms.Path( process.HLTBeginSequence + process.hltL1sQuadJetC50to60IorHTT280to500IorHTT250to340QuadJet + process.hltPreCaloCNNT4HighPU0p9993input201 + process.HLTAK4CaloJetsSequence + process.HLTBtagDeepCSVSequenceL3 + process.CaloCNNT4HighPU0p9993input201 + process.HLTEndSequence )\n")
+man.InsertPath("process.HLT_CaloCNNT4_HighPU0p9993_5_4 = cms.Path( process.HLTBeginSequence + process.hltL1sQuadJetC50to60IorHTT280to500IorHTT250to340QuadJet + process.hltPreCaloCNNT4HighPU0p9993input54 + process.HLTAK4CaloJetsSequence + process.HLTBtagDeepCSVSequenceL3 + process.CaloCNNT4HighPU0p9993input54 + process.HLTEndSequence )\n")
+man.InsertPath("process.HLT_CaloDNNT4_HighPU_20_0p9998 = cms.Path( process.HLTBeginSequence + process.hltL1sQuadJetC50to60IorHTT280to500IorHTT250to340QuadJet + process.hltPreCaloDNNHighPU0p9998input20 + process.HLTAK4CaloJetsSequence + process.HLTBtagDeepCSVSequenceL3 + process.CaloDNNHighPU0p9998input20 + process.HLTEndSequence )\n")
 
 
 if args.tr:
