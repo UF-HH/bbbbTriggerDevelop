@@ -84,6 +84,7 @@ class SaveAllJetsMC : public edm::EDAnalyzer {
         const edm::InputTag CaloBTag_; 
         const edm::EDGetTokenT<reco::JetTagCollection> CaloBToken_;
         const edm::InputTag puInfoLabel_;
+        const edm::EDGetTokenT<std::vector<PileupSummaryInfo >> puInfoToken_;
 
 
         //booleans
@@ -458,7 +459,7 @@ void SaveAllJetsMC::analyze(const edm::Event& iEvent, const edm::EventSetup& iSe
 
     // PileupSummaryInfo
     edm::Handle<std::vector<PileupSummaryInfo > >  PUInfo;
-    iEvent.getByLabel(puInfoLabel_, PUInfo);
+    iEvent.getByToken(puInfoToken_, PUInfo);
 
     std::vector<PileupSummaryInfo>::const_iterator PVI;
     for(PVI = PUInfo->begin(); PVI != PUInfo->end(); ++PVI) {
