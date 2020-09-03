@@ -465,6 +465,8 @@ void SaveAllJetsMC::analyze(const edm::Event& iEvent, const edm::EventSetup& iSe
     std::vector<PileupSummaryInfo>::const_iterator PVI;
     for(PVI = PUInfo->begin(); PVI != PUInfo->end(); ++PVI) {
 
+
+        std::cout << PVI->getPU_NumInteractions() << std::endl;
         nPU->push_back(PVI->getPU_NumInteractions());
         nBX->push_back(PVI->getBunchCrossing());
 
