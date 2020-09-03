@@ -175,10 +175,10 @@ bool CNN1D_5_4<T>::hltFilter(edm::Event& event,
         // std::cout << "Input btag: " <<  *d << std::endl;
         // d++;
 
-        input_tensor_mapped(0, nJet*4, 0) = float(pt);
-        input_tensor_mapped(0, nJet*4+1, 0) = float(eta);
-        input_tensor_mapped(0, nJet*4+2, 0) = float(phi);
-        input_tensor_mapped(0, nJet*4+3, 0) = float(btag);
+        input_tensor_mapped(0, nJet, 0) = float(pt);
+        input_tensor_mapped(0, nJet, 1) = float(eta);
+        input_tensor_mapped(0, nJet, 2) = float(phi);
+        input_tensor_mapped(0, nJet, 3) = float(btag);
         
 
     
@@ -197,7 +197,7 @@ bool CNN1D_5_4<T>::hltFilter(edm::Event& event,
   std::sort(btags_val_.begin(), btags_val_.end(), std::greater<double>());
   for(int idx= 0; idx < 4; idx++){
 
-    input_tensor_mapped(0, 16+idx, 0) = float(btags_val_.at(idx));
+    input_tensor_mapped(0, 5, idx) = float(btags_val_.at(idx));
 
   }
 
