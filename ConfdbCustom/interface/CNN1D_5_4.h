@@ -1,5 +1,5 @@
-#ifndef CALO_PROVA_H
-#define CALO_PROVA_H
+#ifndef CALO_CNN_1D_5_4
+#define CALO_CNN_1D_5_4
 
 
 #include <string>
@@ -16,10 +16,10 @@
 //
 
 template <typename T>
-class CNN_prova : public HLTFilter {
+class CNN1D_5_4 : public HLTFilter {
 public:
-  explicit CNN_prova(const edm::ParameterSet& config);
-  ~CNN_prova() override;
+  explicit CNN1D_5_4(const edm::ParameterSet& config);
+  ~CNN1D_5_4() override;
   static void fillDescriptions(edm::ConfigurationDescriptions& descriptions);
   //input_t DummyInputGeneration() const; //creates map with predefined names var. Can be made smarter
   bool hltFilter(edm::Event& event,
@@ -44,4 +44,4 @@ private:
   tensorflow::Session* session_;
 };
 
-#endif  // CNN_prova_h
+#endif  // CNN1D_5_4_h

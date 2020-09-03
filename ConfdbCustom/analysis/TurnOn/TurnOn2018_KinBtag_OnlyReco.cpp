@@ -47,8 +47,8 @@ bool PassedSkims(hltObj::Jets jets){
     std::vector<double> results;
     double PtMin = 40;
     double PtMax = 1e99;
-    double EtaMax = 2.4;
-    double EtaMin = -2.4;
+    double EtaMax = 2.5;
+    double EtaMin = -2.5;
     double BtagMin = 0.27;
     int MinJets = 4;
     int MinBtaggedJets = 3;
@@ -227,6 +227,9 @@ int main(){
     std::cout << (double)h_tot_btag->GetEntries() << std::endl;
     std::cout << (double)h_cut_btag->GetEntries() << std::endl;
     std::cout << (double)h_cut_btag->GetEntries()/h_tot_btag->GetEntries() << std::endl;
+
+    std::cout << "[INFO] Trigger and selections..." << std::endl;
+    std::cout << "Nsel / Ntot " << (double)h_tot_kin->GetEntries()/50000 << std::endl;
 
     gStyle->SetOptStat(0);
 

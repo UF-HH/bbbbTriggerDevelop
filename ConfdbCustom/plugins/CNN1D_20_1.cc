@@ -1,4 +1,4 @@
-#include "../interface/CNN_prova.h"
+#include "../interface/CNN1D_20_1.h"
 
 #include <vector>
 #include <string>
@@ -35,7 +35,7 @@
 //
 
 template <typename T>
-CNN_prova<T>::CNN_prova(const edm::ParameterSet& iConfig)
+CNN1D_20_1<T>::CNN1D_20_1(const edm::ParameterSet& iConfig)
     : HLTFilter(iConfig),
       m_Jets(iConfig.getParameter<edm::InputTag>("Jets")),
       m_JetsBase(iConfig.getParameter<edm::InputTag>("BaseJets")),
@@ -52,18 +52,18 @@ CNN_prova<T>::CNN_prova(const edm::ParameterSet& iConfig)
           m_JetsToken = consumes<std::vector<T>>(m_Jets), m_JetTagsToken = consumes<reco::JetTagCollection>(m_JetTags), m_JetsBaseToken = consumes<std::vector<T>>(m_JetsBase);
 
       tensorflow::setLogging("0");
-      std::cout << "[Info] CNN_prova: Loading graph def from " << nnconfig << std::endl;
+      std::cout << "[Info] CNN1D_20_1: Loading graph def from " << nnconfig << std::endl;
       graphDef_ = tensorflow::loadGraphDef(nnconfig);
       session_ = tensorflow::createSession(graphDef_);
 
 }
 
 template <typename T>
-CNN_prova<T>::~CNN_prova() = default;
+CNN1D_20_1<T>::~CNN1D_20_1() = default;
 
 
 template <typename T>
-void CNN_prova<T>::fillDescriptions(edm::ConfigurationDescriptions& descriptions) {
+void CNN1D_20_1<T>::fillDescriptions(edm::ConfigurationDescriptions& descriptions) {
   edm::ParameterSetDescription desc;
   makeHLTFilterDescription(desc);
   desc.add<edm::InputTag>("Jets", edm::InputTag("hltJetCollection"));
@@ -78,7 +78,7 @@ void CNN_prova<T>::fillDescriptions(edm::ConfigurationDescriptions& descriptions
   desc.add<int>("TriggerType", 0);
   desc.add<std::string>("NNConfig", std::string("models_json/Calo_T4_HPU_CNN1D.pb"));
   desc.add<double>("WorkingPoint", 0.0);
-  descriptions.add(defaultModuleLabel<CNN_prova<T>>(), desc);
+  descriptions.add(defaultModuleLabel<CNN1D_20_1<T>>(), desc);
 }
 
 //
@@ -87,7 +87,7 @@ void CNN_prova<T>::fillDescriptions(edm::ConfigurationDescriptions& descriptions
 
 /*
 template <typename T>
-input_t CNN_prova<T>::DummyInputGeneration() const{
+input_t CNN1D_20_1<T>::DummyInputGeneration() const{
   
   return { {"inputs",{{"1LeadingPt", 1}, {"1LeadingEta", 1}, {"1LeadingPhi", 1}, {"1LeadingBTag", 1}, {"2LeadingPt", 1}, {"2LeadingEta", 1}, {"2LeadingPhi", 1}, {"2LeadingBTag", 1}, {"3LeadingPt", 1}, {"3LeadingEta", 1}, {"3LeadingPhi", 1}, {"3LeadingBTag", 1}, {"4LeadingPt", 1}, {"4LeadingEta", 1}, {"4LeadingPhi", 1}, {"4LeadingBTag", 1}, {"BTag1", 1}, {"BTag2", 1}, {"BTag3", 1}, {"BTag4", 1} }} };
 
@@ -96,7 +96,7 @@ input_t CNN_prova<T>::DummyInputGeneration() const{
 
 // ------------ method called to produce the data  ------------
 template <typename T>
-bool CNN_prova<T>::hltFilter(edm::Event& event,
+bool CNN1D_20_1<T>::hltFilter(edm::Event& event,
                              const edm::EventSetup& setup,
                              trigger::TriggerFilterObjectWithRefs& filterproduct) const {
   using namespace std;
@@ -141,7 +141,7 @@ bool CNN_prova<T>::hltFilter(edm::Event& event,
   std::vector<double> btags_val_;
   
   for (auto const& jet : *h_JetsBase) {
-    double pt = jet.pt(), mass = jet.mass(), e = jet.energy(), eta = jet.eta();
+    double pt = jet.pt(), phi = jet.phi(), e = jet.energy(), eta = jet.eta();
     double btag = 0;
     //searching for the btagged jets
     for(auto const& btag_jet : *h_JetTags){
@@ -178,13 +178,12 @@ bool CNN_prova<T>::hltFilter(edm::Event& event,
         input_tensor_mapped(0, nJet, 0) = float(pt);
         //std::cout << input_tensor_mapped(nJet, 0, 0) << std::endl;
         nJet++;
-        input_tensor_mapped(0, nJet, 0) = float(mass);
-        //std::cout << input_tensor_mapped(nJet, 0, 0) << std::endl;
-        nJet++;
-        input_tensor_mapped(0, nJet, 0) = float(e);
-        //std::cout << input_tensor_mapped(nJet, 0, 0) << std::endl;
-        nJet++;
         input_tensor_mapped(0, nJet, 0) = float(eta);
+        //std::cout << input_tensor_mapped(nJet, 0, 0) << std::endl;
+        nJet++;
+        //std::cout << input_tensor_mapped(nJet, 0, 0) << std::endl;
+        nJet++;
+        input_tensor_mapped(0, nJet, 0) = float(phi);
         //std::cout << input_tensor_mapped(nJet, 0, 0) << std::endl;
         nJet++;
         input_tensor_mapped(0, nJet, 0) = float(btag);
@@ -197,13 +196,19 @@ bool CNN_prova<T>::hltFilter(edm::Event& event,
     //nJet++;
 
     //Save all BTag Scores. Only for central jets eta < 2.5 and pt > 30, that's why the selection on pt and eta
-    if ((m_MinTag <= btag) && (btag <= m_MaxTag) && (abs(eta) <= m_MaxEta) && (abs(eta) >= m_MinEta) &&
-        (pt <= m_MaxPt) && (pt >= m_MinPt) )  {
-        btags_val_.push_back(btag);
-        // Store a reference to the jets which passed tagging cuts
-        filterproduct.addObject(m_TriggerType, jetRef);
-    }
+    btags_val_.push_back(btag);
+    // Store a reference to the jets which passed tagging cuts
+    filterproduct.addObject(m_TriggerType, jetRef);
   }
+
+  std::sort(btags_val_.begin(), btags_val_.end(), std::greater<double>());
+  for(int idx= 0; idx < 4; idx++){
+
+    input_tensor_mapped(0, nJet+idx, 0) = float(btags_val_.at(idx));
+
+  }
+
+
 
   // auto array = input_tensor_mapped.data();
   // float* int_array = static_cast<float*>(array);
@@ -229,7 +234,7 @@ bool CNN_prova<T>::hltFilter(edm::Event& event,
 }
 
 template <typename T>
-void CNN_prova<T>::endJob(){
+void CNN1D_20_1<T>::endJob(){
 
   // close the session
     tensorflow::closeSession(session_);

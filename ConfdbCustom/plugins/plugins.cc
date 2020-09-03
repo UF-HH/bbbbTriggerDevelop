@@ -30,8 +30,14 @@
 #include "../interface/HLTBTagModel.h"
 #include "HLTBTagModel.cc"
 
-#include "../interface/CNN_prova.h"
-#include "CNN_prova.cc"
+#include "../interface/CNN1D_20_1.h"
+#include "CNN1D_20_1.cc"
+
+#include "../interface/CNN1D_5_4.h"
+#include "CNN1D_5_4.cc"
+
+#include "../interface/DNN_20_Adytia.h"
+#include "DNN_20_Adytia.cc"
 
 #include "../interface/DNN_prova.h"
 #include "DNN_prova.cc"
@@ -59,6 +65,9 @@ typedef HLTBTagSum<PFJet> HLTBTagSumPF;
 typedef FFNNHH4b<CaloJet> CaloNNHH4b;
 typedef FFNNHH4b<PFJet> PFNNHH4b;
 
+typedef DNN_20_Adytia<CaloJet> DNN_20_Adytia_Calo;
+typedef DNN_20_Adytia<PFJet> DNN_20_Adytia_PF;
+
 typedef HLTBTagModel<CaloJet> HLTBTagFFCalo;
 typedef HLTBTagModel<PFJet> HLTBTagFFPF;
 
@@ -66,8 +75,11 @@ typedef HLTKinModel<CaloJet> HLTKinFFCalo;
 typedef HLTKinModel<PFJet> HLTKinFFPF;
 
 //Prova
-typedef CNN_prova<CaloJet> CaloCNNProva;
-typedef CNN_prova<PFJet> PFCNNProva;
+typedef CNN1D_20_1<CaloJet> CNN1D_20_1_Calo;
+typedef CNN1D_20_1<PFJet> CNN1D_20_1_PF;
+
+typedef CNN1D_5_4<CaloJet> CNN1D_5_4_Calo;
+typedef CNN1D_5_4<PFJet> CNN1D_5_4_PF;
 
 typedef DNN_prova<CaloJet> CaloDNNProva;
 
@@ -90,6 +102,9 @@ DEFINE_FWK_MODULE(HLTBTagSumPF);
 DEFINE_FWK_MODULE(CaloNNHH4b);
 DEFINE_FWK_MODULE(PFNNHH4b);
 
+DEFINE_FWK_MODULE(DNN_20_Adytia_Calo);
+DEFINE_FWK_MODULE(DNN_20_Adytia_PF);
+
 DEFINE_FWK_MODULE(HLTBTagFFCalo);
 DEFINE_FWK_MODULE(HLTBTagFFPF);
 
@@ -97,7 +112,10 @@ DEFINE_FWK_MODULE(HLTKinFFCalo);
 DEFINE_FWK_MODULE(HLTKinFFPF);
 
 //Prova
-DEFINE_FWK_MODULE(CaloCNNProva);
-DEFINE_FWK_MODULE(PFCNNProva);
+DEFINE_FWK_MODULE(CNN1D_20_1_Calo);
+DEFINE_FWK_MODULE(CNN1D_20_1_PF);
+
+DEFINE_FWK_MODULE(CNN1D_5_4_Calo);
+DEFINE_FWK_MODULE(CNN1D_5_4_PF);
 
 DEFINE_FWK_MODULE(CaloDNNProva);
