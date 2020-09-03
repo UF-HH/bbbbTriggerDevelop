@@ -175,25 +175,16 @@ bool CNN1D_20_1<T>::hltFilter(edm::Event& event,
         // std::cout << "Input btag: " <<  *d << std::endl;
         // d++;
 
-        input_tensor_mapped(0, nJet, 0) = float(pt);
-        //std::cout << input_tensor_mapped(nJet, 0, 0) << std::endl;
-        nJet++;
-        input_tensor_mapped(0, nJet, 0) = float(eta);
-        //std::cout << input_tensor_mapped(nJet, 0, 0) << std::endl;
-        nJet++;
-        //std::cout << input_tensor_mapped(nJet, 0, 0) << std::endl;
-        nJet++;
-        input_tensor_mapped(0, nJet, 0) = float(phi);
-        //std::cout << input_tensor_mapped(nJet, 0, 0) << std::endl;
-        nJet++;
-        input_tensor_mapped(0, nJet, 0) = float(btag);
-        //std::cout << input_tensor_mapped(nJet, 0, 0) << std::endl;
-        nJet++;
+
+        input_tensor_mapped(0, nJet*4, 0) = float(pt);
+        input_tensor_mapped(0, nJet*4+1, 0) = float(eta);
+        input_tensor_mapped(0, nJet*4+2, 0) = float(phi);
+        input_tensor_mapped(0, nJet*4+3, 0) = float(btag);
 
     
     }
 
-    //nJet++;
+    nJet++;
 
     //Save all BTag Scores. Only for central jets eta < 2.5 and pt > 30, that's why the selection on pt and eta
     btags_val_.push_back(btag);
@@ -204,7 +195,7 @@ bool CNN1D_20_1<T>::hltFilter(edm::Event& event,
   std::sort(btags_val_.begin(), btags_val_.end(), std::greater<double>());
   for(int idx= 0; idx < 4; idx++){
 
-    input_tensor_mapped(0, nJet+idx, 0) = float(btags_val_.at(idx));
+    input_tensor_mapped(0, 16+idx, 0) = float(btags_val_.at(idx));
 
   }
 
