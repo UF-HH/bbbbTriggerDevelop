@@ -1,110 +1,105 @@
 {
-  "input_sequences": [],
+  "defaults": {},
   "inputs": [
     {
-      "name": "node_0",
-      "variables": [
-        {
-          "name": "1l_pt",
-          "offset": 0,
-          "scale": 1
-        },
-        {
-          "name": "1l_eta",
-          "offset": 0,
-          "scale": 1
-        },
-        {
-          "name": "1l_phi",
-          "offset": 0,
-          "scale": 1
-        },
-        {
-          "name": "1l_btag",
-          "offset": 0,
-          "scale": 1
-        },
-        {
-          "name": "2l_pt",
-          "offset": 0,
-          "scale": 1
-        },
-        {
-          "name": "2l_eta",
-          "offset": 0,
-          "scale": 1
-        },
-        {
-          "name": "2l_phi",
-          "offset": 0,
-          "scale": 1
-        },
-        {
-          "name": "2l_btag",
-          "offset": 0,
-          "scale": 1
-        },
-        {
-          "name": "3l_pt",
-          "offset": 0,
-          "scale": 1
-        },
-        {
-          "name": "3l_eta",
-          "offset": 0,
-          "scale": 1
-        },
-        {
-          "name": "3l_phi",
-          "offset": 0,
-          "scale": 1
-        },
-        {
-          "name": "3l_btag",
-          "offset": 0,
-          "scale": 1
-        },
-        {
-          "name": "4l_pt",
-          "offset": 0,
-          "scale": 1
-        },
-        {
-          "name": "4l_eta",
-          "offset": 0,
-          "scale": 1
-        },
-        {
-          "name": "4l_phi",
-          "offset": 0,
-          "scale": 1
-        },
-        {
-          "name": "4l_btag",
-          "offset": 0,
-          "scale": 1
-        },
-        {
-          "name": "1leading_b",
-          "offset": 0,
-          "scale": 1
-        },
-        {
-          "name": "2leading_b",
-          "offset": 0,
-          "scale": 1
-        },
-        {
-          "name": "3leading_b",
-          "offset": 0,
-          "scale": 1
-        },
-        {
-          "name": "4leading_b",
-          "offset": 0,
-          "scale": 1
-        }
-      ]
+      "name": "1l_pt",
+      "offset": 0,
+      "scale": 1
+    },
+    {
+      "name": "1l_eta",
+      "offset": 0,
+      "scale": 1
+    },
+    {
+      "name": "1l_phi",
+      "offset": 0,
+      "scale": 1
+    },
+    {
+      "name": "1l_btag",
+      "offset": 0,
+      "scale": 1
+    },
+    {
+      "name": "2l_pt",
+      "offset": 0,
+      "scale": 1
+    },
+    {
+      "name": "2l_eta",
+      "offset": 0,
+      "scale": 1
+    },
+    {
+      "name": "2l_phi",
+      "offset": 0,
+      "scale": 1
+    },
+    {
+      "name": "2l_btag",
+      "offset": 0,
+      "scale": 1
+    },
+    {
+      "name": "3l_pt",
+      "offset": 0,
+      "scale": 1
+    },
+    {
+      "name": "3l_eta",
+      "offset": 0,
+      "scale": 1
+    },
+    {
+      "name": "3l_phi",
+      "offset": 0,
+      "scale": 1
+    },
+    {
+      "name": "3l_btag",
+      "offset": 0,
+      "scale": 1
+    },
+    {
+      "name": "4l_pt",
+      "offset": 0,
+      "scale": 1
+    },
+    {
+      "name": "4l_eta",
+      "offset": 0,
+      "scale": 1
+    },
+    {
+      "name": "4l_phi",
+      "offset": 0,
+      "scale": 1
+    },
+    {
+      "name": "4l_btag",
+      "offset": 0,
+      "scale": 1
+    },
+    {
+      "name": "1leading_b",
+      "offset": 0,
+      "scale": 1
+    },
+    {
+      "name": "2leading_b",
+      "offset": 0,
+      "scale": 1
+    },
+    {
+      "name": "3leading_b",
+      "offset": 0,
+      "scale": 1
+    },
+    {
+      "name": "4leading_b",
+      "offset": 0,
+      "scale": 1
     }
   ],
   "layers": [
