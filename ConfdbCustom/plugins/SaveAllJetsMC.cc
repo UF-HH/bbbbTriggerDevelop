@@ -153,6 +153,7 @@ SaveAllJetsMC::SaveAllJetsMC(const edm::ParameterSet& iConfig):
     CaloBTag_(iConfig.getParameter<edm::InputTag>("CaloBJetTag")),
     CaloBToken_(consumes<reco::JetTagCollection>(CaloBTag_)),
     puInfoLabel_(iConfig.getParameter<edm::InputTag>("puInfoLabel")),
+    puInfoToken_(consumes<std::vector<PileupSummaryInfo >>(puInfoLabel_)),
     verbose_(iConfig.getParameter<bool>("verbose")),
     t(iConfig.getParameter<std::string>("tree"))
 {   
