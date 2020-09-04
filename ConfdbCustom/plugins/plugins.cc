@@ -42,8 +42,8 @@
 // #include "../interface/LSTM_20_Adytia.h"
 // #include "LSTM_20_Adytia.cc"
 
-// #include "../interface/LSTM_5_4_Adytia.h"
-// #include "LSTM_5_4_Adytia.cc"
+#include "../interface/LSTM_5_4_Adytia.h"
+#include "LSTM_5_4_Adytia.cc"
 
 #include "../interface/DNN_prova.h"
 #include "DNN_prova.cc"
@@ -129,8 +129,8 @@ DEFINE_FWK_MODULE(CNN1D_20_1_PF);
 // DEFINE_FWK_MODULE(LSTM_20_1_Calo);
 // DEFINE_FWK_MODULE(LSTM_20_1_PF);
 
-// DEFINE_FWK_MODULE(LSTM_5_4_Calo);
-// DEFINE_FWK_MODULE(LSTM_5_4_PF);
+DEFINE_FWK_MODULE(LSTM_5_4_Calo);
+DEFINE_FWK_MODULE(LSTM_5_4_PF);
 
 DEFINE_FWK_MODULE(CNN1D_5_4_Calo);
 DEFINE_FWK_MODULE(CNN1D_5_4_PF);

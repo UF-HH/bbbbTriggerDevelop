@@ -224,5 +224,4 @@ bool LSTM_5_4_Adytia<T>::hltFilter(edm::Event& event,
 
   return accept;
   
-  return true;
 }
