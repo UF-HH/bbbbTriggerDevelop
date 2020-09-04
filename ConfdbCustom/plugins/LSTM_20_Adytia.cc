@@ -199,7 +199,7 @@ bool LSTM_20_Adytia<T>::hltFilter(edm::Event& event,
       }
   }
   
-  auto nnoutput = neural_network_->compute(inputs_);
+  auto nnoutput = neural_network_->compute(*inputs_);
 
   //horrible
   double output_value = 0; //initialize as empty as to avoid crashes
