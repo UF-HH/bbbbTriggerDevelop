@@ -50,6 +50,6 @@ private:
   double m_WP;
   lwt::LightweightNeuralNetwork* graph;
   //lwt::LightweightGraph* graph;
-  lwt::GraphConfig config;};
+  //lwt::GraphConfig config;};
 
 #endif  // LSTM_5_4_Adytia_h
