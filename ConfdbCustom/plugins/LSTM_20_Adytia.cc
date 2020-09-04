@@ -152,8 +152,8 @@ bool LSTM_20_Adytia<T>::hltFilter(edm::Event& event,
 
   TRef jetRef;
 
-  inputv_t inputs_ = get_empty_input(); //LSTM inputs {"jets": {"var": {1,2,3,...}}}
-  input_t in_ = get_empty_vals();
+  auto inputs_ = get_empty_input(); //LSTM inputs {"jets": {"var": {1,2,3,...}}}
+  //auto in_ = get_empty_vals();
 
   //Dummy input to NN
   //auto inputs = DummyInputGeneration();
@@ -207,7 +207,7 @@ bool LSTM_20_Adytia<T>::hltFilter(edm::Event& event,
       }
   }
   
-  auto nnoutput = neural_network_->compute(inputs_, in_);
+  auto nnoutput = neural_network_->compute(inputs_);
 
   //horrible
   double output_value = 0; //initialize as empty as to avoid crashes
