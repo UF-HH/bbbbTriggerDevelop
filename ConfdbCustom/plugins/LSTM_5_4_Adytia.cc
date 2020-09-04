@@ -115,6 +115,7 @@ bool LSTM_5_4_Adytia<T>::hltFilter(edm::Event& event,
   using namespace edm;
   using namespace reco;
 
+  /*
   typedef vector<T> TCollection;
   typedef Ref<TCollection> TRef;
 
@@ -219,4 +220,6 @@ bool LSTM_5_4_Adytia<T>::hltFilter(edm::Event& event,
   //edm::LogInfo("") << " trigger accept ? = " << accept << " nTag/nJet = " << nTag << "/" << nJet << std::endl;
 
   return accept;
+  */
+  return true;
 }
