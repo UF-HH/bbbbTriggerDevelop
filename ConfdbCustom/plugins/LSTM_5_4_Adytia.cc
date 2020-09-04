@@ -62,7 +62,7 @@ LSTM_5_4_Adytia<T>::LSTM_5_4_Adytia(const edm::ParameterSet& iConfig)
       m_MinPt(iConfig.getParameter<double>("MinPt")),
       m_MaxPt(iConfig.getParameter<double>("MaxPt")),
       m_TriggerType(iConfig.getParameter<int>("TriggerType")),
-      nnconfig(iConfig.getParameter<std::string>("NNConfig")),
+      nnconfig(iConfig.getParameter<edm::FileInPath>("NNConfig")),
       m_WP(iConfig.getParameter<double>("WorkingPoint")){
           m_JetsToken = consumes<std::vector<T>>(m_Jets), m_JetTagsToken = consumes<reco::JetTagCollection>(m_JetTags), m_JetsBaseToken = consumes<std::vector<T>>(m_JetsBase);
   
@@ -71,7 +71,7 @@ LSTM_5_4_Adytia<T>::LSTM_5_4_Adytia(const edm::ParameterSet& iConfig)
           auto config = lwt::parse_json(jsonfile);
 
           //create NN and store the output names for the future
-          neural_network_ = new lwt::LightweightGraph(parse_json_graph(nnconfig)); //This will be fixed (std::make_unique<const)
+          neural_network_ = new lwt::LightweightGraph(lwt::parse_json_graph(nnconfig)); //This will be fixed (std::make_unique<const)
 }
 
 template <typename T>
