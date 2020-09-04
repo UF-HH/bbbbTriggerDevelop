@@ -67,9 +67,7 @@ LSTM_5_4_Adytia<T>::LSTM_5_4_Adytia(const edm::ParameterSet& iConfig)
           m_JetsToken = consumes<std::vector<T>>(m_Jets), m_JetTagsToken = consumes<reco::JetTagCollection>(m_JetTags), m_JetsBaseToken = consumes<std::vector<T>>(m_JetsBase);
   
           //parse json
-          ifstream jsonfile(nnconfig.fullPath());
-          auto config = lwt::parse_json(jsonfile);
-
+          std::ifstream jsonfile(nnconfig.fullPath());
           //create NN and store the output names for the future
           neural_network_ = new lwt::LightweightGraph(lwt::parse_json_graph(jsonfile), "dense_0"); //This will be fixed (std::make_unique<const)
 }

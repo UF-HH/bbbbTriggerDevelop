@@ -29,6 +29,7 @@
 #include <boost/algorithm/string.hpp>
 
 //Defining inputs to the LSTM net
+typedef std::map<std::string, std::map<std::string, double> > input_t;
 typedef std::map<std::string, std::vector<double> > map_vec_t;
 typedef std::map<std::string, map_vec_t> inputv_t;
 
@@ -38,6 +39,12 @@ inputv_t get_empty_input() {
         {"var", {}}
       }
     }
+  };
+}
+
+input_t get_empty_vals() {
+  return {
+    {}
   };
 }
 
@@ -64,7 +71,7 @@ LSTM_20_Adytia<T>::LSTM_20_Adytia(const edm::ParameterSet& iConfig)
           m_JetsToken = consumes<std::vector<T>>(m_Jets), m_JetTagsToken = consumes<reco::JetTagCollection>(m_JetTags), m_JetsBaseToken = consumes<std::vector<T>>(m_JetsBase);
   
           //parse json
-          ifstream jsonfile(nnconfig.fullPath());
+          std::ifstream jsonfile(nnconfig.fullPath());
           auto config = lwt::parse_json(jsonfile);
 
           //create NN and store the output names for the future
@@ -146,6 +153,7 @@ bool LSTM_20_Adytia<T>::hltFilter(edm::Event& event,
   TRef jetRef;
 
   inputv_t inputs_ = get_empty_input(); //LSTM inputs {"jets": {"var": {1,2,3,...}}}
+  input_t in_ = get_empty_vals();
 
   //Dummy input to NN
   //auto inputs = DummyInputGeneration();
@@ -199,7 +207,7 @@ bool LSTM_20_Adytia<T>::hltFilter(edm::Event& event,
       }
   }
   
-  auto nnoutput = neural_network_->compute(inputs_);
+  auto nnoutput = neural_network_->compute(inputs_, in_);
 
   //horrible
   double output_value = 0; //initialize as empty as to avoid crashes
