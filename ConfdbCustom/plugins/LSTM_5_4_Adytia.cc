@@ -29,13 +29,8 @@
 
 #include <boost/algorithm/string.hpp>
 
-
-//Defining inputs to the LSTM net
-typedef std::map<std::string, std::map<std::string, double> > input_t;
-typedef std::map<std::string, std::vector<double> > map_vec_t;
-typedef std::map<std::string, map_vec_t> inputv_t;
-
-inputv_t get_empty_input() {
+template <typename T>
+inputv_t LSTM_5_4_Adytia<T>::get_empty_input() {
   return {
     {"jets", {
         {"var", {}}

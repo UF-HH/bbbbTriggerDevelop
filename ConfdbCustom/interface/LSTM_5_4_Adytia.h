@@ -18,7 +18,10 @@ namespace edm {
   class ConfigurationDescriptions;
 }
 
+//Defining inputs to the LSTM net
 typedef std::map<std::string, std::map<std::string, double> > input_t;
+typedef std::map<std::string, std::vector<double> > map_vec_t;
+typedef std::map<std::string, map_vec_t> inputv_t;
 
 //
 // class declaration
@@ -34,6 +37,7 @@ public:
   bool hltFilter(edm::Event& event,
                  const edm::EventSetup& setup,
                  trigger::TriggerFilterObjectWithRefs& filterproduct) const override;
+  inputv_t get_empty_input();
   
 private:
   edm::InputTag m_Jets;  // module label of input JetCollection
