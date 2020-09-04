@@ -1,6 +1,6 @@
 #include "../interface/LSTM_20_Adytia.h"
-
 /*
+
 #include <vector>
 #include <string>
 #include <algorithm>
@@ -28,7 +28,7 @@
 #include "lwtnn/parse_json.hh"
 
 #include <boost/algorithm/string.hpp>
-*/
+
 #include <vector>
 #include <string>
 #include <fstream>
@@ -111,14 +111,14 @@ void LSTM_20_Adytia<T>::fillDescriptions(edm::ConfigurationDescriptions& descrip
 // member functions
 //
 
-/*
+
 template <typename T>
 input_t LSTM_20_Adytia<T>::DummyInputGeneration() const{
   
   return { {"inputs",{{"1LeadingPt", 1}, {"1LeadingEta", 1}, {"1LeadingPhi", 1}, {"1LeadingBTag", 1}, {"2LeadingPt", 1}, {"2LeadingEta", 1}, {"2LeadingPhi", 1}, {"2LeadingBTag", 1}, {"3LeadingPt", 1}, {"3LeadingEta", 1}, {"3LeadingPhi", 1}, {"3LeadingBTag", 1}, {"4LeadingPt", 1}, {"4LeadingEta", 1}, {"4LeadingPhi", 1}, {"4LeadingBTag", 1}, {"BTag1", 1}, {"BTag2", 1}, {"BTag3", 1}, {"BTag4", 1} }} };
 
 }
-*/
+
 
 // ------------ method called to produce the data  ------------
 template <typename T>
@@ -129,7 +129,7 @@ bool LSTM_20_Adytia<T>::hltFilter(edm::Event& event,
   using namespace edm;
   using namespace reco;
 
-  /*
+  
   typedef vector<T> TCollection;
   typedef Ref<TCollection> TRef;
 
@@ -229,6 +229,7 @@ bool LSTM_20_Adytia<T>::hltFilter(edm::Event& event,
   //edm::LogInfo("") << " trigger accept ? = " << accept << " nTag/nJet = " << nTag << "/" << nJet << std::endl;
 
   return accept;
-  */
+  
   return true;
 }
+*/
