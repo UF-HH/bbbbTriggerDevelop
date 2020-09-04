@@ -33,6 +33,11 @@
 #include <string>
 #include <fstream>
 
+#include "HLTrigger/HLTcore/interface/HLTFilter.h"
+#include "FWCore/ParameterSet/interface/ConfigurationDescriptions.h"
+#include "FWCore/ParameterSet/interface/ParameterSetDescription.h"
+#include "HLTrigger/HLTcore/interface/defaultModuleLabel.h"
+
 //Defining inputs to the LSTM net
 typedef std::map<std::string, std::map<std::string, double> > input_t;
 typedef std::map<std::string, std::vector<double> > map_vec_t;
