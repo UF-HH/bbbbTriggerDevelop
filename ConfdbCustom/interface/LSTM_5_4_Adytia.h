@@ -46,7 +46,7 @@ private:
   double m_MinEta, m_MaxEta;
   double m_MinPt, m_MaxPt;
   int m_TriggerType;
-  edm::FileInPath nnconfig;
+  std::string nnconfig;
   double m_WP;
   //lwt::LightweightNeuralNetwork* neural_network_;
   lwt::LightweightGraph* neural_network_;
