@@ -1,4 +1,4 @@
-#include "../interface/CNN1D_20_1.h"
+#include "../interface/LSTM_20_Adytia.h"
 
 #include <vector>
 #include <string>
@@ -28,6 +28,18 @@
 
 #include <boost/algorithm/string.hpp>
 
+//Defining inputs to the LSTM net
+typedef std::map<std::string, std::vector<double> > map_vec_t;
+typedef std::map<std::string, map_vec_t> inputv_t;
+
+inputv_t get_empty_input() {
+  return {
+    {"jets", {
+        {"var", {}}
+      }
+    }
+  };
+}
 
 
 //
@@ -35,7 +47,7 @@
 //
 
 template <typename T>
-CNN1D_20_1<T>::CNN1D_20_1(const edm::ParameterSet& iConfig)
+LSTM_20_Adytia<T>::LSTM_20_Adytia(const edm::ParameterSet& iConfig)
     : HLTFilter(iConfig),
       m_Jets(iConfig.getParameter<edm::InputTag>("Jets")),
       m_JetsBase(iConfig.getParameter<edm::InputTag>("BaseJets")),
@@ -47,23 +59,24 @@ CNN1D_20_1<T>::CNN1D_20_1(const edm::ParameterSet& iConfig)
       m_MinPt(iConfig.getParameter<double>("MinPt")),
       m_MaxPt(iConfig.getParameter<double>("MaxPt")),
       m_TriggerType(iConfig.getParameter<int>("TriggerType")),
-      nnconfig(iConfig.getParameter<std::string>("NNConfig")),
+      nnconfig(iConfig.getParameter<edm::FileInPath>("NNConfig")),
       m_WP(iConfig.getParameter<double>("WorkingPoint")){
           m_JetsToken = consumes<std::vector<T>>(m_Jets), m_JetTagsToken = consumes<reco::JetTagCollection>(m_JetTags), m_JetsBaseToken = consumes<std::vector<T>>(m_JetsBase);
+  
+          //parse json
+          ifstream jsonfile(nnconfig.fullPath());
+          auto config = lwt::parse_json(jsonfile);
 
-      tensorflow::setLogging("0");
-      std::cout << "[Info] CNN1D_20_1: Loading graph def from " << nnconfig << std::endl;
-      graphDef_ = tensorflow::loadGraphDef(nnconfig);
-      session_ = tensorflow::createSession(graphDef_);
-
+          //create NN and store the output names for the future
+          neural_network_ = new lwt::LightweightNeuralNetwork(config.inputs, config.layers, config.outputs); //This will be fixed (std::make_unique<const)
 }
 
 template <typename T>
-CNN1D_20_1<T>::~CNN1D_20_1() = default;
+LSTM_20_Adytia<T>::~LSTM_20_Adytia() = default;
 
 
 template <typename T>
-void CNN1D_20_1<T>::fillDescriptions(edm::ConfigurationDescriptions& descriptions) {
+void LSTM_20_Adytia<T>::fillDescriptions(edm::ConfigurationDescriptions& descriptions) {
   edm::ParameterSetDescription desc;
   makeHLTFilterDescription(desc);
   desc.add<edm::InputTag>("Jets", edm::InputTag("hltJetCollection"));
@@ -76,9 +89,9 @@ void CNN1D_20_1<T>::fillDescriptions(edm::ConfigurationDescriptions& description
   desc.add<double>("MinPt", -1);
   desc.add<double>("MaxPt", 999999.0);
   desc.add<int>("TriggerType", 0);
-  desc.add<std::string>("NNConfig", std::string("models_json/Calo_T4_HPU_CNN1D.pb"));
+  desc.add<edm::FileInPath>("NNConfig", edm::FileInPath("models_json/LSTM_calo_20_1.json"));
   desc.add<double>("WorkingPoint", 0.0);
-  descriptions.add(defaultModuleLabel<CNN1D_20_1<T>>(), desc);
+  descriptions.add(defaultModuleLabel<LSTM_20_Adytia<T>>(), desc);
 }
 
 //
@@ -87,7 +100,7 @@ void CNN1D_20_1<T>::fillDescriptions(edm::ConfigurationDescriptions& description
 
 /*
 template <typename T>
-input_t CNN1D_20_1<T>::DummyInputGeneration() const{
+input_t LSTM_20_Adytia<T>::DummyInputGeneration() const{
   
   return { {"inputs",{{"1LeadingPt", 1}, {"1LeadingEta", 1}, {"1LeadingPhi", 1}, {"1LeadingBTag", 1}, {"2LeadingPt", 1}, {"2LeadingEta", 1}, {"2LeadingPhi", 1}, {"2LeadingBTag", 1}, {"3LeadingPt", 1}, {"3LeadingEta", 1}, {"3LeadingPhi", 1}, {"3LeadingBTag", 1}, {"4LeadingPt", 1}, {"4LeadingEta", 1}, {"4LeadingPhi", 1}, {"4LeadingBTag", 1}, {"BTag1", 1}, {"BTag2", 1}, {"BTag3", 1}, {"BTag4", 1} }} };
 
@@ -96,7 +109,7 @@ input_t CNN1D_20_1<T>::DummyInputGeneration() const{
 
 // ------------ method called to produce the data  ------------
 template <typename T>
-bool CNN1D_20_1<T>::hltFilter(edm::Event& event,
+bool LSTM_20_Adytia<T>::hltFilter(edm::Event& event,
                              const edm::EventSetup& setup,
                              trigger::TriggerFilterObjectWithRefs& filterproduct) const {
   using namespace std;
@@ -132,9 +145,10 @@ bool CNN1D_20_1<T>::hltFilter(edm::Event& event,
 
   TRef jetRef;
 
-  tensorflow::Tensor input(tensorflow::DT_FLOAT, tensorflow::TensorShape({ 1,20,1 }));
-  auto input_tensor_mapped = input.tensor<float, 3>();
-  //float* d = input.flat<float>().data();
+  inputv_t inputs_ = get_empty_input(); //LSTM inputs {"jets": {"var": {1,2,3,...}}}
+
+  //Dummy input to NN
+  //auto inputs = DummyInputGeneration();
 
   // Look at all jets in decreasing order of Pt (corrected jets).
   int nJet = 0;
@@ -151,88 +165,53 @@ bool CNN1D_20_1<T>::hltFilter(edm::Event& event,
     }
     //jetRef = TRef(h_Jets, jet.first.key());
     //LogTrace("") << "Jet " << nJet << " : Pt = " << jet.first->pt() << " , tag value = " << jet.second;
-    if(nJet < 4){
-
-        //input.matrix<float>()(0, nJet) = float(pt);
-        //input.matrix<float>()(0, nJet+1) = float(mass);
-        //input.matrix<float>()(0, nJet+2) = float(e);
-        //input.matrix<float>()(0, nJet+3) = float(eta);
-        //input.matrix<float>()(0, nJet+4) = float(btag);
-
-        // *d = float(pt);
-        // std::cout << "Input pt: " <<  *d << std::endl;
-        // d++;
-        // *d = float(mass);
-        // std::cout << "Input mass: " <<  *d << std::endl;
-        // d++;
-        // *d = float(e);
-        // std::cout << "Input energy: " <<  *d << std::endl;        
-        // d++;
-        // *d = float(eta);
-        // std::cout << "Input eta: " <<  *d << std::endl;       
-        // d++;
-        // *d = float(btag);
-        // std::cout << "Input btag: " <<  *d << std::endl;
-        // d++;
-
-
-        input_tensor_mapped(0, nJet*4, 0) = float(pt);
-        input_tensor_mapped(0, nJet*4+1, 0) = float(eta);
-        input_tensor_mapped(0, nJet*4+2, 0) = float(phi);
-        input_tensor_mapped(0, nJet*4+3, 0) = float(btag);
-
+    ++nJet;
+    if(nJet < 5){
+        
+        inputs_["jets"]["var"].push_back(pt);
+        inputs_["jets"]["var"].push_back(phi);
+        inputs_["jets"]["var"].push_back(eta);
+        inputs_["jets"]["var"].push_back(btag);
     
     }
 
-    nJet++;
 
-    //Save all BTag Scores. Only for central jets eta < 2.5 and pt > 30, that's why the selection on pt and eta
     btags_val_.push_back(btag);
     // Store a reference to the jets which passed tagging cuts
     filterproduct.addObject(m_TriggerType, jetRef);
+    
   }
 
   std::sort(btags_val_.begin(), btags_val_.end(), std::greater<double>());
-  for(int idx= 0; idx < 4; idx++){
-
-    input_tensor_mapped(0, 16+idx, 0) = float(btags_val_.at(idx));
-
+  if(btags_val_.size() >= 4){
+      std::vector<double> FourleadingBTag(btags_val_.begin(), btags_val_.begin()+4);
+      for(int i = 0; i < 4; i++){
+          inputs_["jets"]["var"].push_back(FourleadingBTag.at(i));
+      }
   }
-
-
-
-  // auto array = input_tensor_mapped.data();
-  // float* int_array = static_cast<float*>(array);
-
-  // for(int in=0; in < 20; in++){
-  //   std::cout << "Input entry: " << in << " Value: " << int_array[in] << std::endl;
-  // }
-
-
-  std::vector<tensorflow::Tensor> outputs;
-  tensorflow::run(session_, { { "Input", input } }, { "Output/Sigmoid" }, &outputs);
+  else{
+      std::vector<double> FourleadingBTag(btags_val_.begin(), btags_val_.end());
+      for(int j = 0; j < 4-(int)btags_val_.size(); j++){
+          FourleadingBTag.push_back(0);
+      }
+      for(int i = 0; i < 4; i++){
+          inputs_["jets"]["var"].push_back(FourleadingBTag.at(i));
+      }
+  }
   
-  //float result = outputs[0].matrix<float>()(0, 0);
-  float result = *outputs[0].scalar<float>().data();
-  std::cout << " -> " << result << std::endl;
+  auto nnoutput = neural_network_->compute(inputs_);
+
+  //horrible
+  double output_value = 0; //initialize as empty as to avoid crashes
+  for (const auto& out: nnoutput) {
+     output_value = out.second;
+    }
 
   //decision
-  bool accept(result >= m_WP);
+  std::cout << " -> " << output_value << std::endl;
+  bool accept(output_value >= m_WP);
 
   //edm::LogInfo("") << " trigger accept ? = " << accept << " nTag/nJet = " << nTag << "/" << nJet << std::endl;
 
   return accept;
-}
-
-template <typename T>
-void CNN1D_20_1<T>::endJob(){
-
-  // close the session
-    tensorflow::closeSession(session_);
-    session_ = nullptr;
-
-    // delete the graph
-    delete graphDef_;
-    graphDef_ = nullptr;
-
 }

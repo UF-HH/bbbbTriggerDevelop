@@ -214,7 +214,7 @@ bool CNN1D_5_4<T>::hltFilter(edm::Event& event,
   
   //float result = outputs[0].matrix<float>()(0, 0);
   float result = *outputs[0].scalar<float>().data();
-  std::cout << " -> " << result << std::endl << std::endl;
+  std::cout << " -> " << result << std::endl;
 
   //decision
   bool accept(result >= m_WP);
