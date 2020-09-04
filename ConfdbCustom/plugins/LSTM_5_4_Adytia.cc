@@ -1,6 +1,4 @@
 #include "../interface/LSTM_5_4_Adytia.h"
-#include <boost/property_tree/ptree.hpp>
-#include <boost/property_tree/json_parser.hpp>
 
 #include <vector>
 #include <string>
