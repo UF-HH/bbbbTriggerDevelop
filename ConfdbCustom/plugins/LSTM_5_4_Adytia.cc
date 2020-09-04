@@ -1,5 +1,5 @@
 #include "../interface/LSTM_5_4_Adytia.h"
-/*
+
 
 #include <vector>
 #include <string>
@@ -29,17 +29,6 @@
 
 #include <boost/algorithm/string.hpp>
 
-
-#include <vector>
-#include <string>
-#include <fstream>
-
-
-
-#include "HLTrigger/HLTcore/interface/HLTFilter.h"
-#include "FWCore/ParameterSet/interface/ConfigurationDescriptions.h"
-#include "FWCore/ParameterSet/interface/ParameterSetDescription.h"
-#include "HLTrigger/HLTcore/interface/defaultModuleLabel.h"
 
 //Defining inputs to the LSTM net
 typedef std::map<std::string, std::map<std::string, double> > input_t;
@@ -237,4 +226,3 @@ bool LSTM_5_4_Adytia<T>::hltFilter(edm::Event& event,
   
   return true;
 }
-*/
