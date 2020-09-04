@@ -3,7 +3,7 @@
 #include <vector>
 #include <string>
 #include <algorithm>
-//#include <numeric>
+#include <numeric>
 #include <iostream>
 #include <fstream>
 #include <string>
@@ -22,7 +22,6 @@
 #include "HLTrigger/HLTcore/interface/defaultModuleLabel.h"
 
 //lwtnn
-#include "lwtnn/LightweightGraph.hh"
 #include "lwtnn/LightweightNeuralNetwork.hh"
 #include "lwtnn/parse_json.hh"
 

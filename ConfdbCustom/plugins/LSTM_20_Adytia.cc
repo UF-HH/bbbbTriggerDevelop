@@ -1,14 +1,14 @@
 #include "../interface/LSTM_20_Adytia.h"
 
+#include <vector>
+#include <string>
+#include <algorithm>
+#include <numeric>
 #include <iostream>
 #include <fstream>
 #include <string>
 #include <map>
 #include <cmath>
-#include <vector>
-#include <string>
-#include <algorithm>
-//#include <numeric>
 
 #include "FWCore/MessageLogger/interface/MessageLogger.h"
 #include "DataFormats/Common/interface/Handle.h"
@@ -22,7 +22,6 @@
 #include "HLTrigger/HLTcore/interface/defaultModuleLabel.h"
 
 //lwtnn
-#include "lwtnn/LightweightGraph.hh"
 #include "lwtnn/LightweightNeuralNetwork.hh"
 #include "lwtnn/parse_json.hh"
 
