@@ -48,8 +48,7 @@ private:
   int m_TriggerType;
   edm::FileInPath nnconfig;
   double m_WP;
-  //lwt::LightweightNeuralNetwork* neural_network_;
-  lwt::LightweightGraph* graph;
+  lwt::LightweightNeuralNetwork* graph;
   lwt::GraphConfig config;
 };
 

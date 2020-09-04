@@ -35,28 +35,6 @@ typedef std::map<std::string, std::map<std::string, double> > input_t;
 typedef std::map<std::string, std::vector<double> > map_vec_t;
 typedef std::map<std::string, map_vec_t> inputv_t;
 
-lwt::LightweightGraph::SeqNodeMap get_sequences(
-    const std::vector<lwt::InputNodeConfig>& config) {
-    lwt::LightweightGraph::SeqNodeMap nodes;
-    for (const auto& input: config) {
-      // see the `test_utilities` header for this function.
-      nodes[input.name] = get_values_vec(input.variables, 20);
-    }
-    return nodes;
-}
-
-lwt::LightweightGraph::NodeMap get_inputs(std::ifstream& input_file) {
-    boost::property_tree::ptree pt;
-    boost::property_tree::read_json(input_file, pt);
-    lwt::LightweightGraph::NodeMap inputs;
-    for (const auto& node: pt) {
-      for (const auto& input: node.second) {
-        inputs[node.first][input.first] = input.second.get_value<double>();
-      }
-    }
-    return inputs;
-}
-
 lwt::LightweightGraph::NodeMap get_empty_input() {
   return {
     {"jets", {
@@ -89,11 +67,11 @@ LSTM_5_4_Adytia<T>::LSTM_5_4_Adytia(const edm::ParameterSet& iConfig)
   
           //parse json
           std::ifstream jsonfile(nnconfig.fullPath());
-          config = lwt::parse_json_graph(jsonfile);
+          config = lwt::parse_json(jsonfile);
 
           //create NN and store the output names for the future
-          graph = new lwt::LightweightGraph(config); //This will be fixed (std::make_unique<const)
-}
+          graph = new lwt::LightweightNeuralNetwork(config.inputs, config.layers, config.outputs); //This will be fixed (std::make_unique<const)
+      }
 
 template <typename T>
 LSTM_5_4_Adytia<T>::~LSTM_5_4_Adytia() = default;
@@ -169,9 +147,6 @@ bool LSTM_5_4_Adytia<T>::hltFilter(edm::Event& event,
 
   TRef jetRef;
 
-  //Define useful thins for LSTM
-  LightweightGraph::SeqNodeMap seq = get_sequences(config.input_sequences);
-
   auto inputs_ = get_empty_input(); //LSTM inputs {"jets": {"var": {1,2,3,...}}}
 
   //Dummy input to NN
@@ -232,8 +207,7 @@ bool LSTM_5_4_Adytia<T>::hltFilter(edm::Event& event,
 
   }
   
-  LightweightGraph::NodeMap in_nodes; = inputs_;
-  auto nnoutput = graph->compute(in_nodes, seq);
+  auto nnoutput = graph->compute(inputs_);
 
   //horrible
   double output_value = 0; //initialize as empty as to avoid crashes
