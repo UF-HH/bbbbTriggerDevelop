@@ -39,11 +39,11 @@
 #include "../interface/DNN_20_Adytia.h"
 #include "DNN_20_Adytia.cc"
 
-#include "../interface/LSTM_20_Adytia.h"
-#include "LSTM_20_Adytia.cc"
+// #include "../interface/LSTM_20_Adytia.h"
+// #include "LSTM_20_Adytia.cc"
 
-#include "../interface/LSTM_5_4_Adytia.h"
-#include "LSTM_5_4_Adytia.cc"
+// #include "../interface/LSTM_5_4_Adytia.h"
+// #include "LSTM_5_4_Adytia.cc"
 
 #include "../interface/DNN_prova.h"
 #include "DNN_prova.cc"
