@@ -11,6 +11,7 @@
 
 //lwtnn
 #include "lwtnn/LightweightNeuralNetwork.hh"
+#include "lwtnn/LightweightGraph.hh"
 #include "lwtnn/parse_json.hh"
 
 namespace edm {
