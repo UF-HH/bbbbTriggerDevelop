@@ -49,7 +49,8 @@ private:
   edm::FileInPath nnconfig;
   double m_WP;
   //lwt::LightweightNeuralNetwork* neural_network_;
-  lwt::LightweightGraph* neural_network_;
+  lwt::LightweightGraph* graph;
+  lwt::GraphConfig config;
 };
 
 #endif  // LSTM_20_Adytia_h
