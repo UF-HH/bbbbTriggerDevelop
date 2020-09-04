@@ -83,6 +83,9 @@ typedef HLTKinModel<PFJet> HLTKinFFPF;
 typedef LSTM_20_Adytia<CaloJet> LSTM_20_1_Calo;
 typedef LSTM_20_Adytia<PFJet> LSTM_20_1_PF;
 
+typedef LSTM_5_4_Adytia<CaloJet> LSTM_5_4_Calo;
+typedef LSTM_5_4_Adytia<PFJet> LSTM_5_4_PF;
+
 typedef CNN1D_20_1<CaloJet> CNN1D_20_1_Calo;
 typedef CNN1D_20_1<PFJet> CNN1D_20_1_PF;
 
