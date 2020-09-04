@@ -62,7 +62,7 @@ LSTM_5_4_Adytia<T>::LSTM_5_4_Adytia(const edm::ParameterSet& iConfig)
       m_MinPt(iConfig.getParameter<double>("MinPt")),
       m_MaxPt(iConfig.getParameter<double>("MaxPt")),
       m_TriggerType(iConfig.getParameter<int>("TriggerType")),
-      nnconfig(iConfig.getParameter<edm::FileInPath>("NNConfig")),
+      nnconfig(iConfig.getParameter<std::string>("NNConfig")),
       m_WP(iConfig.getParameter<double>("WorkingPoint")){
           m_JetsToken = consumes<std::vector<T>>(m_Jets), m_JetTagsToken = consumes<reco::JetTagCollection>(m_JetTags), m_JetsBaseToken = consumes<std::vector<T>>(m_JetsBase);
   
