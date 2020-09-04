@@ -80,11 +80,11 @@ typedef HLTBTagModel<PFJet> HLTBTagFFPF;
 typedef HLTKinModel<CaloJet> HLTKinFFCalo;
 typedef HLTKinModel<PFJet> HLTKinFFPF;
 
-typedef LSTM_20_Adytia<CaloJet> LSTM_20_1_Calo;
-typedef LSTM_20_Adytia<PFJet> LSTM_20_1_PF;
+// typedef LSTM_20_Adytia<CaloJet> LSTM_20_1_Calo;
+// typedef LSTM_20_Adytia<PFJet> LSTM_20_1_PF;
 
-typedef LSTM_5_4_Adytia<CaloJet> LSTM_5_4_Calo;
-typedef LSTM_5_4_Adytia<PFJet> LSTM_5_4_PF;
+// typedef LSTM_5_4_Adytia<CaloJet> LSTM_5_4_Calo;
+// typedef LSTM_5_4_Adytia<PFJet> LSTM_5_4_PF;
 
 typedef CNN1D_20_1<CaloJet> CNN1D_20_1_Calo;
 typedef CNN1D_20_1<PFJet> CNN1D_20_1_PF;
@@ -126,11 +126,11 @@ DEFINE_FWK_MODULE(HLTKinFFPF);
 DEFINE_FWK_MODULE(CNN1D_20_1_Calo);
 DEFINE_FWK_MODULE(CNN1D_20_1_PF);
 
-DEFINE_FWK_MODULE(LSTM_20_1_Calo);
-DEFINE_FWK_MODULE(LSTM_20_1_PF);
+// DEFINE_FWK_MODULE(LSTM_20_1_Calo);
+// DEFINE_FWK_MODULE(LSTM_20_1_PF);
 
-DEFINE_FWK_MODULE(LSTM_5_4_Calo);
-DEFINE_FWK_MODULE(LSTM_5_4_PF);
+// DEFINE_FWK_MODULE(LSTM_5_4_Calo);
+// DEFINE_FWK_MODULE(LSTM_5_4_PF);
 
 DEFINE_FWK_MODULE(CNN1D_5_4_Calo);
 DEFINE_FWK_MODULE(CNN1D_5_4_PF);
