@@ -10,7 +10,7 @@
 #include <string>
 #include <map>
 #include <cmath>
-*/
+
 #include "FWCore/MessageLogger/interface/MessageLogger.h"
 #include "DataFormats/Common/interface/Handle.h"
 #include "DataFormats/Common/interface/RefToBase.h"
@@ -22,13 +22,16 @@
 #include "FWCore/ParameterSet/interface/ParameterSetDescription.h"
 #include "HLTrigger/HLTcore/interface/defaultModuleLabel.h"
 
-/*
+
 //lwtnn
 #include "lwtnn/LightweightNeuralNetwork.hh"
 #include "lwtnn/parse_json.hh"
 
 #include <boost/algorithm/string.hpp>
 */
+#include <vector>
+#include <string>
+#include <fstream>
 
 //Defining inputs to the LSTM net
 typedef std::map<std::string, std::map<std::string, double> > input_t;
