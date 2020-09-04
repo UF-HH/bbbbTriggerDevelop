@@ -68,7 +68,7 @@ LSTM_20_Adytia<T>::LSTM_20_Adytia(const edm::ParameterSet& iConfig)
           auto config = lwt::parse_json(jsonfile);
 
           //create NN and store the output names for the future
-          neural_network_ = new lwt::LightweightGraph(lwt::parse_json_graph(jsonfile)); //This will be fixed (std::make_unique<const)
+          neural_network_ = new lwt::LightweightGraph(lwt::parse_json_graph(jsonfile), "dense_0"); //This will be fixed (std::make_unique<const)
 }
 
 template <typename T>
@@ -199,7 +199,7 @@ bool LSTM_20_Adytia<T>::hltFilter(edm::Event& event,
       }
   }
   
-  auto nnoutput = neural_network_->compute(*inputs_);
+  auto nnoutput = neural_network_->compute(inputs_);
 
   //horrible
   double output_value = 0; //initialize as empty as to avoid crashes
