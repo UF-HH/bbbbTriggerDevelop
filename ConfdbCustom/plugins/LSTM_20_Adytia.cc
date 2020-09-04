@@ -1,14 +1,14 @@
 #include "../interface/LSTM_20_Adytia.h"
 
-#include <vector>
-#include <string>
-#include <algorithm>
-#include <numeric>
 #include <iostream>
 #include <fstream>
 #include <string>
 #include <map>
 #include <cmath>
+#include <vector>
+#include <string>
+#include <algorithm>
+#include <numeric>
 
 #include "FWCore/MessageLogger/interface/MessageLogger.h"
 #include "DataFormats/Common/interface/Handle.h"
@@ -75,7 +75,7 @@ LSTM_20_Adytia<T>::LSTM_20_Adytia(const edm::ParameterSet& iConfig)
           auto config = lwt::parse_json(jsonfile);
 
           //create NN and store the output names for the future
-          neural_network_ = new lwt::LightweightGraph(lwt::parse_json_graph(jsonfile), "dense_0"); //This will be fixed (std::make_unique<const)
+          neural_network_ = new lwt::LightweightGraph(lwt::parse_json_graph(jsonfile)); //This will be fixed (std::make_unique<const)
 }
 
 template <typename T>
