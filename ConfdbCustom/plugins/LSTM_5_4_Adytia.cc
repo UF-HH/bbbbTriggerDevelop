@@ -3,7 +3,7 @@
 #include <vector>
 #include <string>
 #include <algorithm>
-#include <numeric>
+//#include <numeric>
 #include <iostream>
 #include <fstream>
 #include <string>
