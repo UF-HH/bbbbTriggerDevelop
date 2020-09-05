@@ -167,7 +167,7 @@ man.InsertInMenu(in_class=pf_name, process_name = 'in_class')
 man.InsertPrescaleModule('hltSumBtag', offset=0, name='strip')
 
 #Adding lumi module
-man.addLumiHistos()
+#man.addLumiHistos()
 
 
 #inserting my paths
