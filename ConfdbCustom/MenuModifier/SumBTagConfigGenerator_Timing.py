@@ -57,7 +57,7 @@ parser.add_argument('-ls', '--ls', type=str, required=False, help="select a LS t
 parser.add_argument('-json', '--json', type=str, required=False, help="Name of golden json if data")
 parser.add_argument('-tr', '--tr', type=str, required=False, help="Timing Run selection")
 parser.add_argument('-th', '--th', type=str, required=False, help="Threshold for btag sum trigger", default='0p9')
-parser.add_argument('-empty', '--empty', default=False, help="No new paths", default='0p9', action='store_true')
+parser.add_argument('-empty', '--empty', default=False, help="No new paths", action='store_true')
 
 args = parser.parse_args()
 
