@@ -1,3 +1,9 @@
+python SumBTagConfigGenerator_Timing.py --menu=/online/collisions/2018/2e34/v3.6/HLT -gt=101X_dataRun2_HLT_v7 -out=myHLT_TimingData.py -pr=TIMING --data --tr 319941 --empty
+nohup taskset -c 0-3 cmsRun myHLT_TimingData.py >& full.log&
+cmsRun harvestTiming_cff.py
+mv DQM_V0001_R000319941__HLT__FastTimerService__All.root  DQM_skimEphemeral_PU48-49BX25_Run319941_CMSSW_10_1_11_Menu-HLTv36V4_Base.root 
+
+
 python SumBTagConfigGenerator_Timing.py --menu=/online/collisions/2018/2e34/v3.6/HLT -gt=101X_dataRun2_HLT_v7 -out=myHLT_TimingData.py -pr=TIMING --data --tr 319941 --th 0p9
 nohup taskset -c 0-3 cmsRun myHLT_TimingData.py >& full.log&
 cmsRun harvestTiming_cff.py
