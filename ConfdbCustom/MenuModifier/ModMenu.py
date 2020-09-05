@@ -469,3 +469,28 @@ def AddHLTAnalyzerEndPath():
     toadd = "process.HLTAnalyzerEndpath = cms.EndPath( process.hltGtStage2Digis + process.hltPreHLTAnalyzerEndpath + process.hltL1TGlobalSummary + process.hltTrigReport )\n"
     return toadd
 
+def AddLumiModule():
+    to_add = """process.hltLumiMonitor = cms.EDAnalyzer("LumiMonitor",
+    useBPixelLayer1 = cms.bool( False ),
+    minPixelClusterCharge = cms.double( 15000.0 ),
+    histoPSet = cms.PSet(
+        lsPSet = cms.PSet(  nbins = cms.int32( 2500 )),
+        pixelClusterPSet = cms.PSet( 
+            nbins = cms.int32( 200 ),
+            xmin = cms.double( -0.5 ),
+            xmax = cms.double( 19999.5 )
+        ),
+        lumiPSet = cms.PSet(
+            nbins = cms.int( 5000 ),
+            xmin = cms.double( 0.0 ),
+            xmax = cms.double( 20000 .0 )
+        ),
+        pixellumiPSet = cms.PSet(
+            nbins = cms.int( 300 ),
+            xmin = cms.double( 0.0 ),
+            xmax = cms.double( 3.0 )
+        )
+    )
+    )\n"""
+    return to_add
+

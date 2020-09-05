@@ -312,5 +312,10 @@ class ModMan:
         f.write(self.pathnames)
         f.close()
 
+    def addLumiHistos(self):
+        toadd = ModMenu.AddLumiModule()
+        self.Insert( toadd, self.currentline )
+
+
 
 
