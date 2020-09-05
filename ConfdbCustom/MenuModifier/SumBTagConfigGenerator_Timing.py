@@ -54,7 +54,6 @@ parser.add_argument('-input', '--input', type=str, required=False, help="Input f
 parser.add_argument('-setup', '--setup', default="setup_cff", required=False, help="setup name")
 parser.add_argument('-run', '--run', type=str, required=False, help="select a run to query files")
 parser.add_argument('-ls', '--ls', type=str, required=False, help="select a LS to query files")
-parser.add_argument('-outfile', '--outfile', type=str, required=True, help="Name of output file")
 parser.add_argument('-json', '--json', type=str, required=False, help="Name of golden json if data")
 parser.add_argument('-tr', '--tr', type=str, required=False, help="Timing Run selection")
 parser.add_argument('-th', '--th', type=str, required=False, help="Threshold for btag sum trigger", default='0p9')
