@@ -7,7 +7,7 @@
 # example usage MC: python SumBTagConfigGenerator.py --menu=/dev/CMSSW_11_0_0/GRun/V7 -out=myHLT.py -gt=110X_mcRun3_2021_realistic_v6 -pr=myHLT -paths=HLTriggerFirstPath,HLT_PFHT330PT30_QuadPFJet_75_60_45_40_TriplePFBTagDeepCSV_4p5_v3,HLTriggerFinalPath,HLTAnalyzerEndpath --timing --outfile 
 # example usage Data: python SumBTagConfigGenerator.py --menu=/dev/CMSSW_10_1_0/GRun -gt=101X_dataRun2_HLT_v7 -out=myHLT.py -pr=myHLT -paths=HLTriggerFirstPath,HLT_PFHT330PT30_QuadPFJet_75_60_45_40_TriplePFBTagDeepCSV_4p5_v3,HLTriggerFinalPath,HLTAnalyzerEndpath --timing  --data --run 323725,323725 --ls [18,22],[37,57] --outfile SumBTagRateEstimate.root --json ../test/Json/json_2018D_Ephemeral_20181022_PU50.txt
 # example usage Data online menu (no HLTAnalyzerEndPath): python SumBTagConfigGenerator.py --menu=/online/collisions/2018/2e34/v3.6/HLT -gt=101X_dataRun2_HLT_v7 -out=myHLT.py -pr=myHLT -paths=HLTriggerFirstPath,HLT_PFHT330PT30_QuadPFJet_75_60_45_40_TriplePFBTagDeepCSV_4p5_v3,HLTriggerFinalPath,HLTAnalyzerEndpath --timing  --data --run 323725,323725 --ls [18,22],[37,57] --outfile SumBTagOnlineRateEstimate.root --json ../test/Json/json_2018D_Ephemeral_20181022_PU50.txt
-# example usage Data for Timing: python SumBTagConfigGenerator.py --menu=/online/collisions/2018/2e34/v3.6/HLT -gt=101X_dataRun2_HLT_v7 -out=myHLT_TimingData.py -pr=myHLT --data --tr 319941 --th 0p9
+# example usage Data for Timing: python SumBTagConfigGenerator_Timing.py --menu=/online/collisions/2018/2e34/v3.6/HLT -gt=101X_dataRun2_HLT_v7 -out=myHLT_TimingData.py -pr=myHLT --data --tr 319941 --th 0p9
 #--------------------------------------------------------------------------------------------------------------------------------
 
 import os
@@ -132,11 +132,12 @@ man.SetCurrentLine(option_str="after:process = cms.Process(")
 man.Insert('process.load("{}")\n'.format(args.setup))
 
 
-man.Insert("#------------- My Filters -------------------\n")
+man.Insert("#------------- My Filters -------------------\n", ind=FindFirstSequence(menu_path)-1)
+man.SetCurrentLine(option_str="after:#------------- My Filters -------------------")
+man.MakeSpace(n=30) #caveat, does not work without this, problem with indexing inside man...Need to work on this
+man.SetCurrentLine(option_str="after:#------------- My Filters -------------------\n")
 
 print("@[Info]: Adding Filters definintions... ")
-
-man.SetCurrentLine("after:#------------- My Filters -------------------")
 
 #This module is present in /dev/CMSSW_11_0_0/GRun/V7, does not work if not present in the menu
 man.CloneModule("process.hltQuadCentralJet30", in_class="hltDoubleCentralJet60")
