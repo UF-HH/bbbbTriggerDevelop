@@ -170,7 +170,8 @@ man.addLumiHistos()
 
 
 #inserting my paths
-
+man.SetCurrentLine(FindLastPath(menu_path))
+man.Insert("\n")
 print("@[Info]: Adding Paths... ")
 
 man.Insert("#-----------------My Paths-----------------\n")

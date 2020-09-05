@@ -481,12 +481,12 @@ def AddLumiModule():
             xmax = cms.double( 19999.5 )
         ),
         lumiPSet = cms.PSet(
-            nbins = cms.int( 5000 ),
+            nbins = cms.int32( 5000 ),
             xmin = cms.double( 0.0 ),
-            xmax = cms.double( 20000 .0 )
+            xmax = cms.double( 20000.0 )
         ),
         pixellumiPSet = cms.PSet(
-            nbins = cms.int( 300 ),
+            nbins = cms.int32( 300 ),
             xmin = cms.double( 0.0 ),
             xmax = cms.double( 3.0 )
         )
