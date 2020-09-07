@@ -133,7 +133,7 @@ bool CNN1D_20_1<T>::hltFilter(edm::Event& event,
   TRef jetRef;
 
   tensorflow::Tensor input(tensorflow::DT_FLOAT, tensorflow::TensorShape({ 1,20,1 }));
-  auto input_tensor_mapped = input.tensor<float, 3>();
+  auto input_tensor_mapped = input.flat<float>().data();
   //float* d = input.flat<float>().data();
 
   // Look at all jets in decreasing order of Pt (corrected jets).
@@ -176,10 +176,20 @@ bool CNN1D_20_1<T>::hltFilter(edm::Event& event,
         // d++;
 
 
-        input_tensor_mapped(0, nJet*4, 0) = float(pt);
-        input_tensor_mapped(0, nJet*4+1, 0) = float(eta);
-        input_tensor_mapped(0, nJet*4+2, 0) = float(phi);
-        input_tensor_mapped(0, nJet*4+3, 0) = float(btag);
+        // input_tensor_mapped(0, nJet*4, 0) = float(pt);
+        // input_tensor_mapped(0, nJet*4+1, 0) = float(eta);
+        // input_tensor_mapped(0, nJet*4+2, 0) = float(phi);
+        // input_tensor_mapped(0, nJet*4+3, 0) = float(btag);
+
+        std::cout << nJet*4 << std::endl;
+        std::cout << nJet*4 +1 << std::endl;
+        std::cout << nJet*4 +2 << std::endl;
+        std::cout << nJet*4 +3 << std::endl;
+
+        input_tensor_mapped[nJet*4] = float(pt);
+        input_tensor_mapped[nJet*4+1]= float(eta);
+        input_tensor_mapped[nJet*4+2] = float(phi);
+        input_tensor_mapped[nJet*4+3] = float(btag);
 
     
     }
@@ -195,7 +205,9 @@ bool CNN1D_20_1<T>::hltFilter(edm::Event& event,
   std::sort(btags_val_.begin(), btags_val_.end(), std::greater<double>());
   for(int idx= 0; idx < 4; idx++){
 
-    input_tensor_mapped(0, 16+idx, 0) = float(btags_val_.at(idx));
+    //input_tensor_mapped(0, 16+idx, 0) = float(btags_val_.at(idx));
+    std::cout << 16+idx << std::endl;
+    input_tensor_mapped[16+idx] = float(btags_val_.at(idx));
 
   }
 
@@ -212,8 +224,8 @@ bool CNN1D_20_1<T>::hltFilter(edm::Event& event,
   std::vector<tensorflow::Tensor> outputs;
   tensorflow::run(session_, { { "Input", input } }, { "Output/Sigmoid" }, &outputs);
   
-  //float result = outputs[0].matrix<float>()(0, 0);
-  float result = *outputs[0].scalar<float>().data();
+  float result = outputs[0].matrix<float>()(0, 0);
+  //float result = *outputs[0].scalar<float>().data();
   std::cout << " -> " << result << std::endl;
 
   //decision
