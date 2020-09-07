@@ -133,16 +133,16 @@ bool CNN1D_5_4<T>::hltFilter(edm::Event& event,
   TRef jetRef;
 
   tensorflow::Tensor input(tensorflow::DT_FLOAT, tensorflow::TensorShape({ 1,5,4 }));
-  auto input_tensor_mapped = input.flat<float>().data();
-  //float* d = input.flat<float>().data();
+  //auto input_tensor_mapped = input.flat<float>().data();
+  auto input_tensor_mapped = input_tensor.tensor<float, 3>();
 
   // Look at all jets in decreasing order of Pt (corrected jets).
   int nJet = 0;
   std::vector<double> btags_val_;
   
   for (auto const& jet : *h_JetsBase) {
-    double pt = jet.pt(), phi = jet.phi(), e = jet.energy(), eta = jet.eta();
-    double btag = 0;
+    const float pt = jet.pt(), phi = jet.phi(), e = jet.energy(), eta = jet.eta();
+    const float btag = 0;
     //searching for the btagged jets
     for(auto const& btag_jet : *h_JetTags){
       if(btag_jet.first->pt() == pt && btag_jet.first->eta() == eta && btag_jet.first->energy() == e){
@@ -153,37 +153,15 @@ bool CNN1D_5_4<T>::hltFilter(edm::Event& event,
     //LogTrace("") << "Jet " << nJet << " : Pt = " << jet.first->pt() << " , tag value = " << jet.second;
     if(nJet < 4){
 
-        //input.matrix<float>()(0, nJet) = float(pt);
-        //input.matrix<float>()(0, nJet+1) = float(mass);
-        //input.matrix<float>()(0, nJet+2) = float(e);
-        //input.matrix<float>()(0, nJet+3) = float(eta);
-        //input.matrix<float>()(0, nJet+4) = float(btag);
+        input_tensor_mapped(0, nJet, 0) = pt;
+        input_tensor_mapped(0, nJet, 1) = eta;
+        input_tensor_mapped(0, nJet, 2) = phi;
+        input_tensor_mapped(0, nJet, 3) = btag;
 
-        // *d = float(pt);
-        // std::cout << "Input pt: " <<  *d << std::endl;
-        // d++;
-        // *d = float(mass);
-        // std::cout << "Input mass: " <<  *d << std::endl;
-        // d++;
-        // *d = float(e);
-        // std::cout << "Input energy: " <<  *d << std::endl;        
-        // d++;
-        // *d = float(eta);
-        // std::cout << "Input eta: " <<  *d << std::endl;       
-        // d++;
-        // *d = float(btag);
-        // std::cout << "Input btag: " <<  *d << std::endl;
-        // d++;
-
-        // input_tensor_mapped(0, nJet, 0) = float(pt);
-        // input_tensor_mapped(0, nJet, 1) = float(eta);
-        // input_tensor_mapped(0, nJet, 2) = float(phi);
-        // input_tensor_mapped(0, nJet, 3) = float(btag);
-
-        input_tensor_mapped[nJet*4] = float(pt);
-        input_tensor_mapped[nJet*4+1]= float(eta);
-        input_tensor_mapped[nJet*4+2] = float(phi);
-        input_tensor_mapped[nJet*4+3] = float(btag);
+        // input_tensor_mapped[nJet*4] = float(pt);
+        // input_tensor_mapped[nJet*4+1]= float(eta);
+        // input_tensor_mapped[nJet*4+2] = float(phi);
+        // input_tensor_mapped[nJet*4+3] = float(btag);
         
 
     
@@ -202,17 +180,9 @@ bool CNN1D_5_4<T>::hltFilter(edm::Event& event,
   std::sort(btags_val_.begin(), btags_val_.end(), std::greater<double>());
   for(int idx= 0; idx < 4; idx++){
 
-    //input_tensor_mapped(0, 5, idx) = float(btags_val_.at(idx));
-    input_tensor_mapped[16+idx] = float(btags_val_.at(idx));
+    input_tensor_mapped(0, 4, idx) = float(btags_val_.at(idx));
 
   }
-
-  // auto array = input_tensor_mapped.data();
-  // float* int_array = static_cast<float*>(array);
-
-  // for(int in=0; in < 20; in++){
-  //   std::cout << "Input entry: " << in << " Value: " << int_array[in] << std::endl;
-  // }
 
 
   std::vector<tensorflow::Tensor> outputs;
