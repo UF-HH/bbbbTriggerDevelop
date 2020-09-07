@@ -76,7 +76,7 @@ void CNN1D_20_1<T>::fillDescriptions(edm::ConfigurationDescriptions& description
   desc.add<double>("MinPt", -1);
   desc.add<double>("MaxPt", 999999.0);
   desc.add<int>("TriggerType", 0);
-  desc.add<std::string>("NNConfig", std::string("models_json/Calo_T4_HPU_CNN1D.pb"));
+  desc.add<std::string>("NNConfig", std::string("models_json/Calo_T4_20_1_HPU_CNN1D_v2.pb"));
   desc.add<double>("WorkingPoint", 0.0);
   descriptions.add(defaultModuleLabel<CNN1D_20_1<T>>(), desc);
 }
