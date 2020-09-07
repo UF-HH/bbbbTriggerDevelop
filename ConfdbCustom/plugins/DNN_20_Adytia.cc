@@ -174,7 +174,7 @@ bool DNN_20_Adytia<T>::hltFilter(edm::Event& event,
   if(btags_val_.size() >= 4){
       std::vector<double> FourleadingBTag(btags_val_.begin(), btags_val_.begin()+4);
       for(int i = 0; i < 4; i++){
-          inputs_[std::to_string(i+1)+"BTag"] = FourleadingBTag.at(i);
+          inputs_[std::to_string(i+1)+"leading_b"] = FourleadingBTag.at(i);
       }
   }
   else{
@@ -183,7 +183,7 @@ bool DNN_20_Adytia<T>::hltFilter(edm::Event& event,
           FourleadingBTag.push_back(0);
       }
       for(int i = 0; i < 4; i++){
-          inputs_[std::to_string(i+1)+"BTag"] = FourleadingBTag.at(i);
+          inputs_[std::to_string(i+1)+"leading_b"] = FourleadingBTag.at(i);
       }
   }
   
