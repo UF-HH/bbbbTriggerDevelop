@@ -202,7 +202,7 @@ for th in np.arange(0.8, 0.99 , 0.01):
     th = round(th, 2)
     #calos
     inclass_name = "CaloDNNHighPUinput20{}".format(str(th).replace(".", "p"))
-    dnn_20.append([inclass_name, th])
+    calo_dnn_20.append([inclass_name, th])
     man.CreateFromLocal(in_class=inclass_name,mod_name="DNN_20_Adytia_Calo", WorkingPoint=th)
     man.InsertInMenu(in_class=inclass_name,process_name = 'in_class')
 
