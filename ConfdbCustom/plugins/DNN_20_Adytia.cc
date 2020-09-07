@@ -77,7 +77,7 @@ void DNN_20_Adytia<T>::fillDescriptions(edm::ConfigurationDescriptions& descript
   desc.add<double>("MinPt", -1);
   desc.add<double>("MaxPt", 999999.0);
   desc.add<int>("TriggerType", 0);
-  desc.add<edm::FileInPath>("NNConfig", edm::FileInPath("models_json/FFNNHH_4b_lwtnn_2.json"));
+  desc.add<edm::FileInPath>("NNConfig", edm::FileInPath("models_json/DNN_calo_20_Aditya_LWTNN.json"));
   desc.add<double>("WorkingPoint", 0.0);
   descriptions.add(defaultModuleLabel<DNN_20_Adytia<T>>(), desc);
 }
