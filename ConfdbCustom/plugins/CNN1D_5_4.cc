@@ -134,7 +134,7 @@ bool CNN1D_5_4<T>::hltFilter(edm::Event& event,
 
   tensorflow::Tensor input(tensorflow::DT_FLOAT, tensorflow::TensorShape({ 1,5,4 }));
   //auto input_tensor_mapped = input.flat<float>().data();
-  auto input_tensor_mapped = input_tensor.tensor<float, 3>().data();
+  auto input_tensor_mapped = input.tensor<float, 3>().data();
 
   // Look at all jets in decreasing order of Pt (corrected jets).
   int nJet = 0;
