@@ -181,11 +181,6 @@ bool CNN1D_20_1<T>::hltFilter(edm::Event& event,
         // input_tensor_mapped(0, nJet*4+2, 0) = float(phi);
         // input_tensor_mapped(0, nJet*4+3, 0) = float(btag);
 
-        std::cout << nJet*4 << std::endl;
-        std::cout << nJet*4 +1 << std::endl;
-        std::cout << nJet*4 +2 << std::endl;
-        std::cout << nJet*4 +3 << std::endl;
-
         input_tensor_mapped[nJet*4] = float(pt);
         input_tensor_mapped[nJet*4+1]= float(eta);
         input_tensor_mapped[nJet*4+2] = float(phi);
@@ -206,7 +201,6 @@ bool CNN1D_20_1<T>::hltFilter(edm::Event& event,
   for(int idx= 0; idx < 4; idx++){
 
     //input_tensor_mapped(0, 16+idx, 0) = float(btags_val_.at(idx));
-    std::cout << 16+idx << std::endl;
     input_tensor_mapped[16+idx] = float(btags_val_.at(idx));
 
   }
