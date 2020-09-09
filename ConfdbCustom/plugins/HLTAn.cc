@@ -99,7 +99,7 @@ HLTAn::HLTAn(const edm::ParameterSet& iConfig):
     }
 
     // remove possible duplicates
-    //trgs_of_interest_names_    = remove_duplicates(trgs_of_interest_names_);
+    trgs_of_interest_names_    = remove_duplicates(trgs_of_interest_names_);
 
     verbose_ = iConfig.getParameter<bool>("verbose");
 

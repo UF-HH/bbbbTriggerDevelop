@@ -180,7 +180,7 @@ man.InsertInMenu(in_class="FFNNHH4bCalowp0p87",process_name = 'in_class')
 
 #creating range for the NN, varying thresholds
 calo_20_10 = []
-for th in np.arange(0.8, 0.99 , 0.01):
+for th in np.arange(0.79, 0.99 , 0.02):
     th = round(th, 2)
     #calos
     inclass_name = "CaloCNNT4HighPUInput201{}".format(str(th).replace(".", "p"))
@@ -189,7 +189,7 @@ for th in np.arange(0.8, 0.99 , 0.01):
     man.InsertInMenu(in_class=inclass_name,process_name = 'in_class')
 
 calo_5_4 = []
-for th in np.arange(0.8, 0.99 , 0.01):
+for th in np.arange(0.79, 0.99 , 0.02):
     th = round(th, 2)
     #calos
     inclass_name = "CaloCNNT4HighPUInput54{}".format(str(th).replace(".", "p"))
@@ -198,7 +198,7 @@ for th in np.arange(0.8, 0.99 , 0.01):
     man.InsertInMenu(in_class=inclass_name,process_name = 'in_class')
 
 calo_dnn_20 = []
-for th in np.arange(0.8, 0.99 , 0.01):
+for th in np.arange(0.79, 0.99 , 0.02):
     th = round(th, 2)
     #calos
     inclass_name = "CaloDNNHighPUinput20{}".format(str(th).replace(".", "p"))
@@ -207,7 +207,7 @@ for th in np.arange(0.8, 0.99 , 0.01):
     man.InsertInMenu(in_class=inclass_name,process_name = 'in_class')
 
 calo_dnn_mine = []
-for th in np.arange(0.8, 0.99 , 0.01):
+for th in np.arange(0.79, 0.99 , 0.02):
     th = round(th, 2)
     #calos
     inclass_name = "FFNNHH4bCalowp{}".format(str(th).replace(".", "p"))
