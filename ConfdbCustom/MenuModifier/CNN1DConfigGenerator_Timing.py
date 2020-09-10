@@ -155,6 +155,11 @@ elif args.input_dim == '(20,1)':
     man.CreateFromLocal(in_class=inclass_name,mod_name="CaloCNNT4HighPU_20_1", WorkingPoint=float_th)
     man.InsertInMenu(in_class=inclass_name,process_name = 'in_class')
 
+elif args.input_dim == 'FFNN':
+    #calos
+    inclass_name = "FFNNHH4bCalowp{}".format(args.th)
+    man.CreateFromLocal(in_class=inclass_name,mod_name="FFNNHH4bCalo", WorkingPoint=float_th)
+    man.InsertInMenu(in_class=inclass_name,process_name = 'in_class')
 else:
     sys.exit("[Error]: Invalid input dim for CNN 1D")
 
@@ -174,9 +179,11 @@ man.Insert("#-----------------My Paths-----------------\n")
 
 if not args.empty:
     if args.input_dim == '(5,4)':
-        man.InsertPath("process.HLT_CaloCNNT4_5_4_wp{} = cms.Path( process.HLTBeginSequence + process.hltL1sQuadJetC50to60IorHTT280to500IorHTT250to340QuadJet + process.HLTAK4CaloJetsSequence + process.HLTBtagDeepCSVSequenceL3 + process.{} + process.HLTEndSequence )\n".format(args.th, inclass_name))
+        man.InsertPath("process.HLT_CaloCNNT4_5_4_wp{} = cms.Path( process.HLTBeginSequence + process.hltL1sQuadJetC50to60IorHTT280to500IorHTT250to340QuadJet + process.hltPreCNN + process.HLTAK4CaloJetsSequence + process.HLTBtagDeepCSVSequenceL3 + process.{} + process.HLTEndSequence )\n".format(args.th, inclass_name))
     elif args.input_dim == '(20,1)':
         man.InsertPath("process.HLT_CaloCNNT4_20_1_wp{} = cms.Path( process.HLTBeginSequence + process.hltL1sQuadJetC50to60IorHTT280to500IorHTT250to340QuadJet + process.hltPreCNN + process.HLTAK4CaloJetsSequence + process.HLTBtagDeepCSVSequenceL3 + process.{} + process.HLTEndSequence )\n".format(args.th, inclass_name))
+    elif args.input_dim == 'FFNN':
+        man.InsertPath("process.HLT_CaloDNNT4_20_1_wp{} = cms.Path( process.HLTBeginSequence + process.hltL1sQuadJetC50to60IorHTT280to500IorHTT250to340QuadJet + process.hltPreCNN + process.HLTAK4CaloJetsSequence + process.HLTBtagDeepCSVSequenceL3 + process.{} + process.HLTEndSequence )\n".format(args.th, inclass_name))
 
 #Benchmark
 man.InsertPath("process.HLT_PFHT330PT30_QuadPFJet_75_60_45_40_TriplePFBTagDeepCSV_4p5_v3 = cms.Path( process.HLTBeginSequence + process.hltL1sQuadJetC50to60IorHTT280to500IorHTT250to340QuadJet + process.hltPrePFHT330PT30QuadPFJet75604540TriplePFBTagDeepCSV4p5 + process.HLTAK4CaloJetsSequence + process.hltQuadCentralJet30 + process.hltCaloJetsQuad30ForHt + process.hltHtMhtCaloJetsQuadC30 + process.hltCaloQuadJet30HT320 + process.HLTBtagDeepCSVSequenceL3 + process.hltBTagCaloDeepCSVp17Double + process.HLTAK4PFJetsSequence + process.hltPFCentralJetLooseIDQuad30 + process.hlt1PFCentralJetLooseID75 + process.hlt2PFCentralJetLooseID60 + process.hlt3PFCentralJetLooseID45 + process.hlt4PFCentralJetLooseID40 + process.hltPFCentralJetLooseIDQuad30forHt + process.hltHtMhtPFCentralJetsLooseIDQuadC30 + process.hltPFCentralJetsLooseIDQuad30HT330 + process.HLTBtagDeepCSVSequencePF + process.hltBTagPFDeepCSV4p5Triple + process.HLTEndSequence )\n")
